@@ -1,0 +1,526 @@
+[
+  {
+    "id": "@pklnx/design-system@0.1.0",
+    "name": "@pklnx/design-system",
+    "version": "0.1.0",
+    "size": 530934,
+    "unpackedSize": 1164318,
+    "shasum": "7c381f555dac46750a69203afe7d7a72ab69cf98",
+    "integrity": "sha512-XCgPpqZzh0Kb/8MdTOYswiJpgbrpdUxwUACl8/1ZGmCl7j7L5ueLm2o25tCQJcPvp/Hipok41StwFGCMCHTP7Q==",
+    "filename": "pklnx-design-system-0.1.0.tgz",
+    "files": [
+      {
+        "path": ".github/workflows/pages.yml",
+        "size": 790,
+        "mode": 420
+      },
+      {
+        "path": "LICENSE",
+        "size": 1721,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 3811,
+        "mode": 420
+      },
+      {
+        "path": "THIRD_PARTY_NOTICES.md",
+        "size": 43482,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 816,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/arrow-right.svg",
+        "size": 253,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/check.svg",
+        "size": 236,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/close.svg",
+        "size": 313,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/cloud.svg",
+        "size": 447,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/copy.svg",
+        "size": 317,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/database.svg",
+        "size": 404,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/external.svg",
+        "size": 372,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/globe.svg",
+        "size": 1010,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/key.svg",
+        "size": 532,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/lock.svg",
+        "size": 315,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/mail.svg",
+        "size": 323,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/README.md",
+        "size": 287,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/server.svg",
+        "size": 710,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/shield.svg",
+        "size": 494,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/star.svg",
+        "size": 226,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Icons/terminal.svg",
+        "size": 408,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-avatar.svg",
+        "size": 434,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-favicon.svg",
+        "size": 440,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-mark-black.svg",
+        "size": 387,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-mark-dark.svg",
+        "size": 387,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-mark-light.svg",
+        "size": 387,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-mark-white.svg",
+        "size": 387,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-wordmark-black.svg",
+        "size": 5069,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-wordmark-dark.svg",
+        "size": 5069,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-wordmark-light.svg",
+        "size": 5069,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/pklnx-wordmark-white.svg",
+        "size": 5069,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Logos/README.md",
+        "size": 750,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Patterns/pattern-dark.svg",
+        "size": 845,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Patterns/pattern-light.svg",
+        "size": 845,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Patterns/README.md",
+        "size": 181,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Social/pklnx-banner.svg",
+        "size": 34257,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Social/pklnx-og-image.svg",
+        "size": 47515,
+        "mode": 420
+      },
+      {
+        "path": "project/assets/Social/README.md",
+        "size": 326,
+        "mode": 420
+      },
+      {
+        "path": "project/components/bundle.css",
+        "size": 224582,
+        "mode": 420
+      },
+      {
+        "path": "project/components/bundle.js",
+        "size": 145306,
+        "mode": 420
+      },
+      {
+        "path": "project/components/BusinessCard/preview.html",
+        "size": 2997,
+        "mode": 420
+      },
+      {
+        "path": "project/components/BusinessCard/README.md",
+        "size": 536,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Button/preview.html",
+        "size": 945,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Button/README.md",
+        "size": 924,
+        "mode": 420
+      },
+      {
+        "path": "project/components/CodeBlock/preview.html",
+        "size": 865,
+        "mode": 420
+      },
+      {
+        "path": "project/components/CodeBlock/README.md",
+        "size": 557,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Cover/preview.html",
+        "size": 2565,
+        "mode": 420
+      },
+      {
+        "path": "project/components/EmailSignature/preview.html",
+        "size": 1721,
+        "mode": 420
+      },
+      {
+        "path": "project/components/EmailSignature/README.md",
+        "size": 678,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Icon/preview.html",
+        "size": 1145,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Icon/README.md",
+        "size": 748,
+        "mode": 420
+      },
+      {
+        "path": "project/components/index.d.ts",
+        "size": 3352,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Invoice/preview.html",
+        "size": 5043,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Invoice/README.md",
+        "size": 963,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Letterhead/preview.html",
+        "size": 3130,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Letterhead/README.md",
+        "size": 734,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Logo/preview.html",
+        "size": 713,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Logo/README.md",
+        "size": 745,
+        "mode": 420
+      },
+      {
+        "path": "project/components/LogoUsage/preview.html",
+        "size": 2856,
+        "mode": 420
+      },
+      {
+        "path": "project/components/LogoUsage/README.md",
+        "size": 554,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Pattern/preview.html",
+        "size": 2652,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Pattern/README.md",
+        "size": 425,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Prompt/preview.html",
+        "size": 628,
+        "mode": 420
+      },
+      {
+        "path": "project/components/Prompt/README.md",
+        "size": 594,
+        "mode": 420
+      },
+      {
+        "path": "project/components/ServiceCard/preview.html",
+        "size": 1045,
+        "mode": 420
+      },
+      {
+        "path": "project/components/ServiceCard/README.md",
+        "size": 546,
+        "mode": 420
+      },
+      {
+        "path": "project/components/SiteHeader/preview.html",
+        "size": 678,
+        "mode": 420
+      },
+      {
+        "path": "project/components/SiteHeader/README.md",
+        "size": 660,
+        "mode": 420
+      },
+      {
+        "path": "project/components/SocialKit/preview.html",
+        "size": 1653,
+        "mode": 420
+      },
+      {
+        "path": "project/components/SocialKit/README.md",
+        "size": 500,
+        "mode": 420
+      },
+      {
+        "path": "project/components/StatusBadge/preview.html",
+        "size": 782,
+        "mode": 420
+      },
+      {
+        "path": "project/components/StatusBadge/README.md",
+        "size": 644,
+        "mode": 420
+      },
+      {
+        "path": "project/components/TextField/preview.html",
+        "size": 964,
+        "mode": 420
+      },
+      {
+        "path": "project/components/TextField/README.md",
+        "size": 605,
+        "mode": 420
+      },
+      {
+        "path": "project/design-system.json",
+        "size": 6230,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexMono-Regular.woff2",
+        "size": 49248,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexMono-SemiBold.woff2",
+        "size": 50600,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Italic.woff2",
+        "size": 67220,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Light.woff2",
+        "size": 66356,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Regular.woff2",
+        "size": 63020,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-SemiBold.woff2",
+        "size": 67060,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/OFL.txt",
+        "size": 4361,
+        "mode": 420
+      },
+      {
+        "path": "project/README.md",
+        "size": 7686,
+        "mode": 420
+      },
+      {
+        "path": "project/THIRD_PARTY_NOTICES.txt",
+        "size": 43482,
+        "mode": 420
+      },
+      {
+        "path": "project/tokens.css",
+        "size": 13081,
+        "mode": 420
+      },
+      {
+        "path": "project/tokens.json",
+        "size": 34063,
+        "mode": 420
+      },
+      {
+        "path": "scripts/build_assets.py",
+        "size": 3656,
+        "mode": 420
+      },
+      {
+        "path": "scripts/build_icons.mjs",
+        "size": 1553,
+        "mode": 420
+      },
+      {
+        "path": "scripts/build_logo.py",
+        "size": 6038,
+        "mode": 420
+      },
+      {
+        "path": "scripts/build_site.mjs",
+        "size": 17752,
+        "mode": 420
+      },
+      {
+        "path": "scripts/build.mjs",
+        "size": 22134,
+        "mode": 420
+      },
+      {
+        "path": "scripts/render-previews.mjs",
+        "size": 2404,
+        "mode": 420
+      },
+      {
+        "path": "scripts/token-notes.mjs",
+        "size": 7803,
+        "mode": 420
+      },
+      {
+        "path": "src/carbon.scss",
+        "size": 987,
+        "mode": 420
+      },
+      {
+        "path": "src/components.jsx",
+        "size": 6414,
+        "mode": 420
+      },
+      {
+        "path": "src/pklnx.css",
+        "size": 1598,
+        "mode": 420
+      },
+      {
+        "path": "theme/_index.scss",
+        "size": 2182,
+        "mode": 420
+      },
+      {
+        "path": "theme/brand.json",
+        "size": 224,
+        "mode": 420
+      },
+      {
+        "path": "theme/contrast-report.json",
+        "size": 9294,
+        "mode": 420
+      },
+      {
+        "path": "theme/logo-geometry.json",
+        "size": 5221,
+        "mode": 420
+      },
+      {
+        "path": "theme/pklnx-carbon.css",
+        "size": 1846,
+        "mode": 420
+      },
+      {
+        "path": "theme/tokens.json",
+        "size": 24086,
+        "mode": 420
+      }
+    ],
+    "entryCount": 102,
+    "bundled": []
+  }
+]

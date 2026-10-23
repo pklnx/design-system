@@ -4,9 +4,42 @@
   "private": true,
   "type": "module",
   "description": "pklnx design system: Carbon theme with pklnx brand, source for the claude.ai Design System artifact",
+  "license": "MIT AND Apache-2.0 AND OFL-1.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pklnx/design-system.git"
+  },
+  "homepage": "https://github.com/pklnx/design-system#readme",
+  "bugs": {
+    "url": "https://github.com/pklnx/design-system/issues"
+  },
+  "files": [
+    "theme/pklnx-carbon.css",
+    "theme/_index.scss",
+    "theme/tokens.json",
+    "project/fonts",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "exports": {
+    "./theme/pklnx-carbon.css": "./theme/pklnx-carbon.css",
+    "./theme": {
+      "sass": "./theme/_index.scss",
+      "default": "./theme/_index.scss"
+    },
+    "./theme/tokens.json": "./theme/tokens.json",
+    "./fonts/*": "./project/fonts/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "node scripts/build.mjs",
-    "site": "node scripts/build_site.mjs"
+    "site": "node scripts/build_site.mjs",
+    "test": "node --test \"scripts/*.test.mjs\""
+  },
+  "peerDependencies": {
+    "@carbon/styles": "^1.118.0"
   },
   "devDependencies": {
     "@carbon/colors": "^11.61.0",
@@ -23,6 +56,5 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sass": "^1.106.1"
-  },
-  "license": "SEE LICENSE IN LICENSE"
+  }
 }

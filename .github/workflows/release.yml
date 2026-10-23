@@ -1,0 +1,161 @@
+name: Release
+
+# A release is made only by pushing a vX.Y.Z tag on a main commit whose
+# package.json has version X.Y.Z. See "Releasing" in README.md.
+on:
+  push:
+    tags: ['v*']
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Runs the npm dependencies, so it gets read access only.
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      IBM_TELEMETRY_DISABLED: 'true'
+    outputs:
+      tarball: ${{ steps.pack.outputs.tarball }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Tag matches vX.Y.Z and the package.json version
+        run: |
+          re='^v[0-9]+\.[0-9]+\.[0-9]+$'
+          if [[ ! "$GITHUB_REF_NAME" =~ $re ]]; then
+            echo "::error::tag '$GITHUB_REF_NAME' does not match vX.Y.Z"
+            exit 1
+          fi
+          version="$(jq -r .version package.json)"
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::tag '$GITHUB_REF_NAME' does not match package.json version '$version'"
+            exit 1
+          fi
+
+      # A guard against mistakes, not a security boundary: a tag push runs the
+      # release.yml of the tagged commit itself.
+      - name: Tagged commit is on main
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$GITHUB_SHA is not on main"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          package-manager-cache: false
+
+      - name: Install dependencies without install scripts
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        run: npm run build
+
+      - name: Generated files are committed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            echo "::error::npm run build changed the tree"
+            exit 1
+          fi
+
+      - name: Tests
+        run: npm test
+
+      - name: Package contents
+        run: npm pack --dry-run --json --ignore-scripts | node scripts/check-pack.mjs
+
+      - name: Pack
+        id: pack
+        run: |
+          dist="$RUNNER_TEMP/dist"
+          mkdir -p "$dist"
+          npm pack --ignore-scripts --pack-destination "$dist"
+          tarball="pklnx-design-system-${GITHUB_REF_NAME#v}.tgz"
+          found="$(ls -A "$dist")"
+          if [ "$found" != "$tarball" ]; then
+            echo "::error::expected only $tarball in the pack destination, found: $found"
+            exit 1
+          fi
+          (cd "$dist" && sha256sum "$tarball" > SHA256SUMS)
+          node scripts/release-notes.mjs "$GITHUB_REF_NAME" "$dist/$tarball" > "$dist/notes.md"
+          cat "$dist/SHA256SUMS"
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+
+      - name: Tree still clean
+        run: test -z "$(git status --porcelain)"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-dist
+          path: ${{ runner.temp }}/dist
+          if-no-files-found: error
+
+  # Signs the tarball. Runs no repository or dependency code.
+  attest:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-dist
+          path: dist
+
+      - name: Checksum
+        working-directory: dist
+        run: sha256sum -c SHA256SUMS
+
+      - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: dist/${{ needs.build.outputs.tarball }}
+
+  # Publishes the release. Runs no repository or dependency code.
+  release:
+    needs: [build, attest]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-dist
+          path: dist
+
+      - name: Checksum
+        working-directory: dist
+        run: sha256sum -c SHA256SUMS
+
+      # Fails if the release exists, so a re-run cannot replace published assets.
+      - name: Create the release
+        working-directory: dist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARBALL: ${{ needs.build.outputs.tarball }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file notes.md \
+            "$TARBALL" SHA256SUMS
