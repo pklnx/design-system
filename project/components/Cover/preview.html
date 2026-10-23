@@ -1,0 +1,37 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>pklnx design system</title>
+<style>
+body{margin:0;background:var(--background)}
+.cv{position:relative;width:960px;height:288px;background:var(--background);overflow:hidden}
+.brand{fill:var(--background-brand)} .ink{fill:var(--text-primary)} .tint{fill:var(--highlight)} .layer{fill:var(--layer-accent-01)} .star{fill:var(--star)} .ground{fill:var(--background)}
+.tb{position:absolute;left:32px;bottom:32px;max-width:900px}
+.name{margin:0;font-family:var(--font-sans);font-weight:300;font-size:64px;line-height:.95;letter-spacing:0;color:var(--text-primary)}
+.tag{margin:12px 0 0;font-family:var(--font-sans);font-size:14px;line-height:20px;letter-spacing:.16px;color:var(--text-secondary)}
+</style></head>
+<body>
+<div class="cv">
+<svg width="960" height="112" viewBox="0 0 960 112" aria-hidden="true" style="position:absolute;left:0;top:0">
+<!-- blocks: background-brand 384 (8 x spacing-09), text-primary 160 (5 x spacing-07), highlight 192 (4 x spacing-09), layer-accent-01 96 (spacing-12), star 128 (4 x spacing-07), all 112 tall (spacing-12 + spacing-05), radius-none
+     arrangement: top-band skeleton, a strip of unequal flush bands like Carbon's modular grid; the name is too wide for the 440px zone
+     pattern: literal motif, the space bar bracket of the mark cut out of the blocks in background, one star in star on the tint; the brand is a space bar with a star
+     steps: brackets 48 wide (spacing-09) and 24 tall (spacing-06) with 6px stroke, spaced by spacing-07; radius-none everywhere -->
+<rect class="brand" x="0" y="0" width="384" height="112"/>
+<rect class="ink" x="384" y="0" width="160" height="112"/>
+<rect class="tint" x="544" y="0" width="192" height="112"/>
+<rect class="layer" x="736" y="0" width="96" height="112"/>
+<rect class="star" x="832" y="0" width="128" height="112"/>
+<path class="ground" d="M232 52 h6 v18 h36 v-18 h6 v24 h-48 z"/>
+<path class="ground" d="M304 52 h6 v18 h36 v-18 h6 v24 h-48 z"/>
+<path class="ground" d="M440 52 h6 v18 h36 v-18 h6 v24 h-48 z"/>
+<path class="star" d="M638.8 32 L641.2 32 L643.4 38.6 L650 40.8 L650 43.2 L643.4 45.4 L641.2 52 L638.8 52 L636.6 45.4 L630 43.2 L630 40.8 L636.6 38.6 Z"/>
+<path class="ground" d="M616 64 h6 v18 h36 v-18 h6 v24 h-48 z"/>
+<path class="ground" d="M872 52 h6 v18 h36 v-18 h6 v24 h-48 z"/>
+</svg>
+<div class="tb">
+<p class="name">pklnx design system</p>
+<p class="tag">Carbon with the pklnx.space brand: square, calm, one accent in Purple.</p>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,17 @@
+<!-- @dsCard group="Content" height=230 subtitle="Carbon Tile with status and host link" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>ServiceCard</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;padding:32px}</style></head>
+<body>
+<div id="root" class="grid"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+  h(P.ServiceCard, { name: 'Hermes Mail', host: 'hermes.pklnx.space', status: 'ok' }, 'Mailserver mit Spamfilter und Archiv für kleine Teams.'),
+  h(P.ServiceCard, { name: 'Backup', host: 'backup.pklnx.space', status: 'warn' }, 'Verschlüsselte Sicherung mit restic auf S3, unveränderbar per Object Lock.'),
+  h(P.ServiceCard, { name: 'Mail Archive', host: 'github.com/pklnx/mail-archive' }, 'Altes Postfach durchsuchen, ohne es weiter betreiben zu müssen.')
+));
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "pklnx design system",
+  "primary": "purple",
+  "logo": {
+    "dark": { "ink": "#f4f4f4", "star": "#a56eff", "ground": "#161616" },
+    "light": { "ink": "#161616", "star": "#8a3ffc", "ground": "#ffffff" }
+  }
+}

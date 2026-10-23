@@ -1,0 +1,23 @@
+/* pklnx additions on top of Carbon: only what Carbon has no component for. */
+.pk-logo { display: block; flex: none; }
+.pk-icon { flex: none; vertical-align: middle; fill: currentColor; }
+
+.pk-prompt { margin: 0; font-family: var(--font-mono); font-size: 1.75rem; line-height: 1.28572; font-weight: 600; letter-spacing: 0; color: var(--text-primary); }
+.pk-prompt--h3 { font-size: 1.25rem; line-height: 1.4; }
+.pk-prompt__sign { color: var(--star); }
+
+.pk-card { display: flex; flex-direction: column; gap: var(--spacing-03); min-width: 0; min-height: 10rem; }
+.pk-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-05); flex-wrap: wrap; }
+.pk-card__title { margin: 0; font-family: var(--font-sans); font-size: 1.25rem; line-height: 1.4; font-weight: 400; color: var(--text-primary); }
+.pk-card__host { font-family: var(--font-mono); font-size: 0.875rem; }
+.pk-card__body { margin: 0; font-size: 0.875rem; line-height: 1.42857; letter-spacing: 0.16px; color: var(--text-secondary); }
+.pk-card__foot { margin-top: auto; }
+
+.pk-code { display: flex; flex-direction: column; gap: var(--spacing-03); min-width: 0; }
+.pk-code__label { font-size: 0.75rem; line-height: 1.33333; letter-spacing: 0.32px; color: var(--text-secondary); }
+.pk-code .cds--snippet { max-width: none; width: 100%; }
+
+.pk-header.cds--header { position: relative; }
+.pk-header .cds--header__name { padding: 0 var(--spacing-05); }
+.pk-header .pk-logo { color: var(--text-primary); }
+.pk-header .cds--header__name:focus { outline: 2px solid var(--focus); outline-offset: -2px; }

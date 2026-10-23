@@ -1,0 +1,274 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-23T10:57:01Z"
+ },
+ "title": "pklnx design system",
+ "namespace": "Pklnx",
+ "libraries": [
+  {
+   "name": "react",
+   "version": "18"
+  },
+  {
+   "name": "react-dom",
+   "version": "18"
+  }
+ ],
+ "sections": {},
+ "groups": [
+  "Logos",
+  "Icons",
+  "Patterns",
+  "Social"
+ ],
+ "assetGroups": {
+  "Logos": {
+   "name": "Logos",
+   "tile": "l",
+   "order": [
+    "pklnx-wordmark-dark.svg",
+    "pklnx-wordmark-light.svg",
+    "pklnx-mark-dark.svg",
+    "pklnx-mark-light.svg",
+    "pklnx-favicon.svg",
+    "pklnx-avatar.svg",
+    "pklnx-wordmark-black.svg",
+    "pklnx-wordmark-white.svg",
+    "pklnx-mark-black.svg",
+    "pklnx-mark-white.svg"
+   ],
+   "files": {
+    "pklnx-wordmark-dark.svg": {
+     "name": "pklnx-wordmark-dark.svg",
+     "blob": "e6a0b886a23953f0273e9a9241ddab11",
+     "size": 5069,
+     "type": "image/svg+xml"
+    },
+    "pklnx-wordmark-light.svg": {
+     "name": "pklnx-wordmark-light.svg",
+     "blob": "40d1f0884380db80af8aa6e5658f9215",
+     "size": 5069,
+     "type": "image/svg+xml"
+    },
+    "pklnx-mark-dark.svg": {
+     "name": "pklnx-mark-dark.svg",
+     "blob": "3243117edbcdaeef14dd035830dd3bbb",
+     "size": 387,
+     "type": "image/svg+xml"
+    },
+    "pklnx-mark-light.svg": {
+     "name": "pklnx-mark-light.svg",
+     "blob": "1accca25069acb2e1491cf2be2ac84fb",
+     "size": 387,
+     "type": "image/svg+xml"
+    },
+    "pklnx-favicon.svg": {
+     "name": "pklnx-favicon.svg",
+     "blob": "1e8d99221e54c3151fc8ad17db0ca8f4",
+     "size": 440,
+     "type": "image/svg+xml"
+    },
+    "pklnx-avatar.svg": {
+     "name": "pklnx-avatar.svg",
+     "blob": "d19f6b33307e2c6185abbe47e80300fa",
+     "size": 434,
+     "type": "image/svg+xml"
+    },
+    "pklnx-wordmark-black.svg": {
+     "name": "pklnx-wordmark-black.svg",
+     "blob": "ec82993e210de765c0b1edbf03dcf6d0",
+     "size": 5069,
+     "type": "image/svg+xml"
+    },
+    "pklnx-wordmark-white.svg": {
+     "name": "pklnx-wordmark-white.svg",
+     "blob": "7f5280fe152a1121e98f26369aaed1c8",
+     "size": 5069,
+     "type": "image/svg+xml"
+    },
+    "pklnx-mark-black.svg": {
+     "name": "pklnx-mark-black.svg",
+     "blob": "be573293cca155d23cf92145a383e13f",
+     "size": 387,
+     "type": "image/svg+xml"
+    },
+    "pklnx-mark-white.svg": {
+     "name": "pklnx-mark-white.svg",
+     "blob": "8a9ced0dc09a39f579d5a8851b0fa21d",
+     "size": 387,
+     "type": "image/svg+xml"
+    }
+   }
+  },
+  "Icons": {
+   "name": "Icons",
+   "tile": "xs",
+   "order": [
+    "terminal.svg",
+    "server.svg",
+    "mail.svg",
+    "cloud.svg",
+    "shield.svg",
+    "key.svg",
+    "lock.svg",
+    "database.svg",
+    "globe.svg",
+    "arrow-right.svg",
+    "external.svg",
+    "check.svg",
+    "close.svg",
+    "copy.svg",
+    "star.svg"
+   ],
+   "files": {
+    "terminal.svg": {
+     "name": "terminal.svg",
+     "blob": "d765e9e451f476c954696b1689e4f3db",
+     "size": 408,
+     "type": "image/svg+xml"
+    },
+    "server.svg": {
+     "name": "server.svg",
+     "blob": "ca7fad61455d5bcca6b1cc6806d051a4",
+     "size": 710,
+     "type": "image/svg+xml"
+    },
+    "mail.svg": {
+     "name": "mail.svg",
+     "blob": "536824e8383a6a4e730560a38a96d82c",
+     "size": 323,
+     "type": "image/svg+xml"
+    },
+    "cloud.svg": {
+     "name": "cloud.svg",
+     "blob": "7a47b6a85a705df25de01ec385fff552",
+     "size": 447,
+     "type": "image/svg+xml"
+    },
+    "shield.svg": {
+     "name": "shield.svg",
+     "blob": "dc845ccca6932620f1ba8457af7f0935",
+     "size": 494,
+     "type": "image/svg+xml"
+    },
+    "key.svg": {
+     "name": "key.svg",
+     "blob": "a2626886ee40cbc3bd7e042d6f22f30d",
+     "size": 532,
+     "type": "image/svg+xml"
+    },
+    "lock.svg": {
+     "name": "lock.svg",
+     "blob": "340278d90763a5363a6b34be46128558",
+     "size": 315,
+     "type": "image/svg+xml"
+    },
+    "database.svg": {
+     "name": "database.svg",
+     "blob": "5ecc849ef0a96324ff1a28ffaffece05",
+     "size": 404,
+     "type": "image/svg+xml"
+    },
+    "globe.svg": {
+     "name": "globe.svg",
+     "blob": "4d30bd06db7ada3fd04f14a6ecc6a479",
+     "size": 1010,
+     "type": "image/svg+xml"
+    },
+    "arrow-right.svg": {
+     "name": "arrow-right.svg",
+     "blob": "062234d854e381860ad49c153fdc6d30",
+     "size": 253,
+     "type": "image/svg+xml"
+    },
+    "external.svg": {
+     "name": "external.svg",
+     "blob": "83c9a6ee68209154a1c09b72b6418176",
+     "size": 372,
+     "type": "image/svg+xml"
+    },
+    "check.svg": {
+     "name": "check.svg",
+     "blob": "e2da2a49305cc088e0d58bdc66cb0b0a",
+     "size": 236,
+     "type": "image/svg+xml"
+    },
+    "close.svg": {
+     "name": "close.svg",
+     "blob": "8faa04d1d75f182e3e97773e22c6fa46",
+     "size": 313,
+     "type": "image/svg+xml"
+    },
+    "copy.svg": {
+     "name": "copy.svg",
+     "blob": "f8b753809776c23b6e50c9c398daf70e",
+     "size": 317,
+     "type": "image/svg+xml"
+    },
+    "star.svg": {
+     "name": "star.svg",
+     "blob": "2677bf7e8901959857d08e90a5e48efb",
+     "size": 226,
+     "type": "image/svg+xml"
+    }
+   }
+  },
+  "Patterns": {
+   "name": "Patterns",
+   "tile": "m",
+   "order": [
+    "pattern-dark.svg",
+    "pattern-light.svg"
+   ],
+   "files": {
+    "pattern-dark.svg": {
+     "name": "pattern-dark.svg",
+     "blob": "22b988c6bbdb9083833f47a6163caecd",
+     "size": 845,
+     "type": "image/svg+xml"
+    },
+    "pattern-light.svg": {
+     "name": "pattern-light.svg",
+     "blob": "aef86cea89c7369b7d0ff2f51a201fa0",
+     "size": 845,
+     "type": "image/svg+xml"
+    }
+   }
+  },
+  "Social": {
+   "name": "Social",
+   "tile": "l",
+   "order": [
+    "pklnx-og-image.svg",
+    "pklnx-banner.svg"
+   ],
+   "files": {
+    "pklnx-og-image.svg": {
+     "name": "pklnx-og-image.svg",
+     "blob": "58666f94989f482eb28a2432afe4620a",
+     "size": 47515,
+     "type": "image/svg+xml"
+    },
+    "pklnx-banner.svg": {
+     "name": "pklnx-banner.svg",
+     "blob": "6c88429a660fcefcb46ea76ad9397ad9",
+     "size": 34257,
+     "type": "image/svg+xml"
+    }
+   }
+  }
+ },
+ "blobs": {},
+ "docs": {
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Patrick Klein",
+  "at": "2026-10-23T11:08:27Z",
+  "via": "Claude · github.com/pklnx/design-system",
+  "note": "All content in English"
+ }
+}
