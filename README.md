@@ -64,7 +64,7 @@ The same content as on claude.ai, as a static site on GitHub Pages: **https://pk
 
 - `.github/workflows/pages.yml` builds it on every push to `main` (`npm ci`, `npm run build`, `npm run site`) and deploys it with GitHub Pages.
 - Overview (brand book), colors, typography, spacing and size, assets, and one page per component with its live preview and guidelines. Theme switch between G100 and White.
-- The site is public even though the repo is private.
+- Repo and site are public.
 
 
 ## Publishing to claude.ai
