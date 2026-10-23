@@ -5,7 +5,8 @@
   "type": "module",
   "description": "pklnx design system: Carbon theme with pklnx brand, source for the claude.ai Design System artifact",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "site": "node scripts/build_site.mjs"
   },
   "devDependencies": {
     "@carbon/colors": "^11.61.0",
@@ -18,6 +19,7 @@
     "@ibm/plex-mono": "^2.5.0",
     "@ibm/plex-sans": "^1.1.0",
     "esbuild": "^0.28.2",
+    "marked": "^14.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sass": "^1.106.1"
