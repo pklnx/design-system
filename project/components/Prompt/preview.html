@@ -1,0 +1,16 @@
+<!-- @dsCard group="Inhalt" height=150 subtitle="Abschnittsüberschrift als Shell-Prompt" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Prompt</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary)}.col{display:flex;flex-direction:column;gap:24px;padding:32px}</style></head>
+<body>
+<div id="root" class="col"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+  h(P.Prompt, { cmd: 'ls ./services' }),
+  h(P.Prompt, { cmd: 'cat ./kontakt', as: 'h3' })
+));
+</script>
+</body>
+</html>

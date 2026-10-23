@@ -1,0 +1,25 @@
+{
+  "name": "@pklnx/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "pklnx design system: Carbon theme with pklnx brand, source for the claude.ai Design System artifact",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "@carbon/colors": "^11.61.0",
+    "@carbon/icons-react": "^11.91.0",
+    "@carbon/layout": "^11.62.0",
+    "@carbon/react": "^1.119.0",
+    "@carbon/styles": "^1.118.0",
+    "@carbon/themes": "^11.84.0",
+    "@carbon/type": "^11.70.0",
+    "@ibm/plex-mono": "^2.5.0",
+    "@ibm/plex-sans": "^1.1.0",
+    "esbuild": "^0.28.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sass": "^1.106.1"
+  }
+}

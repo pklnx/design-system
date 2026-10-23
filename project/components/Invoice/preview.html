@@ -1,0 +1,70 @@
+<!-- @dsCard group="Geschäftsausstattung" height=900 width=960 subtitle="Rechnung auf dem Briefbogen" page -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Rechnung</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-sans)}
+.desk{padding:24px;display:flex;justify-content:center;background:var(--layer-01)}
+.page{position:relative;width:595px;height:842px;background:var(--background);color:var(--text-primary);box-shadow:0 0 0 1px var(--border-subtle-00)}
+.mk{position:absolute;left:0;border-top:1px solid var(--border-strong-01)}
+.ab{position:absolute;color:var(--text-secondary)}
+.meta{position:absolute;right:57px;top:142px;width:198px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:9px;line-height:13px}
+.meta .k{color:var(--text-secondary)} .meta .v{text-align:right;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
+table{width:100%;margin-top:16px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{padding:6px 8px;text-align:left;font-size:8.5px;font-weight:600;background:var(--layer-01);color:var(--text-primary)}
+td{padding:6px 8px;border-bottom:1px solid var(--border-subtle-00)}
+.r{text-align:right}
+.sum{margin-left:auto;margin-top:12px;width:210px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-variant-numeric:tabular-nums}
+.sum .k{color:var(--text-secondary)}
+.tot{font-weight:600;padding-top:6px;border-top:1px solid var(--text-primary)}
+.foot{position:absolute;left:71px;right:57px;bottom:34px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding-top:8px;border-top:1px solid var(--border-subtle-00);font-size:7.5px;line-height:11px;color:var(--text-secondary)}
+.lbl{font-weight:600;color:var(--text-primary)}
+</style></head>
+<body>
+<div class="desk">
+<div class="page" data-theme="light" aria-label="Rechnung">
+  <div class="mk" style="top:298px;width:14px"></div>
+  <div class="mk" style="top:421px;width:20px"></div>
+  <div class="mk" style="top:595px;width:14px"></div>
+  <div style="position:absolute;left:71px;top:40px;color:var(--text-primary)" data-logo="wordmark" data-h="26"></div>
+  <div class="ab" style="right:57px;top:40px;text-align:right;font-size:8.5px;line-height:13px">Patrick Klein<br>Infrastructure &amp; Cloud Engineering<br>[Straße Nr.] · [PLZ] Lippstadt<br>[mail]@pklnx.space · pklnx.space</div>
+  <div class="ab" style="left:71px;top:128px;width:241px;font-size:7px;line-height:10px;border-bottom:1px solid var(--border-subtle-00)">pklnx.space · Patrick Klein · [Straße Nr.] · [PLZ] Lippstadt</div>
+  <div style="position:absolute;left:71px;top:142px;width:241px;font-size:10px;line-height:15px">[Firma]<br>[Ansprechperson]<br>[Straße Nr.]<br>[PLZ Ort]</div>
+  <div class="meta">
+    <span class="k">Rechnungsnummer</span><span class="v mono">[2026-001]</span>
+    <span class="k">Rechnungsdatum</span><span class="v">[TT.MM.JJJJ]</span>
+    <span class="k">Leistungszeitraum</span><span class="v">[Zeitraum]</span>
+    <span class="k">Kundennummer</span><span class="v mono">[K-001]</span>
+  </div>
+  <div style="position:absolute;left:71px;right:57px;top:283px;font-size:9.5px;line-height:14px">
+    <div style="font-family:var(--font-mono);font-weight:600;font-size:18px;line-height:22px"><span style="color:var(--star)">$</span> rechnung</div>
+    <table>
+      <thead><tr><th style="width:28px">Pos.</th><th>Leistung</th><th class="r">Menge</th><th class="r">Betrag</th></tr></thead>
+      <tbody>
+        <tr><td class="mono" style="color:var(--text-secondary)">1</td><td>Managed Mailserver (Hermes), [Monat]</td><td class="r">1 Monat</td><td class="r mono">[PREIS]</td></tr>
+        <tr><td class="mono" style="color:var(--text-secondary)">2</td><td>[Leistung]</td><td class="r">[Menge]</td><td class="r mono">[PREIS]</td></tr>
+        <tr><td class="mono" style="color:var(--text-secondary)">3</td><td>[Leistung]</td><td class="r">[Menge]</td><td class="r mono">[PREIS]</td></tr>
+      </tbody>
+    </table>
+    <div class="sum">
+      <span class="k">Zwischensumme</span><span class="r mono">[SUMME]</span>
+      <span class="k">[USt. 19 % oder Hinweis §19 UStG]</span><span class="r mono">[BETRAG]</span>
+      <span class="tot">Gesamt</span><span class="tot r mono">[GESAMT] €</span>
+    </div>
+    <p style="margin:24px 0 0;color:var(--text-secondary)">Bitte überweisen Sie den Betrag bis [Datum] unter Angabe der Rechnungsnummer.</p>
+  </div>
+  <div class="foot">
+    <div><span class="lbl">Kontakt</span><br>[mail]@pklnx.space<br>[Telefon]</div>
+    <div><span class="lbl">Bank</span><br>[Bank]<br>IBAN [IBAN]</div>
+    <div><span class="lbl">Steuer</span><br>Steuernummer [STEUERNUMMER]<br>[USt-IdNr. falls vorhanden]</div>
+  </div>
+</div>
+</div>
+<script>
+document.querySelectorAll('[data-logo]').forEach(function (el) {
+  ReactDOM.createRoot(el).render(React.createElement(window.Pklnx.Logo, { variant: el.getAttribute('data-logo'), height: +el.getAttribute('data-h'), mono: el.hasAttribute('data-mono') }));
+});
+</script>
+</body>
+</html>

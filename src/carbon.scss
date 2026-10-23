@@ -1,0 +1,23 @@
+// The Carbon component styles the bundle uses. Theme values are not emitted here:
+// bundle.css bridges every --cds-* token to the design system token of the same name.
+@use '@carbon/styles/scss/config' with (
+  $css--font-face: false,
+  $css--default-type: true,
+  $css--reset: true,
+  $css--body: true
+);
+@use '@carbon/styles/scss/reset';
+@use '@carbon/styles/scss/layer';
+@use '@carbon/styles/scss/layout';
+@use '@carbon/styles/scss/components/button';
+@use '@carbon/styles/scss/components/code-snippet';
+@use '@carbon/styles/scss/components/copy-button';
+@use '@carbon/styles/scss/components/popover';
+@use '@carbon/styles/scss/components/tooltip';
+@use '@carbon/styles/scss/components/tile';
+@use '@carbon/styles/scss/components/form';
+@use '@carbon/styles/scss/components/text-input';
+@use '@carbon/styles/scss/components/text-area';
+@use '@carbon/styles/scss/components/link';
+@use '@carbon/styles/scss/components/icon-indicator';
+@use '@carbon/styles/scss/components/ui-shell';

@@ -1,0 +1,19 @@
+<!-- @dsCard group="Basis" height=150 subtitle="Carbon Icons und der Stern" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Icon</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary);font-family:var(--font-sans)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:1px;padding:24px;background:var(--background)}
+.c{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;background:var(--layer-01);color:var(--icon-primary)}
+.n{font-family:var(--font-mono);font-size:.75rem;line-height:1.33;color:var(--text-secondary)}</style></head>
+<body>
+<div id="root" class="grid"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+var names = ['terminal','server','mail','cloud','shield','key','lock','database','globe','arrow-right','external','check','close','copy','star'];
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null, names.map(function (n) {
+  return h('div', { className: 'c', key: n }, h(P.Icon, { name: n, size: 24 }), h('span', { className: 'n' }, n));
+})));
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!-- @dsCard group="Marke" height=300 width=960 subtitle="Kachelmuster aus Leertasten und Sternen" page -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Muster</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-sans)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.cell{position:relative;height:280px;background:var(--background)}
+.cell svg{position:absolute;inset:0;width:100%;height:100%}
+.ln{fill:var(--border-subtle-00)} .st{fill:var(--star)}
+.tag{position:absolute;left:24px;bottom:24px;padding:4px 8px;background:var(--background);color:var(--text-secondary);font-family:var(--font-mono);font-size:.75rem;line-height:1.33}
+</style></head>
+<body>
+<div class="grid">
+  <div class="cell" data-theme="dark">
+    <svg aria-hidden="true"><defs><pattern id="pk-d" width="96" height="96" patternUnits="userSpaceOnUse">
+      <g transform="translate(8 8) scale(0.5)"><path class="ln" d="M5.5 24.5 L5.5 51.5 L58.5 51.5 L58.5 24.5 L51.5 24.5 L51.5 44.5 L12.5 44.5 L12.5 24.5 Z"/><path class="ln" d="M30.2 13 L33.8 13 L37.1 22.9 L47 26.2 L47 29.8 L37.1 33.1 L33.8 43 L30.2 43 L26.9 33.1 L17 29.8 L17 26.2 L26.9 22.9 Z"/></g>
+      <g transform="translate(56 56) scale(0.5)"><path class="ln" d="M5.5 24.5 L5.5 51.5 L58.5 51.5 L58.5 24.5 L51.5 24.5 L51.5 44.5 L12.5 44.5 L12.5 24.5 Z"/></g>
+      <g transform="translate(64 12) scale(0.25)"><path class="st" d="M30.2 13 L33.8 13 L37.1 22.9 L47 26.2 L47 29.8 L37.1 33.1 L33.8 43 L30.2 43 L26.9 33.1 L17 29.8 L17 26.2 L26.9 22.9 Z"/></g>
+    </pattern></defs><rect width="100%" height="100%" fill="url(#pk-d)"/></svg>
+    <span class="tag">pattern-dark.svg</span>
+  </div>
+  <div class="cell" data-theme="light">
+    <svg aria-hidden="true"><defs><pattern id="pk-l" width="96" height="96" patternUnits="userSpaceOnUse">
+      <g transform="translate(8 8) scale(0.5)"><path class="ln" d="M5.5 24.5 L5.5 51.5 L58.5 51.5 L58.5 24.5 L51.5 24.5 L51.5 44.5 L12.5 44.5 L12.5 24.5 Z"/><path class="ln" d="M30.2 13 L33.8 13 L37.1 22.9 L47 26.2 L47 29.8 L37.1 33.1 L33.8 43 L30.2 43 L26.9 33.1 L17 29.8 L17 26.2 L26.9 22.9 Z"/></g>
+      <g transform="translate(56 56) scale(0.5)"><path class="ln" d="M5.5 24.5 L5.5 51.5 L58.5 51.5 L58.5 24.5 L51.5 24.5 L51.5 44.5 L12.5 44.5 L12.5 24.5 Z"/></g>
+      <g transform="translate(64 12) scale(0.25)"><path class="st" d="M30.2 13 L33.8 13 L37.1 22.9 L47 26.2 L47 29.8 L37.1 33.1 L33.8 43 L30.2 43 L26.9 33.1 L17 29.8 L17 26.2 L26.9 22.9 Z"/></g>
+    </pattern></defs><rect width="100%" height="100%" fill="url(#pk-l)"/></svg>
+    <span class="tag">pattern-light.svg</span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- @dsCard group="Inhalt" height=230 subtitle="Carbon Code Snippet mit Label" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>CodeBlock</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary)}.col{display:flex;flex-direction:column;gap:24px;padding:32px;max-width:720px}</style></head>
+<body>
+<div id="root" class="col"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+  h(P.CodeBlock, { label: 'Shell', code: 'restic -r s3:s3.eu-central-1.amazonaws.com/pklnx-backup backup /srv' }),
+  h(P.CodeBlock, { label: 'DNS', code: 'pklnx.space.      3600 IN MX 10 hermes.pklnx.space.\npklnx.space.      3600 IN TXT "v=spf1 mx -all"\n_dmarc.pklnx.space 3600 IN TXT "v=DMARC1; p=reject"' })
+));
+</script>
+</body>
+</html>

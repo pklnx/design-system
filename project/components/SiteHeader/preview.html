@@ -1,0 +1,18 @@
+<!-- @dsCard group="Navigation" height=120 width=1200 subtitle="Carbon UI Shell Header mit Wortmarke" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>SiteHeader</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary)}</style></head>
+<body>
+<div id="root"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(P.SiteHeader, { links: [
+  { label: 'Leistungen', href: '#leistungen', current: true },
+  { label: 'Projekte', href: '#projekte' },
+  { label: 'Status', href: '#status' },
+  { label: 'Kontakt', href: '#kontakt' }
+] }));
+</script>
+</body>
+</html>

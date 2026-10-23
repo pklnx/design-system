@@ -1,0 +1,17 @@
+<!-- @dsCard group="Marke" height=170 subtitle="Wortmarke, Bildmarke, einfarbig" -->
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Logo</title>
+<style>body{margin:0;background:var(--background);color:var(--text-primary)}.row{display:flex;flex-wrap:wrap;gap:40px;align-items:center;padding:32px}</style></head>
+<body>
+<div id="root" class="row"></div>
+<script>
+var P = window.Pklnx, h = React.createElement;
+ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+  h(P.Logo, { height: 64 }),
+  h(P.Logo, { variant: 'mark', height: 80 }),
+  h('span', { style: { color: 'var(--text-secondary)' } }, h(P.Logo, { height: 32, mono: true }))
+));
+</script>
+</body>
+</html>
