@@ -48,7 +48,7 @@ The logo star is available as `--pklnx-star`.
 
 | Export | File |
 | --- | --- |
-| `@pklnx/design-system/theme/pklnx-carbon.css` | The theme: only the tokens that differ from Carbon, for `.cds--white` and `.cds--g100` |
+| `@pklnx/design-system/theme/pklnx-carbon.css` | The theme: the tokens that differ from Carbon in either theme, set for `.cds--white` and `.cds--g100` alike, each with its theme's value |
 | `@pklnx/design-system/theme` | The Sass module (`theme/_index.scss`) |
 | `@pklnx/design-system/theme/tokens.json` | Every Carbon color token for White and G100 after the customization, plus the `changed` set |
 | `@pklnx/design-system/fonts/*` | The IBM Plex woff2 files (`project/fonts/`) and `OFL.txt` |
@@ -119,7 +119,7 @@ What protects a release is the `main`-only check plus the permission to run the 
 | Path | Contents |
 | --- | --- |
 | `theme/brand.json` | The brand decisions: primary hue (`purple`) and logo colors. **Change things here.** |
-| `theme/pklnx-carbon.css`, `theme/_index.scss` | Generated: only the tokens that differ from Carbon |
+| `theme/pklnx-carbon.css`, `theme/_index.scss` | Generated: the tokens that differ from Carbon in either theme, the same set for both themes |
 | `theme/tokens.json` | Generated: every Carbon color token for White and G100 after the customization |
 | `theme/contrast-report.json` | Generated: contrast check of the key pairs |
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
