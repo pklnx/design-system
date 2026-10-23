@@ -18,9 +18,9 @@ const pkg = { name: '@pklnx/design-system', scripts: { build: 'node scripts/buil
 
 const packText = (paths) => JSON.stringify([{ name: '@pklnx/design-system', files: paths.map((path) => ({ path, size: 1, mode: 420 })) }]);
 
-test('the captured npm pack sample parses to the 14 expected files', () => {
+test('the captured npm pack sample parses to the 15 expected files', () => {
   const files = parsePackOutput(sample);
-  assert.equal(files.length, 14);
+  assert.equal(files.length, 15);
   assert.deepEqual([...files].sort(), [...EXPECTED_FILES].sort());
   assert.deepEqual(checkPack(sample, pkg), []);
 });

@@ -49,15 +49,44 @@ The logo star is available as `--pklnx-star`.
 | Export | File |
 | --- | --- |
 | `@pklnx/design-system/theme/pklnx-carbon.css` | The theme: the tokens that differ from Carbon in either theme, set for `.cds--white` and `.cds--g100` alike, each with its theme's value |
+| `@pklnx/design-system/theme/vitepress.css` | The VitePress theme for the products' docs, see [VitePress](#vitepress) |
 | `@pklnx/design-system/theme` | The Sass module (`theme/_index.scss`) |
 | `@pklnx/design-system/theme/tokens.json` | Every Carbon color token for White and G100 after the customization, plus the `changed` set |
 | `@pklnx/design-system/fonts/*` | The IBM Plex woff2 files (`project/fonts/`) and `OFL.txt` |
 | `@pklnx/design-system/package.json` | The manifest |
 
-- **Peer dependency**: `@carbon/styles` `^1.118.0`. The package has no dependencies of its own and no install scripts.
-- **Fonts**: the package ships the woff2 files but no `@font-face` rules; a consumer writes its own, for example `src: url("@pklnx/design-system/fonts/IBMPlexSans-Regular.woff2") format("woff2")`.
+- **Peer dependency**: `@carbon/styles` `^1.118.0`, needed for `pklnx-carbon.css` and the Sass module. It is optional (`peerDependenciesMeta`), so a docs site that only uses `vitepress.css` does not install Carbon. The package has no dependencies of its own and no install scripts.
+- **Fonts**: the package ships the woff2 files. `pklnx-carbon.css` has no `@font-face` rules; a consumer writes its own, for example `src: url("@pklnx/design-system/fonts/IBMPlexSans-Regular.woff2") format("woff2")`. `vitepress.css` brings its own `@font-face` rules.
 - **Contents**: exactly the files above plus `LICENSE`, `README.md` and `THIRD_PARTY_NOTICES.md`. No brand assets; `scripts/check-pack.mjs` enforces the list in CI and in the release.
 - **License**: `MIT AND Apache-2.0 AND OFL-1.1`. The code is MIT, the token values are computed from Carbon (Apache-2.0, notices in `THIRD_PARTY_NOTICES.md`), the fonts are IBM Plex (SIL Open Font License 1.1, `OFL.txt`).
+
+### VitePress
+
+`theme/vitepress.css` gives a VitePress docs site the pklnx look. It is written for the default theme of VitePress `2.0.0-alpha.20`, the version both products pin, and needs no Carbon CSS:
+
+- **Colours**: the VitePress colour variables get the Carbon tokens, White in light mode and G100 in `.dark`, with Purple as the accent. Badges use Carbon's tag colours; links in blocks stay link colours.
+- **Custom blocks** (`::: info` … and GitHub alerts `> [!NOTE]` …) look like Carbon's low-contrast inline notification: the notification ground (`layer-01` in G100), a 3 px left stripe in the support colour (`support-info` for info, note and important, `support-success` for tip, `support-warning` for warning and caution, `support-error` for danger), Carbon's 1 px frame in the same colour at opacity 0.4, and Carbon's filled icon before the title (InformationFilled, CheckmarkFilled, WarningFilled, ErrorFilled). The title stays on its own line. `::: details` has no stripe, frame or icon. The stripe, frame and icon are decorative (the title carries the meaning), so they have no 3:1 contrast requirement.
+- **Fonts**: IBM Plex Sans and IBM Plex Mono from this package, with Carbon's fallback stacks. The nav title is set in Plex Mono, so the logo and the site title read as the product lockup.
+- **Corners**: square, as in Carbon (`border-radius: 0 !important` on the rounded VitePress components; the appearance switch, spinners and avatars stay round).
+- **Focus**: Carbon's focus: an outer ring on text links, an inset ring on controls, the double ring on buttons.
+
+`docs/.vitepress/theme/index.ts`, in this order:
+
+```ts
+import DefaultTheme from 'vitepress/theme-without-fonts'; // VitePress without Inter
+import '@pklnx/design-system/theme/vitepress.css';
+import './custom.css'; // the product's own rules, if any
+
+export default DefaultTheme;
+```
+
+The file's `:root` and `.dark` blocks must come after VitePress's own, so it is imported after the VitePress theme. In `docs/.vitepress/config.mts`, the logo takes one file per theme: `themeConfig: { logo: { light: '/logo-light.svg', dark: '/logo-dark.svg' } }`.
+
+The `@font-face` rules point to the font files relative to the CSS file; Vite emits them as hashed assets. The built site then carries IBM Plex, so it must also carry its license, `@pklnx/design-system/fonts/OFL.txt`.
+
+The block icons are inline `data:` SVGs in the CSS (Carbon icons from `@carbon/icons`, via `@carbon/icons-react`, Apache-2.0, see `THIRD_PARTY_NOTICES.md`), so they need no extra request. A site with a Content-Security-Policy must allow `img-src data:`; the products' docs on GitHub Pages send no CSP.
+
+When the products move to another VitePress version, capture its fixture (see the header of `scripts/capture-vitepress-fixture.mjs`), set `VITEPRESS_VERSION` in `scripts/vitepress-map.mjs` and run `npm test`. Every new VitePress rule that sets a corner, an outline or a font fails the tests until `scripts/vitepress-map.mjs` overrides it or keeps it with a reason.
 
 ### Verify a release
 
@@ -121,10 +150,14 @@ What protects a release is the `main`-only check plus the permission to run the 
 | `theme/brand.json` | The brand decisions: primary hue (`purple`) and logo colors. **Change things here.** |
 | `theme/pklnx-carbon.css`, `theme/_index.scss` | Generated: the tokens that differ from Carbon in either theme, the same set for both themes |
 | `theme/tokens.json` | Generated: every Carbon color token for White and G100 after the customization |
+| `theme/vitepress.css` | Generated: the VitePress theme, from `theme/tokens.json` and `scripts/vitepress-map.mjs` |
 | `theme/contrast-report.json` | Generated: contrast check of the key pairs |
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
 | `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
 | `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`) |
+| `scripts/vitepress-map.mjs` | The VitePress theme: variable → token map, the contrast pairs, the overridden and the kept VitePress rules |
+| `scripts/css-selectors.mjs` | The CSS parser, specificity and selector matching the VitePress tests and the capture use |
+| `scripts/capture-vitepress-fixture.mjs` | Captures `scripts/fixtures/vitepress-<version>.json` from the VitePress npm tarball, run by hand; the tests read the fixture |
 | `project/` | Content of the claude.ai design system (README, tokens, components, previews, assets, fonts) |
 
 ## Building
@@ -133,7 +166,7 @@ What protects a release is the `main`-only check plus the permission to run the 
 npm install
 pip install fonttools brotli
 python3 scripts/build_logo.py      # logos from IBM Plex Mono
-npm run build                      # tokens, theme, bundle.css, bundle.js
+npm run build                      # tokens, themes (Carbon, VitePress), bundle.css, bundle.js
 python3 scripts/build_assets.py    # pattern, social images (after the build, reads theme/tokens.json)
 node scripts/build_icons.mjs       # Carbon icons as SVG
 node scripts/render-previews.mjs   # every preview in both themes into .render/ (Chromium)
