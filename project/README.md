@@ -68,3 +68,9 @@ Where this page says nothing, Carbon applies: carbondesignsystem.com. Carbon win
 
 - Source: github.com/pklnx/design-system. Load `theme/pklnx-carbon.css` after Carbon's CSS and set `cds--g100` or `cds--white` on `<html>`. For Sass there is `theme/_index.scss` with `$g100`, `$white` and the override mixins.
 - Never hard-code values in components, always use Carbon tokens (`var(--cds-…)`).
+
+## Licenses
+
+- Carbon code, styles and icons: Apache-2.0 (IBM), its dependencies MIT and Apache-2.0. IBM Plex: SIL Open Font License 1.1, license text in `fonts/OFL.txt`. Full texts in `THIRD_PARTY_NOTICES.txt`.
+- Never use the IBM logo, never name a pklnx product "Carbon …", and never suggest that IBM endorses pklnx.space. "Based on Carbon" is fine.
+- The pklnx name, wordmark, mark, pattern and social images are brand assets of pklnx.space, all rights reserved. The rest of the repo is MIT.
