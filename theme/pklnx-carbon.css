@@ -23,6 +23,10 @@
   --cds-button-tertiary-hover: #7822fb;
   --cds-link-visited: #0043ce;
   --cds-link-inverse-visited: #78a9ff;
+  --cds-focus-inverse: #ffffff;
+  --cds-notification-action-tertiary-inverse: #ffffff;
+  --cds-notification-action-tertiary-inverse-active: #c6c6c6;
+  --cds-notification-action-tertiary-inverse-hover: #f4f4f4;
   --pklnx-star: #8a3ffc;
 }
 .cds--g100, [data-theme="dark"] {
@@ -31,8 +35,9 @@
   --cds-chat-avatar-user: #a56eff;
   --cds-chat-button: #be95ff;
   --cds-chat-button-text-hover: #d4bbff;
-  --cds-focus-inverse: #8a3ffc;
+  --cds-focus: #ffffff;
   --cds-highlight: #31135e;
+  --cds-icon-interactive: #ffffff;
   --cds-interactive: #a56eff;
   --cds-link-inverse: #8a3ffc;
   --cds-link-inverse-hover: #6929c4;
@@ -42,10 +47,14 @@
   --cds-button-primary: #8a3ffc;
   --cds-button-primary-active: #491d8b;
   --cds-button-primary-hover: #7822fb;
+  --cds-button-tertiary: #ffffff;
+  --cds-button-tertiary-active: #c6c6c6;
+  --cds-button-tertiary-hover: #f4f4f4;
+  --cds-link-visited: #a6c8ff;
+  --cds-link-inverse-visited: #0f62fe;
+  --cds-focus-inverse: #8a3ffc;
   --cds-notification-action-tertiary-inverse: #8a3ffc;
   --cds-notification-action-tertiary-inverse-active: #491d8b;
   --cds-notification-action-tertiary-inverse-hover: #7822fb;
-  --cds-link-visited: #a6c8ff;
-  --cds-link-inverse-visited: #0f62fe;
   --pklnx-star: #a56eff;
 }

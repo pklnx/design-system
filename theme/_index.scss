@@ -30,6 +30,10 @@ $overrides-white: (
   button-tertiary-hover: #7822fb,
   link-visited: #0043ce,
   link-inverse-visited: #78a9ff,
+  focus-inverse: #ffffff,
+  notification-action-tertiary-inverse: #ffffff,
+  notification-action-tertiary-inverse-active: #c6c6c6,
+  notification-action-tertiary-inverse-hover: #f4f4f4,
 );
 $overrides-g100: (
   background-brand: #8a3ffc,
@@ -37,8 +41,9 @@ $overrides-g100: (
   chat-avatar-user: #a56eff,
   chat-button: #be95ff,
   chat-button-text-hover: #d4bbff,
-  focus-inverse: #8a3ffc,
+  focus: #ffffff,
   highlight: #31135e,
+  icon-interactive: #ffffff,
   interactive: #a56eff,
   link-inverse: #8a3ffc,
   link-inverse-hover: #6929c4,
@@ -48,11 +53,15 @@ $overrides-g100: (
   button-primary: #8a3ffc,
   button-primary-active: #491d8b,
   button-primary-hover: #7822fb,
+  button-tertiary: #ffffff,
+  button-tertiary-active: #c6c6c6,
+  button-tertiary-hover: #f4f4f4,
+  link-visited: #a6c8ff,
+  link-inverse-visited: #0f62fe,
+  focus-inverse: #8a3ffc,
   notification-action-tertiary-inverse: #8a3ffc,
   notification-action-tertiary-inverse-active: #491d8b,
   notification-action-tertiary-inverse-hover: #7822fb,
-  link-visited: #a6c8ff,
-  link-inverse-visited: #0f62fe,
 );
 
 $star-white: #8a3ffc;
