@@ -55,7 +55,17 @@ npm run build                      # tokens, theme, bundle.css, bundle.js
 python3 scripts/build_assets.py    # pattern, social images (after the build, reads theme/tokens.json)
 node scripts/build_icons.mjs       # Carbon icons as SVG
 node scripts/render-previews.mjs   # every preview in both themes into .render/ (Chromium)
+npm run site                       # documentation site into site/
 ```
+
+## Documentation site
+
+The same content as on claude.ai, as a static site on GitHub Pages: **https://pklnx.github.io/design-system/**
+
+- `.github/workflows/pages.yml` builds it on every push to `main` (`npm ci`, `npm run build`, `npm run site`) and deploys it with GitHub Pages.
+- Overview (brand book), colors, typography, spacing and size, assets, and one page per component with its live preview and guidelines. Theme switch between G100 and White.
+- The site is public even though the repo is private.
+
 
 ## Publishing to claude.ai
 
