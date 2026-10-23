@@ -67,12 +67,12 @@ sha256sum -c SHA256SUMS            # or on macOS: shasum -a 256 -c SHA256SUMS
 gh attestation verify pklnx-design-system-X.Y.Z.tgz --repo pklnx/design-system
 ```
 
-Stricter, pinned to the release workflow and the tag:
+Stricter, pinned to the release workflow run on `main`:
 
 ```sh
 gh attestation verify pklnx-design-system-X.Y.Z.tgz --repo pklnx/design-system \
   --signer-workflow pklnx/design-system/.github/workflows/release.yml \
-  --source-ref refs/tags/vX.Y.Z
+  --source-ref refs/heads/main
 ```
 
 The integrity in the consumer's `pnpm-lock.yaml` must equal:
@@ -83,7 +83,7 @@ echo "sha512-$(openssl dgst -sha512 -binary pklnx-design-system-X.Y.Z.tgz | open
 
 The release notes print the install command and this integrity, too.
 
-The release workflow checks that the tagged commit is on `main`. That check is a guard against mistakes, not a security boundary: a tag push runs the `release.yml` of the tagged commit itself, so a tag on a branch commit with a changed workflow would skip it, and the attestation's `--source-ref` names the tag, not the branch. When you update a consumer, also check that the release's commit is on `main`, for example `git merge-base --is-ancestor vX.Y.Z origin/main` in a clone of this repository.
+The release workflow runs only on `main` and creates the tag itself, on the commit it built. The attestation records the ref the workflow ran on, so `--source-ref refs/heads/main` fails for a tarball built from any other branch. When you update a consumer, also check that the release's commit is on `main`, for example `git merge-base --is-ancestor vX.Y.Z origin/main` in a clone of this repository.
 
 ### Version policy
 
@@ -108,9 +108,11 @@ No release-age delay (`minimumReleaseAge`) applies: it only covers registry pack
 ### Releasing
 
 1. Bump `version` in `package.json` in a pull request and merge it.
-2. Tag `vX.Y.Z` on that `main` commit and push the tag (`git tag vX.Y.Z <commit> && git push origin vX.Y.Z`).
+2. Actions → Release → Run workflow, on `main`. Tick "dry run" first if you want to see the tarball and the notes without releasing anything.
 
-`.github/workflows/release.yml` checks the tag format, that it equals `v` plus the `package.json` version and that the commit is on `main`, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball, writes `SHA256SUMS` and the notes, attests the tarball and creates the release. A tag that fails a check fails the workflow before anything is published: delete the tag and tag again. A release that exists is never replaced.
+Nobody pushes a tag: `.github/workflows/release.yml` creates the tag `vX.Y.Z` together with the release, on the `main` commit it built. It checks that it runs on `main`, that the `package.json` version is `X.Y.Z` and that neither the tag nor a release `vX.Y.Z` exists yet, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball and writes `SHA256SUMS` and the notes (shown in the run's summary). Unless it is a dry run, it then attests the tarball and creates the tag and the release. A failed check stops the workflow before anything is attested or published. A release that exists is never replaced: running the workflow again for the same version fails, so the next release needs a version bump. The token diff in the notes compares against the newest `v*` tag on `main` before the released commit.
+
+What protects a release is the `main`-only check plus the permission to run the workflow: only people with write access to this repository can start it. Anyone with write access can also push to `main` or start the workflow from a branch with a changed `release.yml`; the second case shows up in the attestation, which then does not name `refs/heads/main`.
 
 ## Layout
 

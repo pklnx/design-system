@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -23,6 +24,11 @@ function withTarball(fn) {
   }
 }
 
+// An error shaped like the one execFileSync throws when git exits non-zero.
+function gitError(args, stderr) {
+  return Object.assign(new Error(`Command failed: git ${args.join(' ')}\n${stderr}`), { status: 128, stderr });
+}
+
 // A git stand-in: `describe` answers with `previousTag` (or fails like git does
 // without a tag), `show` returns the previous tokens fixture.
 function fakeGit(previousTag) {
@@ -30,7 +36,7 @@ function fakeGit(previousTag) {
   const run = (args) => {
     calls.push(args);
     if (args[0] === 'describe') {
-      if (!previousTag) throw new Error('fatal: No names found, cannot describe anything.');
+      if (!previousTag) throw gitError(args, 'fatal: No names found, cannot describe anything.\n');
       return previousTag + '\n';
     }
     if (args[0] === 'show' && args[1] === `${previousTag}:theme/tokens.json`) return previousTokensText;
@@ -43,11 +49,56 @@ test('integrityOf is the sha512 of the bytes, base64', () => {
   assert.equal(integrityOf(Buffer.from('abc')), ABC_INTEGRITY);
 });
 
-test('findPreviousTag asks for the newest v* tag before the released commit', () => {
+test('findPreviousTag asks for the newest v* tag reachable from the built commit', () => {
   const { run, calls } = fakeGit('v0.1.0');
   assert.equal(findPreviousTag('0123abc', run), 'v0.1.0');
-  assert.deepEqual(calls, [['describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', '0123abc^']]);
+  assert.equal(findPreviousTag(undefined, run), 'v0.1.0');
+  assert.deepEqual(calls, [
+    ['describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', '0123abc'],
+    ['describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', 'HEAD'],
+  ]);
   assert.equal(findPreviousTag('0123abc', fakeGit(null).run), null);
+});
+
+test('findPreviousTag rethrows every git error except "no names found"', () => {
+  const failing = (stderr) => (args) => {
+    throw gitError(args, stderr);
+  };
+  for (const stderr of [
+    'fatal: Not a valid object name nosuchrev\n',
+    "fatal: No tags can describe '9177e6b757b2bee4e2047b876e5091a4de7bc58f'.\nTry --always, or create some tags.\n",
+    'fatal: not a git repository (or any of the parent directories): .git\n',
+  ]) {
+    assert.throws(() => findPreviousTag('HEAD', failing(stderr)), (err) => err.stderr === stderr, stderr);
+  }
+  const notFound = Object.assign(new Error('spawnSync git ENOENT'), { code: 'ENOENT' });
+  assert.throws(
+    () =>
+      findPreviousTag('HEAD', () => {
+        throw notFound;
+      }),
+    (err) => err === notFound,
+  );
+});
+
+test('findPreviousTag with real git: no tag, a v* tag, a bad revision', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'release-notes-git-'));
+  const run = (args) =>
+    execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  const commit = () =>
+    run(['-c', 'user.name=test', '-c', 'user.email=test@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '-q', '--allow-empty', '-m', 'x']);
+  try {
+    run(['init', '-q']);
+    commit();
+    run(['tag', 'not-a-release']);
+    assert.equal(findPreviousTag('HEAD', run), null);
+    run(['tag', 'v0.1.0']);
+    commit();
+    assert.equal(findPreviousTag('HEAD', run), 'v0.1.0');
+    assert.throws(() => findPreviousTag('nosuchrev', run), /Not a valid object name/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('diffTokens lists added, removed and changed tokens per theme', () => {
@@ -79,7 +130,7 @@ test('the header names the install URL, the integrity of the tarball bytes and t
   assert.ok(lines.includes(ABC_INTEGRITY));
   assert.ok(lines.includes('gh release download v0.2.0 --repo pklnx/design-system'));
   assert.ok(lines.includes('gh attestation verify pklnx-design-system-0.2.0.tgz --repo pklnx/design-system \\'));
-  assert.ok(lines.includes('  --signer-workflow pklnx/design-system/.github/workflows/release.yml --source-ref refs/tags/v0.2.0'));
+  assert.ok(lines.includes('  --signer-workflow pklnx/design-system/.github/workflows/release.yml --source-ref refs/heads/main'));
 });
 
 test('a later release lists the token diff against the previous tag', () => {
@@ -87,7 +138,7 @@ test('a later release lists the token diff against the previous tag', () => {
   const notes = withTarball((tarballPath) =>
     buildNotes({ tag: 'v0.2.0', tarballPath, rev: 'cafe1234', tokensPath: fixture('tokens-current.json'), run }),
   );
-  assert.deepEqual(calls[0].at(-1), 'cafe1234^');
+  assert.deepEqual(calls[0].at(-1), 'cafe1234');
   assert.deepEqual(calls[1], ['show', 'v0.1.0:theme/tokens.json']);
   const tokens = notes.slice(notes.indexOf('## Tokens'));
   assert.equal(

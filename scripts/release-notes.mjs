@@ -5,8 +5,8 @@
 // The header names the install command, the tarball's sha512 integrity (what a
 // consumer's pnpm-lock.yaml must show) and the verify commands. Then follows the
 // token diff of theme/tokens.json against the previous v* tag, per theme.
-// The previous tag is the newest v* tag reachable from the parent of the
-// released commit ($GITHUB_SHA, or the tag itself outside Actions).
+// The release workflow runs it before the tag exists, so the previous tag is
+// the newest v* tag reachable from the checked-out commit (HEAD).
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -26,14 +26,17 @@ function git(args) {
   return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 }
 
-// The newest v* tag before `rev`, or null for the first release (git describe
-// exits non-zero when no such tag exists).
-export function findPreviousTag(rev, run = git) {
+// The newest v* tag reachable from `rev`, or null for the first release. git
+// describe fails with "No names found" when there is no such tag; any other
+// git error (a bad revision, no repository, a v* tag that is not reachable) is
+// rethrown, so it fails the release instead of producing first-release notes.
+export function findPreviousTag(rev = 'HEAD', run = git) {
   try {
-    const tag = run(['describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', `${rev}^`]).trim();
+    const tag = run(['describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', rev]).trim();
     return tag || null;
-  } catch {
-    return null;
+  } catch (err) {
+    if (/no names found/i.test(`${err?.stderr ?? ''}\n${err?.message ?? ''}`)) return null;
+    throw err;
   }
 }
 
@@ -81,7 +84,7 @@ export function renderNotes({ tag, repo = DEFAULT_REPO, tarball, integrity, prev
     `gh release download ${tag} --repo ${repo}`,
     'sha256sum -c SHA256SUMS   # or: shasum -a 256 -c SHA256SUMS',
     `gh attestation verify ${tarball} --repo ${repo} \\`,
-    `  --signer-workflow ${repo}/.github/workflows/release.yml --source-ref refs/tags/${tag}`,
+    `  --signer-workflow ${repo}/.github/workflows/release.yml --source-ref refs/heads/main`,
     '```',
     '',
     '## Tokens',
@@ -111,7 +114,7 @@ export function renderNotes({ tag, repo = DEFAULT_REPO, tarball, integrity, prev
 export function buildNotes({
   tag,
   tarballPath,
-  rev = tag,
+  rev = 'HEAD',
   repo = DEFAULT_REPO,
   tokensPath = new URL('../theme/tokens.json', import.meta.url),
   run = git,
@@ -137,7 +140,7 @@ function main() {
     process.exit(2);
   }
   process.stdout.write(
-    buildNotes({ tag, tarballPath, rev: process.env.GITHUB_SHA || tag, repo: process.env.GITHUB_REPOSITORY || DEFAULT_REPO }),
+    buildNotes({ tag, tarballPath, repo: process.env.GITHUB_REPOSITORY || DEFAULT_REPO }),
   );
 }
 
