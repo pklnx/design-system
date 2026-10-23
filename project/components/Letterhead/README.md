@@ -1,6 +1,6 @@
 # Letterhead
 
-A4 letterhead following the DIN 5008 Form B layout, always in the White (paper) theme.
+A4 letterhead following the DIN 5008 Form B layout, always in the White (paper) theme. Letter text is German.
 
 - Wordmark top left, 9 mm high, 25 mm from the left edge. Sender block on the right in `legal-01`, `text-secondary`.
 - Address window 45 mm from the top, 85 × 45 mm, return address line above it in 7 pt `text-secondary`.

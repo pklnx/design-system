@@ -1,6 +1,6 @@
 <!-- @dsCard group="Content" height=100 subtitle="Carbon Icon Indicator: shape, color and word" -->
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head><meta charset="utf-8"><title>StatusBadge</title>
 <style>body{margin:0;background:var(--background);color:var(--text-primary)}.row{display:flex;flex-wrap:wrap;gap:32px;align-items:center;padding:32px}</style></head>
 <body>
@@ -9,7 +9,7 @@
 var P = window.Pklnx, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
   h(P.StatusBadge, { status: 'ok' }),
-  h(P.StatusBadge, { status: 'warn' }, 'Maintenance until 6 pm'),
+  h(P.StatusBadge, { status: 'warn' }, 'Wartung bis 18 Uhr'),
   h(P.StatusBadge, { status: 'err' }),
   h(P.StatusBadge, { status: 'info' }),
   h(P.StatusBadge, { status: 'off' })

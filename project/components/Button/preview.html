@@ -1,6 +1,6 @@
 <!-- @dsCard group="Actions" height=140 subtitle="Carbon Button: primary, secondary, tertiary, ghost, danger" -->
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head><meta charset="utf-8"><title>Button</title>
 <style>body{margin:0;background:var(--background);color:var(--text-primary)}.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:24px}</style></head>
 <body>
@@ -8,12 +8,12 @@
 <script>
 var P = window.Pklnx, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
-  h(P.Button, { kind: 'primary', icon: 'arrow-right' }, 'Send request'),
-  h(P.Button, { kind: 'secondary' }, 'View services'),
-  h(P.Button, { kind: 'tertiary', icon: 'external' }, 'Open status'),
-  h(P.Button, { kind: 'ghost' }, 'Later'),
-  h(P.Button, { kind: 'danger' }, 'Delete account'),
-  h(P.Button, { kind: 'secondary', disabled: true }, 'Locked')
+  h(P.Button, { kind: 'primary', icon: 'arrow-right' }, 'Anfrage senden'),
+  h(P.Button, { kind: 'secondary' }, 'Leistungen ansehen'),
+  h(P.Button, { kind: 'tertiary', icon: 'external' }, 'Status öffnen'),
+  h(P.Button, { kind: 'ghost' }, 'Später'),
+  h(P.Button, { kind: 'danger' }, 'Konto löschen'),
+  h(P.Button, { kind: 'secondary', disabled: true }, 'Gesperrt')
 ));
 </script>
 </body>

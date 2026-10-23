@@ -26,7 +26,7 @@ Where this page says nothing, Carbon applies: carbondesignsystem.com. Carbon win
 - **IBM Plex** only: `font-sans` (IBM Plex Sans) for everything, `font-mono` (IBM Plex Mono) for code, host names, commands, numbers in tables and the brand. The font files are in `fonts/`, on the web from `@ibm/plex-sans` and `@ibm/plex-mono`.
 - Carbon's productive type scale, unchanged: page titles `heading-05`, sections `heading-04`, tiles `heading-03`, body copy `body-02` on the web and `body-01` in dense areas, UI text `body-compact-01`, labels `label-01`, helper text `helper-text-01`, small print `legal-01`, code `code-01` and `code-02`.
 - The one style of our own: `prompt` (Plex Mono SemiBold 28px) for section headings as a shell prompt (`$ ls ./services`), used sparingly.
-- Sentence case everywhere. No all caps in labels, buttons or table headers.
+- German capitalization rules, otherwise sentence case. No all caps in labels, buttons or table headers.
 - Body copy at most 68 characters wide, left aligned, never justified. Numbers in columns with `font-variant-numeric: tabular-nums`. In print body copy 10 pt, small print not below 7 pt.
 
 ## Spacing, shape, grid
@@ -40,9 +40,10 @@ Where this page says nothing, Carbon applies: carbondesignsystem.com. Carbon win
 
 ## Voice and tone
 
-- Direct, factual, short. All copy is in English. First person on the website ("I run …"), plain "you" towards clients.
-- Buttons name the action as a verb: "Send request", "Copy code". Errors say what to do: "Enter the full address, for example info@company.com."
-- The shell as a stylistic device, sparingly: section headings as a `Prompt` (`$ ls ./services`, `$ cat ./contact`), normal language everywhere else.
+- **Customer-facing copy is German**: website, letters, invoices, business card, email signature, and the text components show (status words, copy feedback, skip link). This documentation and everything on GitHub (code, docs, commits, PRs) is English.
+- Direct, factual, short. First person on the website ("Ich betreibe …"), formal "Sie" towards clients.
+- Buttons name the action as a verb: „Anfrage senden“, „Code kopieren“. Errors say what to do: „Bitte geben Sie die vollständige Adresse an, zum Beispiel info@firma.de.“
+- The shell as a stylistic device, sparingly: section headings as a `Prompt` (`$ ls ./services`, `$ cat ./kontakt`), normal language everywhere else.
 - Technical names exactly: host names, commands and paths in mono, spelled as they really are.
 - No emoji, no exclamation marks, no marketing superlatives.
 

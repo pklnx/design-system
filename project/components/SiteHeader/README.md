@@ -1,6 +1,6 @@
 # SiteHeader
 
-Page header as a Carbon UI Shell Header: wordmark on the left, navigation next to it, "Skip to main content" for keyboard users.
+Page header as a Carbon UI Shell Header: wordmark on the left, navigation next to it, „Zum Inhalt springen“ for keyboard users.
 
 - 48px high, area `background`, divider `border-subtle`. The current page gets `current` and Carbon's marker in `border-interactive` (Purple).
 - At most five links. On narrow screens Carbon hides the navigation; add a menu through `HeaderMenuButton` for mobile if needed.

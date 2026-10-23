@@ -70,8 +70,8 @@ export function Prompt({ cmd, as = 'h2', id, className, children }) {
 }
 
 const STATUS = {
-  ok: ['succeeded', 'Running'], warn: ['caution-minor', 'Maintenance'], err: ['failed', 'Down'], off: ['not-started', 'Off'],
-  info: ['informative', 'Notice'],
+  ok: ['succeeded', 'läuft'], warn: ['caution-minor', 'Wartung'], err: ['failed', 'gestört'], off: ['not-started', 'aus'],
+  info: ['informative', 'Hinweis'],
 };
 /** Carbon icon indicator: shape, color and word. Never color alone. */
 export function StatusBadge({ status = 'ok', children, size = 16, className }) {
@@ -103,8 +103,8 @@ export function CodeBlock({ code = '', label, type, copyable = true, className }
   return (
     <div className={cx('pk-code', className)}>
       {label ? <span className="pk-code__label">{label}</span> : null}
-      <CodeSnippet type={t} hideCopyButton={!copyable} feedback="Copied" copyButtonDescription="Copy code"
-        aria-label={label || 'Code'} showMoreText="Show more" showLessText="Show less" wrapText={false}>
+      <CodeSnippet type={t} hideCopyButton={!copyable} feedback="Kopiert" copyButtonDescription="Code kopieren"
+        aria-label={label || 'Code'} showMoreText="Mehr anzeigen" showLessText="Weniger anzeigen" wrapText={false}>
         {code}
       </CodeSnippet>
     </div>
@@ -121,12 +121,12 @@ export function TextField({ id, label, hint, error, multiline = false, ...rest }
 export function SiteHeader({ links = [], homeHref = '/', logoHeight = 22, fixed = false, contentId = 'main', className }) {
   return (
     <Header aria-label="pklnx.space" className={cx(!fixed && 'pk-header', className)}>
-      <SkipToContent href={`#${contentId}`}>Skip to main content</SkipToContent>
+      <SkipToContent href={`#${contentId}`}>Zum Inhalt springen</SkipToContent>
       <HeaderName href={homeHref} prefix="">
-        <Logo height={logoHeight} title="pklnx.space, home" />
+        <Logo height={logoHeight} title="pklnx.space, Startseite" />
       </HeaderName>
       {links.length ? (
-        <HeaderNavigation aria-label="Main navigation">
+        <HeaderNavigation aria-label="Hauptnavigation">
           {links.map((l) => (
             <HeaderMenuItem key={l.href} href={l.href} isActive={!!l.current} aria-current={l.current ? 'page' : undefined}>{l.label}</HeaderMenuItem>
           ))}

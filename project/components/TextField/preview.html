@@ -1,6 +1,6 @@
 <!-- @dsCard group="Forms" height=330 subtitle="Carbon Text Input and Text Area" -->
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head><meta charset="utf-8"><title>TextField</title>
 <style>body{margin:0;background:var(--background);color:var(--text-primary)}.col{display:flex;flex-direction:column;gap:24px;padding:32px;max-width:480px}</style></head>
 <body>
@@ -8,9 +8,9 @@
 <script>
 var P = window.Pklnx, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
-  h(P.TextField, { id: 'f-domain', label: 'Domain', placeholder: 'company.com', hint: 'The domain mail should run for.' }),
-  h(P.TextField, { id: 'f-mail', label: 'Email address', defaultValue: 'info@company', error: 'Enter the full address, for example info@company.com.' }),
-  h(P.TextField, { id: 'f-msg', label: 'Message', multiline: true, rows: 3, placeholder: 'What is it about?' })
+  h(P.TextField, { id: 'f-domain', label: 'Domain', placeholder: 'firma.de', hint: 'Die Domain, für die Mail laufen soll.' }),
+  h(P.TextField, { id: 'f-mail', label: 'E-Mail-Adresse', defaultValue: 'info@firma', error: 'Bitte geben Sie die vollständige Adresse an, zum Beispiel info@firma.de.' }),
+  h(P.TextField, { id: 'f-msg', label: 'Nachricht', multiline: true, rows: 3, placeholder: 'Worum geht es?' })
 ));
 </script>
 </body>

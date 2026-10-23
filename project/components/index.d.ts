@@ -20,7 +20,7 @@ export declare function Button(props: ButtonProps): React.ReactElement;
 export interface PromptProps { cmd?: string; as?: 'h1' | 'h2' | 'h3'; id?: string; className?: string; children?: React.ReactNode; }
 export declare function Prompt(props: PromptProps): React.ReactElement;
 
-/** Carbon Icon Indicator: shape, color and word. Default words: Running, Maintenance, Down, Notice, Off. */
+/** Carbon Icon Indicator: shape, color and word. Default words (German UI): läuft, Wartung, gestört, Hinweis, aus. */
 export interface StatusBadgeProps { status?: Status; size?: 16 | 20; className?: string; children?: string; }
 export declare function StatusBadge(props: StatusBadgeProps): React.ReactElement;
 
