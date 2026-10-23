@@ -1,13 +1,13 @@
 [
   {
-    "id": "@pklnx/design-system@0.1.0",
+    "id": "@pklnx/design-system@0.2.0",
     "name": "@pklnx/design-system",
-    "version": "0.1.0",
-    "size": 381644,
-    "unpackedSize": 446664,
-    "shasum": "04deebc2006670b5d6d52392016604ddfdedcb8e",
-    "integrity": "sha512-Q6bmvV6Qp2mMsgMShwrzCCpRSvu1O3HZRMPEXb+1pDkIEx+UEIEDIU9ujzqjDqecBQ8A3krFA4dZy4T/GRGLVw==",
-    "filename": "pklnx-design-system-0.1.0.tgz",
+    "version": "0.2.0",
+    "size": 387023,
+    "unpackedSize": 471851,
+    "shasum": "c338b633805be985be751ae90b2989c08ae64375",
+    "integrity": "sha512-EAmwtaC3mJ0HNZ6APRME49ERx7aNjxhBdFwN2HHl8QZbURp+TVjv0xAPJXhwgkj0R5pPC7bZdwwIPz/xJlHGgw==",
+    "filename": "pklnx-design-system-0.2.0.tgz",
     "files": [
       {
         "path": "LICENSE",
@@ -16,7 +16,7 @@
       },
       {
         "path": "README.md",
-        "size": 3811,
+        "size": 12210,
         "mode": 420
       },
       {
@@ -26,7 +26,7 @@
       },
       {
         "path": "package.json",
-        "size": 1671,
+        "size": 1838,
         "mode": 420
       },
       {
@@ -66,21 +66,26 @@
       },
       {
         "path": "theme/_index.scss",
-        "size": 2182,
+        "size": 2512,
         "mode": 420
       },
       {
         "path": "theme/pklnx-carbon.css",
-        "size": 1846,
+        "size": 2230,
         "mode": 420
       },
       {
         "path": "theme/tokens.json",
         "size": 24086,
         "mode": 420
+      },
+      {
+        "path": "theme/vitepress.css",
+        "size": 15907,
+        "mode": 420
       }
     ],
-    "entryCount": 14,
+    "entryCount": 15,
     "bundled": []
   }
 ]

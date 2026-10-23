@@ -1,5 +1,6 @@
 // Builds everything from the Carbon packages and theme/brand.json:
-//   theme/          the Carbon theme for code (CSS and SCSS overrides, tokens as JSON)
+//   theme/          the Carbon theme for code (CSS and SCSS overrides, tokens as JSON) and
+//                   the VitePress theme (theme/vitepress.css)
 //   project/        the files of the claude.ai Design System artifact
 // Run: npm run build   (the logo is built separately: python3 scripts/build_logo.py)
 import fs from 'node:fs';
@@ -8,6 +9,7 @@ import { createRequire } from 'node:module';
 import * as sass from 'sass';
 import * as esbuild from 'esbuild';
 import { noteFor } from './token-notes.mjs';
+import { vitepressCss } from './vitepress-map.mjs';
 
 const require = createRequire(import.meta.url);
 const themes = require('@carbon/themes');
@@ -239,6 +241,9 @@ $g100: map.merge(themes.$g100, $overrides-g100);
 @mixin overrides-dark { @each $k, $v in $overrides-g100 { --cds-#{$k}: #{$v}; } --pklnx-star: #{$star-g100}; }
 `);
 write(P('theme/tokens.json'), JSON.stringify({ light: all.light, dark: all.dark, changed }, null, 1) + '\n');
+// The VitePress theme for the products' docs: VitePress variables mapped to these tokens
+// (scripts/vitepress-map.mjs), IBM Plex, Carbon corners and focus.
+write(P('theme/vitepress.css'), vitepressCss({ light: all.light, dark: all.dark }, typeTokens.families));
 
 // ---------------------------------------------------------------- project/components/bundle.css
 const carbonCss = sass.compile(P('src/carbon.scss'), { loadPaths: [P('node_modules')], style: 'compressed', silenceDeprecations: ['if-function', 'mixed-decls', 'global-builtin', 'import'], quietDeps: true }).css;

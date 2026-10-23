@@ -25,6 +25,7 @@ export const EXPECTED_FILES = [
   'theme/_index.scss',
   'theme/pklnx-carbon.css',
   'theme/tokens.json',
+  'theme/vitepress.css',
 ];
 
 // Scripts that npm or pnpm run on install or pack. A consumer's pnpm with

@@ -1,6 +1,6 @@
 {
   "name": "@pklnx/design-system",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "pklnx design system: Carbon theme with pklnx brand, source for the claude.ai Design System artifact",
@@ -15,6 +15,7 @@
   },
   "files": [
     "theme/pklnx-carbon.css",
+    "theme/vitepress.css",
     "theme/_index.scss",
     "theme/tokens.json",
     "project/fonts",
@@ -22,6 +23,7 @@
   ],
   "exports": {
     "./theme/pklnx-carbon.css": "./theme/pklnx-carbon.css",
+    "./theme/vitepress.css": "./theme/vitepress.css",
     "./theme": {
       "sass": "./theme/_index.scss",
       "default": "./theme/_index.scss"
@@ -40,6 +42,11 @@
   },
   "peerDependencies": {
     "@carbon/styles": "^1.118.0"
+  },
+  "peerDependenciesMeta": {
+    "@carbon/styles": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@carbon/colors": "^11.61.0",

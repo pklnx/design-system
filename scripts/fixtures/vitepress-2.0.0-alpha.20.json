@@ -1,0 +1,1985 @@
+{
+ "source": "npm pack vitepress@2.0.0-alpha.20, dist/client/theme-default (captured by scripts/capture-vitepress-fixture.mjs)",
+ "version": "2.0.0-alpha.20",
+ "properties": [
+  "border-radius",
+  "outline",
+  "box-shadow",
+  "font-family"
+ ],
+ "asyncComponents": [
+  "components/VPAlgoliaSearchBox.vue",
+  "components/VPCarbonAds.vue",
+  "components/VPLocalSearchBox.vue"
+ ],
+ "vars": {
+  ":root": [
+   "--vp-backdrop-bg-color",
+   "--vp-badge-caution-bg",
+   "--vp-badge-caution-border",
+   "--vp-badge-caution-text",
+   "--vp-badge-danger-bg",
+   "--vp-badge-danger-border",
+   "--vp-badge-danger-text",
+   "--vp-badge-important-bg",
+   "--vp-badge-important-border",
+   "--vp-badge-important-text",
+   "--vp-badge-info-bg",
+   "--vp-badge-info-border",
+   "--vp-badge-info-text",
+   "--vp-badge-note-bg",
+   "--vp-badge-note-border",
+   "--vp-badge-note-text",
+   "--vp-badge-tip-bg",
+   "--vp-badge-tip-border",
+   "--vp-badge-tip-text",
+   "--vp-badge-warning-bg",
+   "--vp-badge-warning-border",
+   "--vp-badge-warning-text",
+   "--vp-button-alt-active-bg",
+   "--vp-button-alt-active-border",
+   "--vp-button-alt-active-text",
+   "--vp-button-alt-bg",
+   "--vp-button-alt-border",
+   "--vp-button-alt-hover-bg",
+   "--vp-button-alt-hover-border",
+   "--vp-button-alt-hover-text",
+   "--vp-button-alt-text",
+   "--vp-button-brand-active-bg",
+   "--vp-button-brand-active-border",
+   "--vp-button-brand-active-text",
+   "--vp-button-brand-bg",
+   "--vp-button-brand-border",
+   "--vp-button-brand-hover-bg",
+   "--vp-button-brand-hover-border",
+   "--vp-button-brand-hover-text",
+   "--vp-button-brand-text",
+   "--vp-button-sponsor-active-bg",
+   "--vp-button-sponsor-active-border",
+   "--vp-button-sponsor-active-text",
+   "--vp-button-sponsor-bg",
+   "--vp-button-sponsor-border",
+   "--vp-button-sponsor-hover-bg",
+   "--vp-button-sponsor-hover-border",
+   "--vp-button-sponsor-hover-text",
+   "--vp-button-sponsor-text",
+   "--vp-c-bg",
+   "--vp-c-bg-alt",
+   "--vp-c-bg-elv",
+   "--vp-c-bg-soft",
+   "--vp-c-black",
+   "--vp-c-border",
+   "--vp-c-brand",
+   "--vp-c-brand-1",
+   "--vp-c-brand-2",
+   "--vp-c-brand-3",
+   "--vp-c-brand-soft",
+   "--vp-c-caution-1",
+   "--vp-c-caution-2",
+   "--vp-c-caution-3",
+   "--vp-c-caution-soft",
+   "--vp-c-danger-1",
+   "--vp-c-danger-2",
+   "--vp-c-danger-3",
+   "--vp-c-danger-soft",
+   "--vp-c-default-1",
+   "--vp-c-default-2",
+   "--vp-c-default-3",
+   "--vp-c-default-soft",
+   "--vp-c-divider",
+   "--vp-c-gray-1",
+   "--vp-c-gray-2",
+   "--vp-c-gray-3",
+   "--vp-c-gray-soft",
+   "--vp-c-green-1",
+   "--vp-c-green-2",
+   "--vp-c-green-3",
+   "--vp-c-green-soft",
+   "--vp-c-gutter",
+   "--vp-c-important-1",
+   "--vp-c-important-2",
+   "--vp-c-important-3",
+   "--vp-c-important-soft",
+   "--vp-c-indigo-1",
+   "--vp-c-indigo-2",
+   "--vp-c-indigo-3",
+   "--vp-c-indigo-soft",
+   "--vp-c-neutral",
+   "--vp-c-neutral-inverse",
+   "--vp-c-note-1",
+   "--vp-c-note-2",
+   "--vp-c-note-3",
+   "--vp-c-note-soft",
+   "--vp-c-orange-1",
+   "--vp-c-orange-2",
+   "--vp-c-orange-3",
+   "--vp-c-orange-soft",
+   "--vp-c-purple-1",
+   "--vp-c-purple-2",
+   "--vp-c-purple-3",
+   "--vp-c-purple-soft",
+   "--vp-c-red-1",
+   "--vp-c-red-2",
+   "--vp-c-red-3",
+   "--vp-c-red-soft",
+   "--vp-c-sponsor",
+   "--vp-c-success-1",
+   "--vp-c-success-2",
+   "--vp-c-success-3",
+   "--vp-c-success-soft",
+   "--vp-c-text-1",
+   "--vp-c-text-2",
+   "--vp-c-text-3",
+   "--vp-c-tip-1",
+   "--vp-c-tip-2",
+   "--vp-c-tip-3",
+   "--vp-c-tip-soft",
+   "--vp-c-warning-1",
+   "--vp-c-warning-2",
+   "--vp-c-warning-3",
+   "--vp-c-warning-soft",
+   "--vp-c-white",
+   "--vp-c-yellow-1",
+   "--vp-c-yellow-2",
+   "--vp-c-yellow-3",
+   "--vp-c-yellow-soft",
+   "--vp-carbon-ads-bg-color",
+   "--vp-carbon-ads-hover-poweredby-color",
+   "--vp-carbon-ads-hover-text-color",
+   "--vp-carbon-ads-poweredby-color",
+   "--vp-carbon-ads-text-color",
+   "--vp-code-bg",
+   "--vp-code-block-bg",
+   "--vp-code-block-color",
+   "--vp-code-block-divider-color",
+   "--vp-code-color",
+   "--vp-code-copy-code-active-text",
+   "--vp-code-copy-code-bg",
+   "--vp-code-copy-code-border-color",
+   "--vp-code-copy-code-hover-bg",
+   "--vp-code-copy-code-hover-border-color",
+   "--vp-code-font-size",
+   "--vp-code-lang-color",
+   "--vp-code-line-diff-add-color",
+   "--vp-code-line-diff-add-symbol-color",
+   "--vp-code-line-diff-remove-color",
+   "--vp-code-line-diff-remove-symbol-color",
+   "--vp-code-line-error-color",
+   "--vp-code-line-height",
+   "--vp-code-line-highlight-color",
+   "--vp-code-line-number-color",
+   "--vp-code-line-warning-color",
+   "--vp-code-link-color",
+   "--vp-code-link-hover-color",
+   "--vp-code-tab-active-bar-color",
+   "--vp-code-tab-active-text-color",
+   "--vp-code-tab-bg",
+   "--vp-code-tab-divider",
+   "--vp-code-tab-hover-text-color",
+   "--vp-code-tab-text-color",
+   "--vp-custom-block-caution-bg",
+   "--vp-custom-block-caution-border",
+   "--vp-custom-block-caution-code-bg",
+   "--vp-custom-block-caution-text",
+   "--vp-custom-block-code-font-size",
+   "--vp-custom-block-danger-bg",
+   "--vp-custom-block-danger-border",
+   "--vp-custom-block-danger-code-bg",
+   "--vp-custom-block-danger-text",
+   "--vp-custom-block-details-bg",
+   "--vp-custom-block-details-border",
+   "--vp-custom-block-details-code-bg",
+   "--vp-custom-block-details-text",
+   "--vp-custom-block-font-size",
+   "--vp-custom-block-important-bg",
+   "--vp-custom-block-important-border",
+   "--vp-custom-block-important-code-bg",
+   "--vp-custom-block-important-text",
+   "--vp-custom-block-info-bg",
+   "--vp-custom-block-info-border",
+   "--vp-custom-block-info-code-bg",
+   "--vp-custom-block-info-text",
+   "--vp-custom-block-note-bg",
+   "--vp-custom-block-note-border",
+   "--vp-custom-block-note-code-bg",
+   "--vp-custom-block-note-text",
+   "--vp-custom-block-tip-bg",
+   "--vp-custom-block-tip-border",
+   "--vp-custom-block-tip-code-bg",
+   "--vp-custom-block-tip-text",
+   "--vp-custom-block-warning-bg",
+   "--vp-custom-block-warning-border",
+   "--vp-custom-block-warning-code-bg",
+   "--vp-custom-block-warning-text",
+   "--vp-font-family-base",
+   "--vp-font-family-mono",
+   "--vp-header-anchor-symbol",
+   "--vp-home-hero-image-background-image",
+   "--vp-home-hero-image-filter",
+   "--vp-home-hero-name-background",
+   "--vp-home-hero-name-color",
+   "--vp-input-bg-color",
+   "--vp-input-border-color",
+   "--vp-input-switch-bg-color",
+   "--vp-layout-max-width",
+   "--vp-local-nav-bg-color",
+   "--vp-local-nav-divider-color",
+   "--vp-local-search-bg",
+   "--vp-local-search-highlight-bg",
+   "--vp-local-search-highlight-text",
+   "--vp-local-search-result-bg",
+   "--vp-local-search-result-border",
+   "--vp-local-search-result-selected-bg",
+   "--vp-local-search-result-selected-border",
+   "--vp-nav-backdrop-filter",
+   "--vp-nav-bg-color",
+   "--vp-nav-divider-color",
+   "--vp-nav-height",
+   "--vp-nav-home-bg-color",
+   "--vp-nav-logo-height",
+   "--vp-nav-screen-bg-color",
+   "--vp-shadow-1",
+   "--vp-shadow-2",
+   "--vp-shadow-3",
+   "--vp-shadow-4",
+   "--vp-shadow-5",
+   "--vp-sidebar-bg-color",
+   "--vp-sidebar-width",
+   "--vp-z-index-backdrop",
+   "--vp-z-index-footer",
+   "--vp-z-index-layout-top",
+   "--vp-z-index-local-nav",
+   "--vp-z-index-nav",
+   "--vp-z-index-sidebar"
+  ],
+  ".dark": [
+   "--vp-c-bg",
+   "--vp-c-bg-alt",
+   "--vp-c-bg-elv",
+   "--vp-c-bg-soft",
+   "--vp-c-border",
+   "--vp-c-divider",
+   "--vp-c-gray-1",
+   "--vp-c-gray-2",
+   "--vp-c-gray-3",
+   "--vp-c-gray-soft",
+   "--vp-c-green-1",
+   "--vp-c-green-2",
+   "--vp-c-green-3",
+   "--vp-c-green-soft",
+   "--vp-c-gutter",
+   "--vp-c-indigo-1",
+   "--vp-c-indigo-2",
+   "--vp-c-indigo-3",
+   "--vp-c-indigo-soft",
+   "--vp-c-neutral",
+   "--vp-c-neutral-inverse",
+   "--vp-c-orange-1",
+   "--vp-c-orange-2",
+   "--vp-c-orange-3",
+   "--vp-c-orange-soft",
+   "--vp-c-purple-1",
+   "--vp-c-purple-2",
+   "--vp-c-purple-3",
+   "--vp-c-purple-soft",
+   "--vp-c-red-1",
+   "--vp-c-red-2",
+   "--vp-c-red-3",
+   "--vp-c-red-soft",
+   "--vp-c-text-1",
+   "--vp-c-text-2",
+   "--vp-c-text-3",
+   "--vp-c-yellow-1",
+   "--vp-c-yellow-2",
+   "--vp-c-yellow-3",
+   "--vp-c-yellow-soft"
+  ],
+  ":root:where(:has(.vp-graded-containers))": [
+   "--vp-c-caution-1",
+   "--vp-c-caution-2",
+   "--vp-c-caution-3",
+   "--vp-c-caution-soft",
+   "--vp-c-warning-1",
+   "--vp-c-warning-2",
+   "--vp-c-warning-3",
+   "--vp-c-warning-soft"
+  ],
+  "@media (min-width: 60rem) { :root }": [
+   "--vp-z-index-sidebar"
+  ],
+  ".hide-nav": [
+   "--vp-nav-height"
+  ],
+  ".hide-nav .VPSidebar": [
+   "--vp-nav-height"
+  ]
+ },
+ "rules": [
+  {
+   "file": "components/VPBadge.vue",
+   "line": 22,
+   "selector": ".VPBadge",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 71,
+   "selector": ".VPButton.medium",
+   "property": "border-radius",
+   "value": "1.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 78,
+   "selector": ".VPButton.big",
+   "property": "border-radius",
+   "value": "1.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPCarbonAds.vue",
+   "line": 56,
+   "selector": ".VPCarbonAds",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPCarbonAds.vue",
+   "line": 70,
+   "selector": ".VPCarbonAds :deep(img)",
+   "property": "border-radius",
+   "value": "0.375rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPDocAsideOutline.vue",
+   "line": 55,
+   "selector": ".outline-marker",
+   "property": "border-radius",
+   "value": "2px",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPDocFooter.vue",
+   "line": 125,
+   "selector": ".pager-link",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPFeature.vue",
+   "line": 77,
+   "selector": ".VPFeature",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPFeature.vue",
+   "line": 101,
+   "selector": ".icon",
+   "property": "border-radius",
+   "value": "0.375rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPHero.vue",
+   "line": 301,
+   "selector": ".image-bg",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalNavOutlineDropdown.vue",
+   "line": 151,
+   "selector": ".items",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalNavOutlineDropdown.vue",
+   "line": 151,
+   "selector": ".items",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-3)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 521,
+   "selector": ".shell",
+   "property": "border-radius",
+   "value": "0.375rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 536,
+   "selector": ".shell",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": "not all and (min-width: 48rem)",
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 545,
+   "selector": ".search-bar",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 630,
+   "selector": ".search-loading",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 679,
+   "selector": ".search-keyboard-shortcuts kbd",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 679,
+   "selector": ".search-keyboard-shortcuts kbd",
+   "property": "box-shadow",
+   "value": "0 2px 2px 0 rgba(0, 0, 0, 0.1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 700,
+   "selector": ".result",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 700,
+   "selector": ".result",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 779,
+   "selector": ".titles :deep(mark)",
+   "property": "border-radius",
+   "value": "0.125rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 779,
+   "selector": ".excerpt :deep(mark)",
+   "property": "border-radius",
+   "value": "0.125rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 791,
+   "selector": ".excerpt :deep(.vp-code-group) div[class*='language-']",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": true,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    4,
+    1
+   ]
+  },
+  {
+   "file": "components/VPMenu.vue",
+   "line": 30,
+   "selector": ".VPMenu",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenu.vue",
+   "line": 30,
+   "selector": ".VPMenu",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-3)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenuLink.vue",
+   "line": 57,
+   "selector": ".link",
+   "property": "border-radius",
+   "value": "0.375rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenuLink.vue",
+   "line": 85,
+   "selector": ".VPNavScreen .link",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPNavAppearance.vue",
+   "line": 58,
+   "selector": ".VPNavScreenAppearance",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPNavBarAskAiButton.vue",
+   "line": 17,
+   "selector": ".VPNavBarAskAiButton",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": "(min-width: 48rem)",
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPNavBarSearchButton.vue",
+   "line": 34,
+   "selector": "kbd",
+   "property": "font-family",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "components/VPNavBarSearchButton.vue",
+   "line": 52,
+   "selector": ".VPNavBarSearchButton",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": "(min-width: 48rem)",
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPNavBarSearchButton.vue",
+   "line": 67,
+   "selector": ".keys",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": "(min-width: 48rem)",
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebar.vue",
+   "line": 57,
+   "selector": ".VPSidebar",
+   "property": "box-shadow",
+   "value": "var(--vp-c-shadow-3)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebar.vue",
+   "line": 83,
+   "selector": ".dark .VPSidebar",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebar.vue",
+   "line": 88,
+   "selector": ".VPSidebar",
+   "property": "box-shadow",
+   "value": "none",
+   "important": false,
+   "media": "(min-width: 60rem)",
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebar.vue",
+   "line": 121,
+   "selector": ".nav",
+   "property": "outline",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebarItem.vue",
+   "line": 97,
+   "selector": ".indicator",
+   "property": "border-radius",
+   "value": "2px",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSkipLink.vue",
+   "line": 23,
+   "selector": ".VPSkipLink",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSkipLink.vue",
+   "line": 23,
+   "selector": ".VPSkipLink",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-3)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 12,
+   "selector": ".VPSwitch",
+   "property": "border-radius",
+   "value": "0.6875rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 28,
+   "selector": ".check",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 28,
+   "selector": ".check",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 41,
+   "selector": ".icon",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 57,
+   "selector": ".VPTeamMembersItem",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 147,
+   "selector": ".avatar",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 147,
+   "selector": ".avatar",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-3)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 155,
+   "selector": ".avatar-img",
+   "property": "border-radius",
+   "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 218,
+   "selector": ".sp .sp-link.link:hover",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    5,
+    0
+   ]
+  },
+  {
+   "file": "components/VPTeamMembersItem.vue",
+   "line": 218,
+   "selector": ".sp .sp-link.link:focus",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    5,
+    0
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 18,
+   "selector": "html",
+   "property": "font-family",
+   "value": "var(--vp-font-family-base)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 18,
+   "selector": ":host",
+   "property": "font-family",
+   "value": "var(--vp-font-family-base)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 61,
+   "selector": "code",
+   "property": "font-family",
+   "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 61,
+   "selector": "kbd",
+   "property": "font-family",
+   "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 61,
+   "selector": "samp",
+   "property": "font-family",
+   "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 61,
+   "selector": "pre",
+   "property": "font-family",
+   "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 97,
+   "selector": ":-moz-focusring:where(:not(iframe))",
+   "property": "outline",
+   "value": "auto",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "button",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "input",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "select",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "optgroup",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "textarea",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "::file-selector-button",
+   "property": "border-radius",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 208,
+   "selector": ":-moz-ui-invalid",
+   "property": "box-shadow",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 277,
+   "selector": "button:focus",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 277,
+   "selector": "input:focus",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 277,
+   "selector": "textarea:focus",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 277,
+   "selector": "select:focus",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 284,
+   "selector": "button:focus-visible",
+   "property": "outline",
+   "value": "1px dotted",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 284,
+   "selector": "button:focus-visible",
+   "property": "outline",
+   "value": "4px auto -webkit-focus-ring-color",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 1,
+   "selector": ".custom-block",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 5,
+   "selector": ".vp-code-group .tabs",
+   "property": "box-shadow",
+   "value": "inset 0 -1px var(--vp-code-tab-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 18,
+   "selector": ".vp-code-group .tabs",
+   "property": "border-radius",
+   "value": "0.5rem 0.5rem 0 0",
+   "important": false,
+   "media": "(min-width: 40rem)",
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 45,
+   "selector": ".vp-code-group .tabs label::after",
+   "property": "border-radius",
+   "value": "2px",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h1",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h2",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h3",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h4",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h5",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 30,
+   "selector": ".vp-doc h6",
+   "property": "outline",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 287,
+   "selector": ".vp-doc .custom-block div[class*='language-']",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 302,
+   "selector": ".vp-doc .custom-block .vp-code-group .tabs",
+   "property": "border-radius",
+   "value": "0.5rem 0.5rem 0 0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 322,
+   "selector": ".vp-doc :not(pre) > code",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 356,
+   "selector": ".vp-doc div[class*='language-']",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": "(min-width: 40rem)",
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 356,
+   "selector": ".vp-block",
+   "property": "border-radius",
+   "value": "0.5rem",
+   "important": false,
+   "media": "(min-width: 40rem)",
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 364,
+   "selector": ".vp-doc li div[class*='language-']",
+   "property": "border-radius",
+   "value": "0.5rem 0 0 0.5rem",
+   "important": false,
+   "media": "not all and (min-width: 40rem)",
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 478,
+   "selector": ".vp-doc .line-numbers-wrapper",
+   "property": "font-family",
+   "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 499,
+   "selector": ".vp-doc [class*='language-'] > button.copy",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 535,
+   "selector": ".vp-doc [class*='language-'] > button.copy.copied",
+   "property": "border-radius",
+   "value": "0 0.25rem 0.25rem 0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 535,
+   "selector": ".vp-doc [class*='language-'] > button.copy:hover.copied",
+   "property": "border-radius",
+   "value": "0 0.25rem 0.25rem 0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    5,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 543,
+   "selector": ".vp-doc [class*='language-'] > button.copy.copied::before",
+   "property": "border-radius",
+   "value": "0.25rem 0 0 0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 543,
+   "selector": ".vp-doc [class*='language-'] > button.copy:hover.copied::before",
+   "property": "border-radius",
+   "value": "0.25rem 0 0 0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    5,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-sponsor.css",
+   "line": 1,
+   "selector": ".vp-sponsor",
+   "property": "border-radius",
+   "value": "1rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-sponsor.css",
+   "line": 6,
+   "selector": ".vp-sponsor.aside",
+   "property": "border-radius",
+   "value": "0.75rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 79,
+   "selector": ".DocSearch-Commands-Key",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 85,
+   "selector": ".DocSearch-Hit a:focus-visible",
+   "property": "outline",
+   "value": "2px solid var(--docsearch-focus-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 97,
+   "selector": ".DocSearch-Menu-content",
+   "property": "border-radius",
+   "value": "0.375rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 97,
+   "selector": ".DocSearch-Menu-content",
+   "property": "box-shadow",
+   "value": "var(--vp-shadow-2)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 105,
+   "selector": ".DocSearch-Menu-item",
+   "property": "border-radius",
+   "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  }
+ ]
+}
