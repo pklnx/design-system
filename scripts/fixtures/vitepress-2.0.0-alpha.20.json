@@ -5,7 +5,23 @@
   "border-radius",
   "outline",
   "box-shadow",
-  "font-family"
+  "font-family",
+  "border",
+  "border-color",
+  "border-width",
+  "border-style",
+  "border-left",
+  "border-left-color",
+  "border-left-width",
+  "border-left-style",
+  "border-inline",
+  "border-inline-color",
+  "border-inline-width",
+  "border-inline-style",
+  "border-inline-start",
+  "border-inline-start-color",
+  "border-inline-start-width",
+  "border-inline-start-style"
  ],
  "asyncComponents": [
   "components/VPAlgoliaSearchBox.vue",
@@ -319,6 +335,23 @@
    "file": "components/VPBadge.vue",
    "line": 22,
    "selector": ".VPBadge",
+   "property": "border",
+   "value": "1px solid transparent",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 22,
+   "selector": ".VPBadge",
    "property": "border-radius",
    "value": "0.75rem",
    "important": false,
@@ -329,6 +362,142 @@
    "specificity": [
     0,
     1,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 67,
+   "selector": ".VPBadge.info",
+   "property": "border-color",
+   "value": "var(--vp-badge-info-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 73,
+   "selector": ".VPBadge.note",
+   "property": "border-color",
+   "value": "var(--vp-badge-note-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 79,
+   "selector": ".VPBadge.tip",
+   "property": "border-color",
+   "value": "var(--vp-badge-tip-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 85,
+   "selector": ".VPBadge.important",
+   "property": "border-color",
+   "value": "var(--vp-badge-important-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 91,
+   "selector": ".VPBadge.caution",
+   "property": "border-color",
+   "value": "var(--vp-badge-caution-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 97,
+   "selector": ".VPBadge.warning",
+   "property": "border-color",
+   "value": "var(--vp-badge-warning-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPBadge.vue",
+   "line": 103,
+   "selector": ".VPBadge.danger",
+   "property": "border-color",
+   "value": "var(--vp-badge-danger-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 57,
+   "selector": ".VPButton",
+   "property": "border",
+   "value": "1px solid transparent",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
     0
    ]
   },
@@ -363,6 +532,159 @@
    "specificity": [
     0,
     3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 85,
+   "selector": ".VPButton.brand",
+   "property": "border-color",
+   "value": "var(--vp-button-brand-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 91,
+   "selector": ".VPButton.brand:hover",
+   "property": "border-color",
+   "value": "var(--vp-button-brand-hover-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 97,
+   "selector": ".VPButton.brand:active",
+   "property": "border-color",
+   "value": "var(--vp-button-brand-active-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 103,
+   "selector": ".VPButton.alt",
+   "property": "border-color",
+   "value": "var(--vp-button-alt-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 109,
+   "selector": ".VPButton.alt:hover",
+   "property": "border-color",
+   "value": "var(--vp-button-alt-hover-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 115,
+   "selector": ".VPButton.alt:active",
+   "property": "border-color",
+   "value": "var(--vp-button-alt-active-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 121,
+   "selector": ".VPButton.sponsor",
+   "property": "border-color",
+   "value": "var(--vp-button-sponsor-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 127,
+   "selector": ".VPButton.sponsor:hover",
+   "property": "border-color",
+   "value": "var(--vp-button-sponsor-hover-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPButton.vue",
+   "line": 133,
+   "selector": ".VPButton.sponsor:active",
+   "property": "border-color",
+   "value": "var(--vp-button-sponsor-active-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
     0
    ]
   },
@@ -402,6 +724,23 @@
   },
   {
    "file": "components/VPDocAsideOutline.vue",
+   "line": 47,
+   "selector": ".content",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPDocAsideOutline.vue",
    "line": 55,
    "selector": ".outline-marker",
    "property": "border-radius",
@@ -419,10 +758,78 @@
   },
   {
    "file": "components/VPDocFooter.vue",
+   "line": 92,
+   "selector": ".edit-link-button",
+   "property": "border",
+   "value": "0",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPDocFooter.vue",
+   "line": 125,
+   "selector": ".pager-link",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPDocFooter.vue",
    "line": 125,
    "selector": ".pager-link",
    "property": "border-radius",
    "value": "0.5rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPDocFooter.vue",
+   "line": 135,
+   "selector": ".pager-link:hover",
+   "property": "border-color",
+   "value": "var(--vp-c-brand-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPFeature.vue",
+   "line": 77,
+   "selector": ".VPFeature",
+   "property": "border",
+   "value": "1px solid var(--vp-c-bg-soft)",
    "important": false,
    "media": null,
    "layer": null,
@@ -453,6 +860,23 @@
   },
   {
    "file": "components/VPFeature.vue",
+   "line": 86,
+   "selector": ".VPFeature.link:hover",
+   "property": "border-color",
+   "value": "var(--vp-c-brand-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPFeature.vue",
    "line": 101,
    "selector": ".icon",
    "property": "border-radius",
@@ -474,6 +898,23 @@
    "selector": ".image-bg",
    "property": "border-radius",
    "value": "50%",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalNavOutlineDropdown.vue",
+   "line": 151,
+   "selector": ".items",
+   "property": "border",
+   "value": "1px solid var(--vp-c-border)",
    "important": false,
    "media": null,
    "layer": null,
@@ -557,8 +998,59 @@
    "file": "components/VPLocalSearchBox.vue",
    "line": 545,
    "selector": ".search-bar",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 545,
+   "selector": ".search-bar",
    "property": "border-radius",
    "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 560,
+   "selector": ".search-bar:focus-within",
+   "property": "border-color",
+   "value": "var(--vp-c-brand-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 630,
+   "selector": ".search-loading",
+   "property": "border",
+   "value": "2px solid var(--vp-c-divider)",
    "important": false,
    "media": null,
    "layer": null,
@@ -608,6 +1100,23 @@
    "file": "components/VPLocalSearchBox.vue",
    "line": 679,
    "selector": ".search-keyboard-shortcuts kbd",
+   "property": "border",
+   "value": "1px solid rgba(128, 128, 128, 0.15)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 679,
+   "selector": ".search-keyboard-shortcuts kbd",
    "property": "box-shadow",
    "value": "0 2px 2px 0 rgba(0, 0, 0, 0.1)",
    "important": false,
@@ -642,6 +1151,23 @@
    "file": "components/VPLocalSearchBox.vue",
    "line": 700,
    "selector": ".result",
+   "property": "border",
+   "value": "solid 2px var(--vp-local-search-result-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 700,
+   "selector": ".result",
    "property": "outline",
    "value": "none",
    "important": false,
@@ -652,6 +1178,23 @@
    "specificity": [
     0,
     2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPLocalSearchBox.vue",
+   "line": 752,
+   "selector": ".result.selected",
+   "property": "border-color",
+   "value": "var(--vp-local-search-result-selected-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": true,
+   "specificity": [
+    0,
+    3,
     0
    ]
   },
@@ -727,6 +1270,23 @@
    "file": "components/VPMenu.vue",
    "line": 30,
    "selector": ".VPMenu",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenu.vue",
+   "line": 30,
+   "selector": ".VPMenu",
    "property": "box-shadow",
    "value": "var(--vp-shadow-3)",
    "important": false,
@@ -737,6 +1297,40 @@
    "specificity": [
     0,
     2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenuGroup.vue",
+   "line": 70,
+   "selector": ".VPNavScreen .VPMenuGroup",
+   "property": "border",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenuGroup.vue",
+   "line": 84,
+   "selector": ".VPMenuGroup > .sub-groups",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
     0
    ]
   },
@@ -754,6 +1348,23 @@
    "specificity": [
     0,
     2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPMenuLink.vue",
+   "line": 79,
+   "selector": ".VPNavScreen .VPMenuLink",
+   "property": "border",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
     0
    ]
   },
@@ -831,6 +1442,23 @@
    "selector": ".VPNavBarSearchButton",
    "property": "border-radius",
    "value": "0.5rem",
+   "important": false,
+   "media": "(min-width: 48rem)",
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPNavBarSearchButton.vue",
+   "line": 67,
+   "selector": ".keys",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
    "important": false,
    "media": "(min-width: 48rem)",
    "layer": null,
@@ -945,6 +1573,91 @@
    ]
   },
   {
+   "file": "components/VPSidebarItem.vue",
+   "line": 207,
+   "selector": ".VPSidebarItem.level-1 .items",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebarItem.vue",
+   "line": 207,
+   "selector": ".VPSidebarItem.level-2 .items",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebarItem.vue",
+   "line": 207,
+   "selector": ".VPSidebarItem.level-3 .items",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebarItem.vue",
+   "line": 207,
+   "selector": ".VPSidebarItem.level-4 .items",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSidebarItem.vue",
+   "line": 207,
+   "selector": ".VPSidebarItem.level-5 .items",
+   "property": "border-left",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    0
+   ]
+  },
+  {
    "file": "components/VPSkipLink.vue",
    "line": 23,
    "selector": ".VPSkipLink",
@@ -992,6 +1705,40 @@
    "specificity": [
     0,
     2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 12,
+   "selector": ".VPSwitch",
+   "property": "border",
+   "value": "1px solid var(--vp-input-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "components/VPSwitch.vue",
+   "line": 24,
+   "selector": ".VPSwitch:hover",
+   "property": "border-color",
+   "value": "var(--vp-c-brand-1)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": true,
+   "async": false,
+   "specificity": [
+    0,
+    3,
     0
    ]
   },
@@ -1150,6 +1897,91 @@
   },
   {
    "file": "styles/base.css",
+   "line": 7,
+   "selector": "*",
+   "property": "border",
+   "value": "0 solid",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 7,
+   "selector": "::after",
+   "property": "border",
+   "value": "0 solid",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 7,
+   "selector": "::before",
+   "property": "border",
+   "value": "0 solid",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 7,
+   "selector": "::backdrop",
+   "property": "border",
+   "value": "0 solid",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 7,
+   "selector": "::file-selector-button",
+   "property": "border",
+   "value": "0 solid",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
    "line": 18,
    "selector": "html",
    "property": "font-family",
@@ -1239,6 +2071,23 @@
    "selector": "pre",
    "property": "font-family",
    "value": "var(--vp-font-family-mono)",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 91,
+   "selector": "table",
+   "property": "border-color",
+   "value": "inherit",
    "important": false,
    "media": null,
    "layer": "__vitepress_base",
@@ -1492,6 +2341,23 @@
    "file": "styles/components/custom-block.css",
    "line": 1,
    "selector": ".custom-block",
+   "property": "border",
+   "value": "1px solid transparent",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 1,
+   "selector": ".custom-block",
    "property": "border-radius",
    "value": "0.5rem",
    "important": false,
@@ -1502,6 +2368,142 @@
    "specificity": [
     0,
     1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 15,
+   "selector": ".custom-block.info",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-info-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 35,
+   "selector": ".custom-block.note",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-note-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 55,
+   "selector": ".custom-block.tip",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-tip-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 75,
+   "selector": ".custom-block.important",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-important-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 95,
+   "selector": ".custom-block.warning",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-warning-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 115,
+   "selector": ".custom-block.danger",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-danger-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 135,
+   "selector": ".custom-block.caution",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-caution-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/custom-block.css",
+   "line": 155,
+   "selector": ".custom-block.details",
+   "property": "border-color",
+   "value": "var(--vp-custom-block-details-border)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
     0
    ]
   },
@@ -1660,6 +2662,74 @@
   },
   {
    "file": "styles/components/vp-doc.css",
+   "line": 131,
+   "selector": ".vp-doc blockquote",
+   "property": "border-left",
+   "value": "2px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 242,
+   "selector": ".vp-doc th",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 242,
+   "selector": ".vp-doc td",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 264,
+   "selector": ".vp-doc hr",
+   "property": "border",
+   "value": "none",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
    "line": 287,
    "selector": ".vp-doc .custom-block div[class*='language-']",
    "property": "border-radius",
@@ -1781,6 +2851,23 @@
    "file": "styles/components/vp-doc.css",
    "line": 499,
    "selector": ".vp-doc [class*='language-'] > button.copy",
+   "property": "border",
+   "value": "1px solid var(--vp-code-copy-code-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    3,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 499,
+   "selector": ".vp-doc [class*='language-'] > button.copy",
    "property": "border-radius",
    "value": "0.25rem",
    "important": false,
@@ -1791,6 +2878,40 @@
    "specificity": [
     0,
     3,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 529,
+   "selector": ".vp-doc [class*='language-'] > button.copy:hover",
+   "property": "border-color",
+   "value": "var(--vp-code-copy-code-hover-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 529,
+   "selector": ".vp-doc [class*='language-'] > button.copy.copied",
+   "property": "border-color",
+   "value": "var(--vp-code-copy-code-hover-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
     1
    ]
   },
@@ -1826,6 +2947,40 @@
     0,
     5,
     1
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 543,
+   "selector": ".vp-doc [class*='language-'] > button.copy.copied::before",
+   "property": "border",
+   "value": "1px solid var(--vp-code-copy-code-hover-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    4,
+    2
+   ]
+  },
+  {
+   "file": "styles/components/vp-doc.css",
+   "line": 543,
+   "selector": ".vp-doc [class*='language-'] > button.copy:hover.copied::before",
+   "property": "border",
+   "value": "1px solid var(--vp-code-copy-code-hover-border-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    5,
+    2
    ]
   },
   {
@@ -1900,6 +3055,23 @@
    "file": "styles/docsearch.css",
    "line": 79,
    "selector": ".DocSearch-Commands-Key",
+   "property": "border",
+   "value": "1px solid var(--docsearch-subtle-color)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 79,
+   "selector": ".DocSearch-Commands-Key",
    "property": "border-radius",
    "value": "0.25rem",
    "important": false,
@@ -1928,6 +3100,23 @@
     0,
     2,
     1
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 97,
+   "selector": ".DocSearch-Menu-content",
+   "property": "border",
+   "value": "1px solid var(--vp-c-divider)",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
    ]
   },
   {
@@ -1970,6 +3159,23 @@
    "selector": ".DocSearch-Menu-item",
    "property": "border-radius",
    "value": "0.25rem",
+   "important": false,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/docsearch.css",
+   "line": 113,
+   "selector": ".DocSearch-Sidepanel-Prompt--form",
+   "property": "border-color",
+   "value": "var(--docsearch-subtle-color)",
    "important": false,
    "media": null,
    "layer": null,

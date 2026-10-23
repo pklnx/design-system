@@ -3,10 +3,10 @@
     "id": "@pklnx/design-system@0.2.0",
     "name": "@pklnx/design-system",
     "version": "0.2.0",
-    "size": 387023,
-    "unpackedSize": 471851,
-    "shasum": "c338b633805be985be751ae90b2989c08ae64375",
-    "integrity": "sha512-EAmwtaC3mJ0HNZ6APRME49ERx7aNjxhBdFwN2HHl8QZbURp+TVjv0xAPJXhwgkj0R5pPC7bZdwwIPz/xJlHGgw==",
+    "size": 388352,
+    "unpackedSize": 482030,
+    "shasum": "93ddaab8f3207b409dea0b01c60e658badf57c26",
+    "integrity": "sha512-+wmZdT1DRJyxDt/JREQMXOC5yV3YrnF2FdrkjR2HP9J7STi/5SYRgIwwjAV4GZrnUuXQuMQ91lMwlnfqd+8Gtg==",
     "filename": "pklnx-design-system-0.2.0.tgz",
     "files": [
       {
@@ -16,12 +16,12 @@
       },
       {
         "path": "README.md",
-        "size": 12210,
+        "size": 13315,
         "mode": 420
       },
       {
         "path": "THIRD_PARTY_NOTICES.md",
-        "size": 43482,
+        "size": 43524,
         "mode": 420
       },
       {
@@ -81,7 +81,7 @@
       },
       {
         "path": "theme/vitepress.css",
-        "size": 15907,
+        "size": 24939,
         "mode": 420
       }
     ],

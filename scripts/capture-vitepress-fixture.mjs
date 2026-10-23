@@ -17,7 +17,9 @@
 //   components/*.vue          every <style> block, with its scoped flag (the theme ships
 //                             SFC sources, not compiled component CSS)
 //   styles/**/*.css           with the @layer name where there is one
-// and records every rule that sets border-radius, outline, box-shadow or font-family:
+// and records every rule that sets border-radius, outline, box-shadow, font-family or a
+// border (border, border-left, border-inline, border-inline-start and their -color,
+// -width and -style):
 // file, line, selector, media condition, scoped, layer, !important, specificity (scoped
 // rules get Vue's [data-v-…] attribute, +(0,1,0)) and whether the component is loaded
 // async (its CSS then arrives after theme/vitepress.css).
@@ -26,7 +28,10 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseCss, specificity, splitTopLevel } from './css-selectors.mjs';
 
-export const PROPERTIES = ['border-radius', 'outline', 'box-shadow', 'font-family'];
+// Border properties are recorded too: theme/vitepress.css gives custom blocks a left
+// stripe, and the tests check every border rule that reaches a custom block.
+const BORDERS = ['', '-left', '-inline', '-inline-start'].flatMap((side) => ['', '-color', '-width', '-style'].map((part) => `border${side}${part}`));
+export const PROPERTIES = ['border-radius', 'outline', 'box-shadow', 'font-family', ...BORDERS];
 
 const listFiles = (dir, ext) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
   const p = path.join(dir, d.name);

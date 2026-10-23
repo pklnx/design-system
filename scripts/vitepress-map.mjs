@@ -24,6 +24,50 @@ const BLOCKS = {
   danger: 'notification-background-error',
   details: 'layer-01',
 };
+// The left stripe of each custom-block kind (maintainer decision on PR #13): a 3 px
+// border in Carbon's support colour, in both themes, like Carbon's inline notification.
+// details gets none. The stripe is decorative (the block title carries the meaning), so
+// it has no 3:1 contrast requirement and is not in PAIRS. The same holds for the 1 px
+// frame and the icon below.
+export const STRIPES = {
+  info: 'support-info',
+  note: 'support-info',
+  important: 'support-info',
+  tip: 'support-success',
+  warning: 'support-warning',
+  caution: 'support-warning',
+  danger: 'support-error',
+};
+// Carbon's low-contrast inline notification also draws a 1 px frame in the support
+// colour, through a ::before with `filter: opacity(0.4)` (@carbon/styles,
+// scss/components/notification/_inline-notification.scss,
+// inline-notification-low-contrast-before). Here the frame is the block's own 1 px border
+// (VitePress's `.custom-block` border, coloured by --vp-custom-block-<kind>-border) in the
+// support colour at alpha 0.4, which looks the same over the block ground.
+export const FRAME_ALPHA = 0.4;
+// The filled Carbon icon before each block title, as in the notification: the icon in
+// the support colour, its inner path cut out, except WarningFilled, whose inner path
+// Carbon fills black ($black-100). The build renders the icons from @carbon/icons-react
+// (generated from @carbon/icons, Apache-2.0).
+export const BLOCK_ICONS = {
+  info: 'InformationFilled',
+  note: 'InformationFilled',
+  important: 'InformationFilled',
+  tip: 'CheckmarkFilled',
+  warning: 'WarningFilled',
+  caution: 'WarningFilled',
+  danger: 'ErrorFilled',
+};
+export const FILLED_INNER = ['WarningFilled'];
+// The elements VitePress renders for custom blocks: `::: kind` containers, GitHub-style
+// alerts (`> [!NOTE]`, `<div class="note custom-block github-alert">`, five kinds) and
+// `::: details` (a <details>).
+const ALERTS = ['note', 'tip', 'important', 'warning', 'caution'];
+export const CUSTOM_BLOCK_ELEMENTS = [
+  ...Object.keys(STRIPES).map((kind) => ({ tag: 'div', classes: [kind, 'custom-block'] })),
+  ...ALERTS.map((kind) => ({ tag: 'div', classes: [kind, 'custom-block', 'github-alert'] })),
+  { tag: 'details', classes: ['details', 'custom-block'] },
+];
 const BADGES = {
   info: ['tag-background-gray', 'tag-color-gray'],
   note: ['tag-background-gray', 'tag-color-gray'],
@@ -92,7 +136,8 @@ export const MAP = {
     [`--vp-badge-${kind}-bg`, T(bg)],
   ])),
   ...Object.fromEntries(Object.entries(BLOCKS).flatMap(([kind, bg]) => [
-    [`--vp-custom-block-${kind}-border`, T('transparent')],
+    // The 1 px frame (see FRAME_ALPHA); details has none.
+    [`--vp-custom-block-${kind}-border`, STRIPES[kind] ? { ...T(STRIPES[kind]), alpha: FRAME_ALPHA } : T('transparent')],
     [`--vp-custom-block-${kind}-text`, T('text-primary')],
     [`--vp-custom-block-${kind}-bg`, T(bg)],
     // Inline code in blocks: a grey ground would fail 4.5:1 under link colours in light.
@@ -139,6 +184,8 @@ export const MAP = {
   // button focus).
   '--pklnx-vp-focus': T('focus'),
   '--pklnx-vp-focus-inset': T('focus-inset'),
+  // Custom-block stripes (see STRIPES).
+  ...Object.fromEntries(Object.entries(STRIPES).map(([kind, token]) => [`--pklnx-vp-stripe-${kind}`, T(token)])),
 };
 
 // Custom properties that are not colours, the same in both themes. The font stacks are
@@ -248,7 +295,7 @@ export const CORNERS = [
   { area: 'Other', selectors: ['.VPTeamMembersItem'], covers: at('components/VPTeamMembersItem.vue', '.VPTeamMembersItem') },
 ];
 
-// Focus, nav title and inline code: normal declarations, unlayered. VitePress's
+// Focus, nav title, inline code and custom-block stripes: normal declarations, unlayered. VitePress's
 // base.css sits in @layer __vitepress_base, so these beat its rules at any
 // specificity. `elements` describe the elements a rule is meant for; the tests check
 // that the rule matches them and that every VitePress rule which sets the same
@@ -291,13 +338,24 @@ export const RULES = [
     decls: ['color: var(--vp-code-color)'],
     elements: [{ tag: 'code' }],
   },
+  // Custom-block stripes. `.custom-block.custom-block.<kind>` (0,3,0) beats VitePress's
+  // `.custom-block` frame (0,1,0) and `.custom-block.<kind> { border-color }` (0,2,0).
+  ...Object.keys(STRIPES).map((kind, i) => ({
+    area: 'Custom blocks',
+    note: i === 0 ? "Custom blocks: a 3 px left stripe in Carbon's support colour, as on Carbon's inline notification. Decorative (the title carries the meaning), so no 3:1 requirement. details has none." : null,
+    selector: `.custom-block.custom-block.${kind}`,
+    decls: [`border-left: 3px solid var(--pklnx-vp-stripe-${kind})`],
+    covers: at('styles/components/custom-block.css', `.custom-block.${kind}`),
+    elements: CUSTOM_BLOCK_ELEMENTS.filter((el) => el.classes[0] === kind),
+  })),
 ];
 
 // ---------------------------------------------------------------- kept rules
-// VitePress rules that set a corner, an outline or a font and stay as they are (file,
-// selector, the property kept, the reason). An
+// VitePress rules that set a corner, an outline or a font, or a border on a custom
+// block, and stay as they are (file, selector, the property kept, the reason). An
 // outline rule that is not in a cascade layer carries the element it styles: the tests
 // check that it still wins against every pklnx focus rule that matches that element.
+// Kept rules without an element may still lose to a pklnx rule where one applies.
 const keep = (file, selectors, property, reason, element) => selectors.map((selector) => ({ file, selector, property, reason, ...(element ? { element: element(selector) } : {}) }));
 const UNUSED = 'component the products do not use';
 export const KEPT = [
@@ -318,6 +376,10 @@ export const KEPT = [
   ...keep('components/VPTeamMembersItem.vue', ['.sp .sp-link.link:hover', '.sp .sp-link.link:focus'], 'outline', UNUSED, () => ({ tag: 'a', classes: ['sp-link', 'link'], attrs: { href: '/' } })),
   ...keep('styles/base.css', [':-moz-focusring:where(:not(iframe))'], 'outline', "Firefox's default ring in @layer __vitepress_base; every pklnx focus rule is unlayered and replaces it where it applies"),
   ...keep('components/VPNavBarSearchButton.vue', ['kbd'], 'font-family', "inherits the search button's font"),
+  // Borders of custom blocks.
+  ...keep('styles/components/custom-block.css', ['.custom-block'], 'border', 'the 1 px transparent frame of every block; the stripe rules replace its left side, details keeps it whole'),
+  ...keep('styles/components/custom-block.css', ['.custom-block.details'], 'border-color', 'details has no stripe; --vp-custom-block-details-border is transparent'),
+  ...keep('styles/base.css', ['*'], 'border', 'the preflight reset (border: 0 solid) in @layer __vitepress_base'),
 ];
 
 // Values that already equal what the overrides set, so their rules need no entry.
@@ -328,6 +390,42 @@ export const isTargetValue = (property, value) =>
 // ---------------------------------------------------------------- the stylesheet
 const block = (selector, props) => `${selector} {\n${Object.entries(props).map(([k, v]) => `  ${k}: ${v};`).join('\n')}\n}\n`;
 
+// '#0043ce', 0.4 → 'rgba(0, 67, 206, 0.4)'.
+export function withAlpha(hex, alpha) {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!m) throw new Error(`vitepress-map: not a 6-digit hex colour: ${hex}`);
+  return `rgba(${[0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)).join(', ')}, ${alpha})`;
+}
+
+// The icon custom properties for one theme: a data: SVG per block kind. shapes: the
+// icon name → { viewBox, outer, inner } from @carbon/icons-react; black: Carbon's
+// $black-100 for the filled inner path.
+export function iconProperties(tokens, theme, shapes, black) {
+  return Object.fromEntries(Object.entries(BLOCK_ICONS).map(([kind, name]) => {
+    const shape = shapes[name];
+    if (!shape) throw new Error(`vitepress-map: icon ${name} missing`);
+    const fill = tokens[theme][STRIPES[kind]];
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shape.viewBox}"><path fill="${fill}" d="${shape.outer}"/>`;
+    if (FILLED_INNER.includes(name)) svg += `<path fill="${black}" d="${shape.inner}"/>`;
+    svg += '</svg>';
+    return [`--pklnx-vp-icon-${kind}`, `url("data:image/svg+xml,${encodeURIComponent(svg)}")`];
+  }));
+}
+
+// 20 px, as Carbon's notification icon, centred on the 14 px title line.
+export const ICON_GEOMETRY = [
+  'content: ""',
+  'display: inline-block',
+  'width: 1.25rem',
+  'height: 1.25rem',
+  'margin-inline-end: 0.5rem',
+  'vertical-align: -0.3125rem',
+  'background-repeat: no-repeat',
+  'background-position: center',
+  'background-size: contain',
+];
+export const ICON_BEFORE = (kind) => `.custom-block.${kind} > .custom-block-title::before`;
+
 // Resolves MAP for one theme against tokens.json.
 export function themeValues(tokens, theme) {
   return Object.fromEntries(Object.entries(MAP).map(([name, t]) => {
@@ -335,19 +433,22 @@ export function themeValues(tokens, theme) {
     if (token === 'transparent') return [name, 'transparent'];
     const v = tokens[theme][token];
     if (!v) throw new Error(`vitepress-map: token ${token} missing in ${theme}`);
-    return [name, v];
+    return [name, t.alpha === undefined ? v : withAlpha(v, t.alpha)];
   }));
 }
 
-// The text of theme/vitepress.css. tokens: theme/tokens.json; fonts: { sans, mono }.
-export function vitepressCss(tokens, fonts) {
+// The text of theme/vitepress.css. tokens: theme/tokens.json; fonts: { sans, mono };
+// icons: { shapes, black } (see iconProperties).
+export function vitepressCss(tokens, fonts, icons) {
   const statics = staticProperties(fonts);
   let css = `/* pklnx VitePress theme: VitePress ${VITEPRESS_VERSION} default theme with the pklnx Carbon tokens,
    IBM Plex, Carbon corners and focus. Import after vitepress/theme-without-fonts.
-   Generated by scripts/build.mjs from theme/tokens.json and scripts/vitepress-map.mjs. Do not edit. */
+   Generated by scripts/build.mjs from theme/tokens.json and scripts/vitepress-map.mjs. Do not edit.
+   The custom-block icons are Carbon icons (@carbon/icons via @carbon/icons-react, Copyright IBM Corp.,
+   Apache-2.0; see THIRD_PARTY_NOTICES.md). */
 `;
-  css += block(':root', { ...themeValues(tokens, 'light'), ...statics });
-  css += block('.dark', { ...themeValues(tokens, 'dark'), ...statics });
+  css += block(':root', { ...themeValues(tokens, 'light'), ...statics, ...iconProperties(tokens, 'light', icons.shapes, icons.black) });
+  css += block('.dark', { ...themeValues(tokens, 'dark'), ...statics, ...iconProperties(tokens, 'dark', icons.shapes, icons.black) });
   for (const f of FONT_FACES) {
     css += block('@font-face', {
       'font-family': `"${f.family}"`,
@@ -359,6 +460,9 @@ export function vitepressCss(tokens, fonts) {
   }
   css += '/* Corners: Carbon is square. */\n';
   for (const c of CORNERS) css += `${c.selectors.join(',\n')} {\n  border-radius: 0 !important;\n}\n`;
-  for (const r of RULES) css += `/* ${r.note.replace(/\*\//g, '* /')} */\n${r.selector} {\n${r.decls.map((d) => `  ${d};`).join('\n')}\n}\n`;
+  for (const r of RULES) css += `${r.note ? `/* ${r.note.replace(/\*\//g, '* /')} */\n` : ''}${r.selector} {\n${r.decls.map((d) => `  ${d};`).join('\n')}\n}\n`;
+  css += "/* Custom-block icons: Carbon's filled notification icon before the title, in the support colour. The title stays on its own line. */\n";
+  css += `${Object.keys(BLOCK_ICONS).map(ICON_BEFORE).join(',\n')} {\n${ICON_GEOMETRY.map((d) => `  ${d};`).join('\n')}\n}\n`;
+  for (const kind of Object.keys(BLOCK_ICONS)) css += `${ICON_BEFORE(kind)} {\n  background-image: var(--pklnx-vp-icon-${kind});\n}\n`;
   return css;
 }
