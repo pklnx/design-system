@@ -7,7 +7,21 @@ This repo is the source of truth for two things:
 1. **The Carbon theme for code** (`theme/`), usable in any Carbon application.
 2. **The design system on claude.ai** (`project/`), the browsable reference with tokens, component previews and assets.
 
-## Using the theme in code
+## Package
+
+The theme is released as an npm-format tarball attached to a [GitHub release](https://github.com/pklnx/design-system/releases) of this repository. It is not on the npm registry and not on GitHub Packages: the asset is public and needs no account or token, also in Docker builds.
+
+### Install
+
+```sh
+pnpm add https://github.com/pklnx/design-system/releases/download/vX.Y.Z/pklnx-design-system-X.Y.Z.tgz
+```
+
+pnpm records the URL and the tarball's sha512 integrity in `pnpm-lock.yaml`; a changed asset fails `pnpm install --frozen-lockfile`.
+
+**Never run `pnpm add @pklnx/design-system` (or `npm install @pklnx/design-system`) without the URL.** The bare name asks the npm registry, where the name is not ours.
+
+### Use
 
 CSS: load it after Carbon's CSS and set the theme on `<html>`:
 
@@ -20,7 +34,7 @@ import '@carbon/styles/css/styles.css';
 import '@pklnx/design-system/theme/pklnx-carbon.css';
 ```
 
-Sass:
+Sass (secondary; no product uses it today):
 
 ```scss
 @use '@pklnx/design-system/theme' as pklnx;
@@ -32,6 +46,72 @@ Sass:
 
 The logo star is available as `--pklnx-star`.
 
+| Export | File |
+| --- | --- |
+| `@pklnx/design-system/theme/pklnx-carbon.css` | The theme: only the tokens that differ from Carbon, for `.cds--white` and `.cds--g100` |
+| `@pklnx/design-system/theme` | The Sass module (`theme/_index.scss`) |
+| `@pklnx/design-system/theme/tokens.json` | Every Carbon color token for White and G100 after the customization, plus the `changed` set |
+| `@pklnx/design-system/fonts/*` | The IBM Plex woff2 files (`project/fonts/`) and `OFL.txt` |
+| `@pklnx/design-system/package.json` | The manifest |
+
+- **Peer dependency**: `@carbon/styles` `^1.118.0`. The package has no dependencies of its own and no install scripts.
+- **Fonts**: the package ships the woff2 files but no `@font-face` rules; a consumer writes its own, for example `src: url("@pklnx/design-system/fonts/IBMPlexSans-Regular.woff2") format("woff2")`.
+- **Contents**: exactly the files above plus `LICENSE`, `README.md` and `THIRD_PARTY_NOTICES.md`. No brand assets; `scripts/check-pack.mjs` enforces the list in CI and in the release.
+- **License**: `MIT AND Apache-2.0 AND OFL-1.1`. The code is MIT, the token values are computed from Carbon (Apache-2.0, notices in `THIRD_PARTY_NOTICES.md`), the fonts are IBM Plex (SIL Open Font License 1.1, `OFL.txt`).
+
+### Verify a release
+
+```sh
+gh release download vX.Y.Z --repo pklnx/design-system
+sha256sum -c SHA256SUMS            # or on macOS: shasum -a 256 -c SHA256SUMS
+gh attestation verify pklnx-design-system-X.Y.Z.tgz --repo pklnx/design-system
+```
+
+Stricter, pinned to the release workflow and the tag:
+
+```sh
+gh attestation verify pklnx-design-system-X.Y.Z.tgz --repo pklnx/design-system \
+  --signer-workflow pklnx/design-system/.github/workflows/release.yml \
+  --source-ref refs/tags/vX.Y.Z
+```
+
+The integrity in the consumer's `pnpm-lock.yaml` must equal:
+
+```sh
+echo "sha512-$(openssl dgst -sha512 -binary pklnx-design-system-X.Y.Z.tgz | openssl base64 -A)"
+```
+
+The release notes print the install command and this integrity, too.
+
+The release workflow checks that the tagged commit is on `main`. That check is a guard against mistakes, not a security boundary: a tag push runs the `release.yml` of the tagged commit itself, so a tag on a branch commit with a changed workflow would skip it, and the attestation's `--source-ref` names the tag, not the branch. When you update a consumer, also check that the release's commit is on `main`, for example `git merge-base --is-ancestor vX.Y.Z origin/main` in a clone of this repository.
+
+### Version policy
+
+[Semantic versioning](https://semver.org/):
+
+- **Major**: a new Carbon major, a removed or renamed token, a removed export.
+- **Minor**: new tokens or exports, changed token values.
+- **Patch**: anything else.
+
+While the version is 0.x, a breaking change bumps the minor version.
+
+### Updating a consumer
+
+Dependabot does not update URL dependencies. Each release gets a small pull request in each consumer:
+
+1. `pnpm add https://github.com/pklnx/design-system/releases/download/vX.Y.Z/pklnx-design-system-X.Y.Z.tgz`
+2. Verify the release as above, including that its commit is on `main`.
+3. The review checks that the integrity in `pnpm-lock.yaml` equals the integrity of the verified tarball.
+
+No release-age delay (`minimumReleaseAge`) applies: it only covers registry packages.
+
+### Releasing
+
+1. Bump `version` in `package.json` in a pull request and merge it.
+2. Tag `vX.Y.Z` on that `main` commit and push the tag (`git tag vX.Y.Z <commit> && git push origin vX.Y.Z`).
+
+`.github/workflows/release.yml` checks the tag format, that it equals `v` plus the `package.json` version and that the commit is on `main`, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball, writes `SHA256SUMS` and the notes, attests the tarball and creates the release. A tag that fails a check fails the workflow before anything is published: delete the tag and tag again. A release that exists is never replaced.
+
 ## Layout
 
 | Path | Contents |
@@ -42,7 +122,7 @@ The logo star is available as `--pklnx-star`.
 | `theme/contrast-report.json` | Generated: contrast check of the key pairs |
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
 | `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
-| `scripts/` | Build scripts |
+| `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`) |
 | `project/` | Content of the claude.ai design system (README, tokens, components, previews, assets, fonts) |
 
 ## Building

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "@pklnx/design-system@0.1.0",
+    "name": "@pklnx/design-system",
+    "version": "0.1.0",
+    "size": 381644,
+    "unpackedSize": 446664,
+    "shasum": "04deebc2006670b5d6d52392016604ddfdedcb8e",
+    "integrity": "sha512-Q6bmvV6Qp2mMsgMShwrzCCpRSvu1O3HZRMPEXb+1pDkIEx+UEIEDIU9ujzqjDqecBQ8A3krFA4dZy4T/GRGLVw==",
+    "filename": "pklnx-design-system-0.1.0.tgz",
+    "files": [
+      {
+        "path": "LICENSE",
+        "size": 1721,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 3811,
+        "mode": 420
+      },
+      {
+        "path": "THIRD_PARTY_NOTICES.md",
+        "size": 43482,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1671,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexMono-Regular.woff2",
+        "size": 49248,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexMono-SemiBold.woff2",
+        "size": 50600,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Italic.woff2",
+        "size": 67220,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Light.woff2",
+        "size": 66356,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-Regular.woff2",
+        "size": 63020,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/IBMPlexSans-SemiBold.woff2",
+        "size": 67060,
+        "mode": 420
+      },
+      {
+        "path": "project/fonts/OFL.txt",
+        "size": 4361,
+        "mode": 420
+      },
+      {
+        "path": "theme/_index.scss",
+        "size": 2182,
+        "mode": 420
+      },
+      {
+        "path": "theme/pklnx-carbon.css",
+        "size": 1846,
+        "mode": 420
+      },
+      {
+        "path": "theme/tokens.json",
+        "size": 24086,
+        "mode": 420
+      }
+    ],
+    "entryCount": 14,
+    "bundled": []
+  }
+]
