@@ -1,13 +1,13 @@
 # Button
 
-Carbon Button mit pklnx-Defaults: Größe `lg` (48px), Icon rechts vom Text.
+Carbon Button with pklnx defaults: size `lg` (48px), icon to the right of the label.
 
-- `kind="primary"` (Fläche `button-primary`, Purple): höchstens einmal pro Ansicht, für die Handlung, um die es geht.
-- `kind="secondary"`: Standard für alle weiteren Aktionen.
-- `kind="tertiary"`: Rahmen-Button für eine zweite wichtige Aktion neben Primary.
-- `kind="ghost"`: Nebenaktionen in Kacheln, Tabellen und Kopfzeilen.
-- `kind="danger"`: nur für zerstörerische Aktionen, immer mit Bestätigung.
-- `icon` nimmt einen Namen aus `Icon` (`arrow-right`, `external`, `copy` …). Mit `href` wird ein Link gerendert.
-- Beschriftung als Verb, kurz, Satzanfang groß: „Anfrage senden“, „Code kopieren“. Kein „Klicken Sie hier“, keine Versalien.
-- Deaktivierte Buttons vermeiden. Lieber aktiv lassen und beim Klick sagen, was fehlt.
-- Der Konsument liefert `children` und `onClick` oder `href`. Alle weiteren Props gehen an Carbon `Button` (`size`, `type`, `iconDescription`).
+- `kind="primary"` (area `button-primary`, Purple): at most once per view, for the action the view is about.
+- `kind="secondary"`: the default for every other action.
+- `kind="tertiary"`: outlined button for a second important action next to primary.
+- `kind="ghost"`: minor actions in tiles, tables and headers.
+- `kind="danger"`: destructive actions only, always with a confirmation.
+- `icon` takes a name from `Icon` (`arrow-right`, `external`, `copy` …). With `href` a link is rendered.
+- Label as a verb, short, sentence case: "Send request", "Copy code". No "Click here", no all caps.
+- Avoid disabled buttons. Keep them enabled and say on click what is missing.
+- The consumer provides `children` and `onClick` or `href`. Every other prop goes to Carbon `Button` (`size`, `type`, `iconDescription`).

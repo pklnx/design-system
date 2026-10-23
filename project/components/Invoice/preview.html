@@ -1,7 +1,7 @@
-<!-- @dsCard group="Geschäftsausstattung" height=900 width=960 subtitle="Rechnung auf dem Briefbogen" page -->
+<!-- @dsCard group="Stationery" height=900 width=960 subtitle="Invoice on the letterhead" page -->
 <!doctype html>
-<html lang="de">
-<head><meta charset="utf-8"><title>Rechnung</title>
+<html lang="en">
+<head><meta charset="utf-8"><title>Invoice</title>
 <style>
 body{margin:0;background:var(--background);font-family:var(--font-sans)}
 .desk{padding:24px;display:flex;justify-content:center;background:var(--layer-01)}
@@ -23,41 +23,41 @@ td{padding:6px 8px;border-bottom:1px solid var(--border-subtle-00)}
 </style></head>
 <body>
 <div class="desk">
-<div class="page" data-theme="light" aria-label="Rechnung">
+<div class="page" data-theme="light" aria-label="Invoice">
   <div class="mk" style="top:298px;width:14px"></div>
   <div class="mk" style="top:421px;width:20px"></div>
   <div class="mk" style="top:595px;width:14px"></div>
   <div style="position:absolute;left:71px;top:40px;color:var(--text-primary)" data-logo="wordmark" data-h="26"></div>
-  <div class="ab" style="right:57px;top:40px;text-align:right;font-size:8.5px;line-height:13px">Patrick Klein<br>Infrastructure &amp; Cloud Engineering<br>[Straße Nr.] · [PLZ] Lippstadt<br>[mail]@pklnx.space · pklnx.space</div>
-  <div class="ab" style="left:71px;top:128px;width:241px;font-size:7px;line-height:10px;border-bottom:1px solid var(--border-subtle-00)">pklnx.space · Patrick Klein · [Straße Nr.] · [PLZ] Lippstadt</div>
-  <div style="position:absolute;left:71px;top:142px;width:241px;font-size:10px;line-height:15px">[Firma]<br>[Ansprechperson]<br>[Straße Nr.]<br>[PLZ Ort]</div>
+  <div class="ab" style="right:57px;top:40px;text-align:right;font-size:8.5px;line-height:13px">Patrick Klein<br>Infrastructure &amp; Cloud Engineering<br>[Street No.] · [Postcode] Lippstadt<br>[mail]@pklnx.space · pklnx.space</div>
+  <div class="ab" style="left:71px;top:128px;width:241px;font-size:7px;line-height:10px;border-bottom:1px solid var(--border-subtle-00)">pklnx.space · Patrick Klein · [Street No.] · [Postcode] Lippstadt</div>
+  <div style="position:absolute;left:71px;top:142px;width:241px;font-size:10px;line-height:15px">[Company]<br>[Contact person]<br>[Street No.]<br>[Postcode City]</div>
   <div class="meta">
-    <span class="k">Rechnungsnummer</span><span class="v mono">[2026-001]</span>
-    <span class="k">Rechnungsdatum</span><span class="v">[TT.MM.JJJJ]</span>
-    <span class="k">Leistungszeitraum</span><span class="v">[Zeitraum]</span>
-    <span class="k">Kundennummer</span><span class="v mono">[K-001]</span>
+    <span class="k">Invoice number</span><span class="v mono">[2026-001]</span>
+    <span class="k">Invoice date</span><span class="v">[DD.MM.YYYY]</span>
+    <span class="k">Service period</span><span class="v">[Period]</span>
+    <span class="k">Customer number</span><span class="v mono">[C-001]</span>
   </div>
   <div style="position:absolute;left:71px;right:57px;top:283px;font-size:9.5px;line-height:14px">
-    <div style="font-family:var(--font-mono);font-weight:600;font-size:18px;line-height:22px"><span style="color:var(--star)">$</span> rechnung</div>
+    <div style="font-family:var(--font-mono);font-weight:600;font-size:18px;line-height:22px"><span style="color:var(--star)">$</span> invoice</div>
     <table>
-      <thead><tr><th style="width:28px">Pos.</th><th>Leistung</th><th class="r">Menge</th><th class="r">Betrag</th></tr></thead>
+      <thead><tr><th style="width:28px">Item</th><th>Service</th><th class="r">Quantity</th><th class="r">Amount</th></tr></thead>
       <tbody>
-        <tr><td class="mono" style="color:var(--text-secondary)">1</td><td>Managed Mailserver (Hermes), [Monat]</td><td class="r">1 Monat</td><td class="r mono">[PREIS]</td></tr>
-        <tr><td class="mono" style="color:var(--text-secondary)">2</td><td>[Leistung]</td><td class="r">[Menge]</td><td class="r mono">[PREIS]</td></tr>
-        <tr><td class="mono" style="color:var(--text-secondary)">3</td><td>[Leistung]</td><td class="r">[Menge]</td><td class="r mono">[PREIS]</td></tr>
+        <tr><td class="mono" style="color:var(--text-secondary)">1</td><td>Managed mail server (Hermes), [Month]</td><td class="r">1 month</td><td class="r mono">[PRICE]</td></tr>
+        <tr><td class="mono" style="color:var(--text-secondary)">2</td><td>[Service]</td><td class="r">[Quantity]</td><td class="r mono">[PRICE]</td></tr>
+        <tr><td class="mono" style="color:var(--text-secondary)">3</td><td>[Service]</td><td class="r">[Quantity]</td><td class="r mono">[PRICE]</td></tr>
       </tbody>
     </table>
     <div class="sum">
-      <span class="k">Zwischensumme</span><span class="r mono">[SUMME]</span>
-      <span class="k">[USt. 19 % oder Hinweis §19 UStG]</span><span class="r mono">[BETRAG]</span>
-      <span class="tot">Gesamt</span><span class="tot r mono">[GESAMT] €</span>
+      <span class="k">Subtotal</span><span class="r mono">[SUBTOTAL]</span>
+      <span class="k">[VAT 19 % or note on §19 UStG]</span><span class="r mono">[AMOUNT]</span>
+      <span class="tot">Total</span><span class="tot r mono">[TOTAL] €</span>
     </div>
-    <p style="margin:24px 0 0;color:var(--text-secondary)">Bitte überweisen Sie den Betrag bis [Datum] unter Angabe der Rechnungsnummer.</p>
+    <p style="margin:24px 0 0;color:var(--text-secondary)">Please transfer the amount by [Date], quoting the invoice number.</p>
   </div>
   <div class="foot">
-    <div><span class="lbl">Kontakt</span><br>[mail]@pklnx.space<br>[Telefon]</div>
+    <div><span class="lbl">Contact</span><br>[mail]@pklnx.space<br>[Phone]</div>
     <div><span class="lbl">Bank</span><br>[Bank]<br>IBAN [IBAN]</div>
-    <div><span class="lbl">Steuer</span><br>Steuernummer [STEUERNUMMER]<br>[USt-IdNr. falls vorhanden]</div>
+    <div><span class="lbl">Tax</span><br>Tax number [TAX NUMBER]<br>[VAT ID if any]</div>
   </div>
 </div>
 </div>

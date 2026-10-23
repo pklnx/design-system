@@ -106,27 +106,27 @@ const styleOf = (key, extra = {}) => {
   return Object.assign(o, extra);
 };
 const typeGroups = [
-  { name: 'Überschriften', family: 'sans', styles: [
-    ['heading-07', 'heading07', 'Infrastruktur, die läuft', 'Größte Überschrift: Hero einer Seite, Titelblatt. Eine pro Seite.'],
-    ['heading-06', 'heading06', 'Mailserver und Backups', 'Hero auf Unterseiten, große Zahlen.'],
-    ['heading-05', 'heading05', 'Leistungen', 'Seitentitel.'],
-    ['heading-04', 'heading04', 'Hosting für kleine Unternehmen', 'Abschnittstitel.'],
-    ['heading-03', 'heading03', 'hermes.pklnx.space', 'Titel von Kacheln und Dialogen.'],
-    ['heading-compact-02', 'headingCompact02', 'Rechnung 2026-014', 'Kleine Überschrift in dichten Bereichen, Tabellenköpfe in Dokumenten.'],
-    ['heading-compact-01', 'headingCompact01', 'Leistungszeitraum', 'Kleinste Überschrift: Gruppen in Formularen, Spaltenköpfe.'],
+  { name: 'Headings', family: 'sans', styles: [
+    ['heading-07', 'heading07', 'Infrastructure that runs', 'Largest heading: page hero, title page. One per page.'],
+    ['heading-06', 'heading06', 'Mail servers and backups', 'Hero on sub pages, large figures.'],
+    ['heading-05', 'heading05', 'Services', 'Page titles.'],
+    ['heading-04', 'heading04', 'Hosting for small businesses', 'Section titles.'],
+    ['heading-03', 'heading03', 'hermes.pklnx.space', 'Titles of tiles and dialogs.'],
+    ['heading-compact-02', 'headingCompact02', 'Invoice 2026-014', 'Small heading in dense areas, table headers in documents.'],
+    ['heading-compact-01', 'headingCompact01', 'Service period', 'Smallest heading: form groups, column headers.'],
   ] },
   { name: 'Text', family: 'sans', styles: [
-    ['body-02', 'body02', 'Ich betreibe Mailserver, Backups und Hosting für kleine Unternehmen in Lippstadt und Umgebung.', 'Fließtext auf Webseiten. Höchstens 68 Zeichen pro Zeile.'],
-    ['body-01', 'body01', 'Die Sicherung läuft jede Nacht und wird 30 Tage aufbewahrt.', 'Fließtext in dichten Bereichen, Kacheltexte, Rechnungspositionen.'],
-    ['body-compact-02', 'bodyCompact02', 'Anfrage senden', 'Einzeilige Texte 16px: große Buttons, Navigation.'],
-    ['body-compact-01', 'bodyCompact01', 'Leistungen ansehen', 'Einzeilige UI-Texte: Buttons, Menüs, Tabellenzellen.'],
-    ['label-01', 'label01', 'Rechnungsnummer', 'Feldlabels, Metadaten, Spaltenbeschriftungen.'],
-    ['helper-text-01', 'helperText01', 'Vollständige Domain, zum Beispiel firma.de', 'Hilfetexte unter Feldern.'],
-    ['legal-01', 'legal01', 'Steuernummer [STEUERNUMMER] · USt-IdNr. [UST-ID]', 'Kleingedrucktes, Fußzeilen, Bankdaten. Im Druck nicht unter 7 pt.'],
+    ['body-02', 'body02', 'I run mail servers, backups and hosting for small businesses in and around Lippstadt.', 'Body copy on web pages. At most 68 characters per line.'],
+    ['body-01', 'body01', 'The backup runs every night and is kept for 30 days.', 'Body copy in dense areas, tile text, invoice items.'],
+    ['body-compact-02', 'bodyCompact02', 'Send request', 'Single-line 16px text: large buttons, navigation.'],
+    ['body-compact-01', 'bodyCompact01', 'View services', 'Single-line UI text: buttons, menus, table cells.'],
+    ['label-01', 'label01', 'Invoice number', 'Field labels, metadata, column labels.'],
+    ['helper-text-01', 'helperText01', 'The full domain, for example company.com', 'Helper text below fields.'],
+    ['legal-01', 'legal01', 'Tax number [TAX NUMBER] · VAT ID [VAT ID]', 'Small print, footers, bank details. Not below 7 pt in print.'],
   ] },
   { name: 'Code', family: 'mono', styles: [
-    ['code-02', 'code02', 'restic -r s3:backup backup /srv', 'Code-Blöcke.'],
-    ['code-01', 'code01', 'hermes.pklnx.space', 'Hostnamen, Pfade und Befehle im Fließtext.'],
+    ['code-02', 'code02', 'restic -r s3:backup backup /srv', 'Code blocks.'],
+    ['code-01', 'code01', 'hermes.pklnx.space', 'Host names, paths and commands in running text.'],
   ] },
 ];
 const typeTokens = {
@@ -149,39 +149,39 @@ const typeTokens = {
   groups: typeGroups.map((g) => ({ name: g.name, family: g.family, styles: g.styles.map(([name, key, sample, usage]) => ({ name, ...styleOf(key), sample, usage })) })),
 };
 // The brand's one own style: the shell prompt heading.
-typeTokens.groups[2].styles.push({ name: 'prompt', family: 'mono', fontSize: '1.75rem', lineHeight: 1.28572, fontWeight: 600, sample: '$ ls ./services', usage: 'Abschnittsüberschriften als Shell-Prompt (Komponente Prompt). Das `$` in `star`.' });
+typeTokens.groups[2].styles.push({ name: 'prompt', family: 'mono', fontSize: '1.75rem', lineHeight: 1.28572, fontWeight: 600, sample: '$ ls ./services', usage: 'Section headings as a shell prompt (component Prompt). The `$` in `star`.' });
 
 // ---------------------------------------------------------------- spacing, size, radius
-const spaceNotes = ['Haarfeine Abstände, Icon zu Badge.', 'Abstand Icon zu Text.', 'Enge Gruppen, Tag-Innenabstand.', 'Innenabstand vertikal in Feldern.', 'Seitenrand mobil, Innenabstand von Kacheln und Buttons.', 'Abstand zwischen Elementen einer Gruppe.', 'Abstand zwischen Kacheln, Seitenrand Desktop.', 'Abstand zwischen Gruppen.', 'Abstand zwischen Abschnitten mobil.', 'Abstand zwischen Abschnitten Desktop.', 'Großer Abschnittsabstand.', 'Rand oben und unten am Hero.', 'Größter Abstand, nur für Hero-Flächen.'];
+const spaceNotes = ['Hairline gaps, icon to badge.', 'Icon to text.', 'Tight groups, tag padding.', 'Vertical padding in fields.', 'Mobile page margin, padding of tiles and buttons.', 'Gap between items of a group.', 'Gap between tiles, desktop page margin.', 'Gap between groups.', 'Gap between sections on mobile.', 'Gap between sections on desktop.', 'Large section gap.', 'Top and bottom margin of the hero.', 'Largest gap, hero areas only.'];
 const spacing = { tokens: layout.spacing.map((v, i) => ({ name: `spacing-${String(i + 1).padStart(2, '0')}`, value: v, usage: spaceNotes[i] })) };
-const sizeNotes = { XSmall: ['size-xs', 'Kleinste Bedienhöhe: kleine Tags.'], Small: ['size-sm', 'Kompakte Buttons und Felder in dichten Tabellen.'], Medium: ['size-md', 'Buttons und Felder in Formularen.'], Large: ['size-lg', 'Standardhöhe für Buttons und Felder im Web, auch auf Touch.'], XLarge: ['size-xl', 'Große Buttons im Hero.'], '2XLarge': ['size-2xl', 'Größte Bedienhöhe.'] };
-const size = { note: 'Höhen der Bedienelemente nach Carbon. Touch-Ziele mindestens `size-lg`.', tokens: [
+const sizeNotes = { XSmall: ['size-xs', 'Smallest control height: small tags.'], Small: ['size-sm', 'Compact buttons and fields in dense tables.'], Medium: ['size-md', 'Buttons and fields in forms.'], Large: ['size-lg', 'Default height for buttons and fields on the web, touch included.'], XLarge: ['size-xl', 'Large buttons in the hero.'], '2XLarge': ['size-2xl', 'Largest control height.'] };
+const size = { note: 'Control heights from Carbon. Touch targets at least `size-lg`.', tokens: [
   ...Object.entries(layout.sizes).map(([k, v]) => ({ name: sizeNotes[k][0], value: v, usage: sizeNotes[k][1] })),
-  { name: 'icon-size-01', value: layout.iconSize01, usage: 'Icons neben Text und in Buttons.' },
-  { name: 'icon-size-02', value: layout.iconSize02, usage: 'Icons allein oder in der Kopfzeile.' },
+  { name: 'icon-size-01', value: layout.iconSize01, usage: 'Icons next to text and in buttons.' },
+  { name: 'icon-size-02', value: layout.iconSize02, usage: 'Icons on their own or in the header.' },
 ] };
-const radius = { note: 'Carbon ist eckig. Rundungen nur für die drei Ausnahmen hier.', tokens: [
-  { name: 'radius-none', value: '0px', usage: 'Standard für alles: Buttons, Kacheln, Felder, Code.' },
-  { name: 'radius-icon', value: '22%', usage: 'Nur App-Icon und Favicon-Kachel.' },
-  { name: 'radius-full', value: '9999px', usage: 'Nur Avatar-Kreis und Status-Punkt.' },
+const radius = { note: 'Carbon is square. Rounding only for the three exceptions here.', tokens: [
+  { name: 'radius-none', value: '0px', usage: 'Default for everything: buttons, tiles, fields, code.' },
+  { name: 'radius-icon', value: '22%', usage: 'App icon and favicon tile only.' },
+  { name: 'radius-full', value: '9999px', usage: 'Avatar circle and status dot only.' },
 ] };
 
 // ---------------------------------------------------------------- project/tokens.json
 const colorTokens = order.map((name) => {
   const t = { name, value: { dark: all.dark[name], light: all.light[name] }, usage: noteFor(name) };
   const fail = failing.filter((f) => f.fg === name);
-  if (fail.length) t.usage += ' Kontrast unter Soll: ' + fail.map((f) => `${f.ground} ${f.theme === 'dark' ? 'G100' : 'White'} ${f.ratio}:1`).join(', ') + ' (Carbon-Wert, unverändert).';
+  if (fail.length) t.usage += ' Contrast below target: ' + fail.map((f) => `${f.ground} ${f.theme === 'dark' ? 'G100' : 'White'} ${f.ratio}:1`).join(', ') + ' (Carbon value, unchanged).';
   return t;
 });
 const tokensJson = {
   name: brand.name,
   version: 1,
-  color: { themes: [{ id: 'dark', name: 'G100 · Dunkel' }, { id: 'light', name: 'White · Papier' }], tokens: colorTokens },
+  color: { themes: [{ id: 'dark', name: 'G100 · Dark' }, { id: 'light', name: 'White · Paper' }], tokens: colorTokens },
   type: typeTokens,
   spacing,
   size,
   radius,
-  meta: { source: 'Carbon Design System v11 (@carbon/themes ' + require('@carbon/themes/package.json').version + ', @carbon/type, @carbon/layout) mit pklnx-Anpassung aus github.com/pklnx/design-system, theme/brand.json. Erzeugt von scripts/build.mjs.' },
+  meta: { source: 'Carbon Design System v11 (@carbon/themes ' + require('@carbon/themes/package.json').version + ', @carbon/type, @carbon/layout) with the pklnx customization from github.com/pklnx/design-system, theme/brand.json. Generated by scripts/build.mjs.' },
 };
 write(P('project/tokens.json'), JSON.stringify(tokensJson, null, 1) + '\n');
 

@@ -1,8 +1,8 @@
 # TextField
 
-Carbon Text Input (oder mit `multiline` Text Area) mit Label über dem Feld, Hilfetext und Fehlermeldung.
+Carbon Text Input (or Text Area with `multiline`) with the label above the field, helper text and error message.
 
-- Feldhöhe `size-lg` (48px), Schrift im Feld 14px. Fläche `field-01` auf `background`, `field-02` auf `layer-01`.
-- Label in `label-01`, normale Schreibung. Platzhalter nur als Beispiel, nie als Ersatz für das Label.
-- Fehlermeldungen in `text-error` sagen, was zu tun ist: „Bitte die vollständige Adresse angeben, zum Beispiel info@firma.de.“
-- Der Konsument liefert eine eindeutige `id` und `label`; `hint`, `error`, `placeholder`, `value`/`onChange` und weitere Props gehen an Carbon.
+- Field height `size-lg` (48px), 14px type inside. Area `field-01` on `background`, `field-02` on `layer-01`.
+- Label in `label-01`, sentence case. Placeholder only as an example, never instead of the label.
+- Error messages in `text-error` say what to do: "Enter the full address, for example info@company.com."
+- The consumer provides a unique `id` and `label`; `hint`, `error`, `placeholder`, `value`/`onChange` and other props go to Carbon.

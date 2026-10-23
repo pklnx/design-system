@@ -1,8 +1,8 @@
 # SiteHeader
 
-Seitenkopf als Carbon UI Shell Header: Wortmarke links, Navigation daneben, „Zum Inhalt springen“ für Tastatur.
+Page header as a Carbon UI Shell Header: wordmark on the left, navigation next to it, "Skip to main content" for keyboard users.
 
-- Höhe 48px, Fläche `background`, Trennlinie `border-subtle`. Die aktive Seite bekommt `current` und die Carbon-Markierung in `border-interactive` (Purple).
-- Höchstens fünf Einträge. Auf schmalen Bildschirmen blendet Carbon die Navigation aus; für Mobile ein Menü über `HeaderMenuButton` ergänzen, wenn nötig.
-- Standard ist im Fluss. Mit `fixed` klebt er oben, wie in Carbon üblich; dann braucht der Inhalt 48px Abstand oben.
-- Der Konsument liefert `links` (`label`, `href`, `current`) und die `contentId` des Hauptinhalts (Standard `main`).
+- 48px high, area `background`, divider `border-subtle`. The current page gets `current` and Carbon's marker in `border-interactive` (Purple).
+- At most five links. On narrow screens Carbon hides the navigation; add a menu through `HeaderMenuButton` for mobile if needed.
+- In the flow by default. With `fixed` it sticks to the top, as usual in Carbon; the content then needs 48px top spacing.
+- The consumer provides `links` (`label`, `href`, `current`) and the `contentId` of the main content (default `main`).

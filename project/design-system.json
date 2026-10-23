@@ -226,14 +226,14 @@
    "files": {
     "pattern-dark.svg": {
      "name": "pattern-dark.svg",
-     "blob": "bc2ce19e533c342aa7cf1853f73e83ad",
-     "size": 843,
+     "blob": "22b988c6bbdb9083833f47a6163caecd",
+     "size": 845,
      "type": "image/svg+xml"
     },
     "pattern-light.svg": {
      "name": "pattern-light.svg",
-     "blob": "a53bf44397a12cf36d9bf37edf2598c0",
-     "size": 843,
+     "blob": "aef86cea89c7369b7d0ff2f51a201fa0",
+     "size": 845,
      "type": "image/svg+xml"
     }
    }
@@ -267,8 +267,8 @@
  },
  "lastChange": {
   "by": "Patrick Klein",
-  "at": "2026-10-23T10:57:01Z",
+  "at": "2026-10-23T11:08:27Z",
   "via": "Claude · github.com/pklnx/design-system",
-  "note": "Neues System auf Carbon v11, Primärfarbe Purple, Wortmarke in IBM Plex Mono"
+  "note": "All content in English"
  }
 }

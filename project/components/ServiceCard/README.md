@@ -1,8 +1,8 @@
 # ServiceCard
 
-Ein Dienst oder Projekt als Carbon Tile: Name, Status, ein Satz Beschreibung, Host-Link unten.
+A service or project as a Carbon Tile: name, status, one sentence of description, host link at the bottom.
 
-- Fläche `layer-01` auf `background`, keine Schatten, keine runden Ecken. Im Raster 2px Abstand (Carbon-Kachelfuge) oder `spacing-07`.
-- Name in `heading-03`, Beschreibung `body-01` in `text-secondary`, Host als Carbon Link in Mono mit Launch-Icon.
-- Status nur zeigen, wenn er tatsächlich überwacht wird (`StatusBadge`).
-- Der Konsument liefert `name`, optional `host`, `href`, `status` und die Beschreibung als `children`.
+- Area `layer-01` on `background`, no shadows, no rounded corners. In a grid with a 2px gap (Carbon tile gutter) or `spacing-07`.
+- Name in `heading-03`, description `body-01` in `text-secondary`, host as a Carbon Link in mono with the Launch icon.
+- Show the status only when it is actually monitored (`StatusBadge`).
+- The consumer provides `name`, optionally `host`, `href`, `status`, and the description as `children`.

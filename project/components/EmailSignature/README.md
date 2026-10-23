@@ -1,9 +1,9 @@
 # EmailSignature
 
-E-Mail-Signatur als Tabelle mit Inline-Styles und festen Hex-Werten, weil Mailprogramme weder CSS-Variablen noch modernes CSS können.
+Email signature as a table with inline styles and fixed hex values, because mail clients support neither CSS variables nor modern CSS.
 
-- Werte aus dem Theme White: Text `#161616` (`text-primary`), Nebentext `#525252` (`text-secondary`), Linie und Link `#8a3ffc` (`link-primary`).
-- Bildmarke als PNG (88 × 88 px, angezeigt 44 px), gehostet unter pklnx.space, nicht als Anhang und nicht als SVG. Die Vorschau zeigt sie als SVG.
-- Name in IBM Plex Sans SemiBold, Rolle in `text-secondary`, eine Trennlinie 2px Purple.
-- Schriften fallen in vielen Programmen auf Arial zurück. Das ist in Ordnung, Farben und Aufbau tragen die Marke.
-- Höchstens drei Zeilen Kontakt. Keine Zitate, keine Banner.
+- Values from the White theme: text `#161616` (`text-primary`), secondary text `#525252` (`text-secondary`), rule and link `#8a3ffc` (`link-primary`).
+- The mark as a PNG (88 × 88 px, shown at 44 px), hosted on pklnx.space, not as an attachment and not as SVG. The preview shows it as SVG.
+- Name in IBM Plex Sans SemiBold, role in `text-secondary`, one 2px Purple rule.
+- Many clients fall back to Arial. That is fine, colors and structure carry the brand.
+- At most three lines of contact details. No quotes, no banners.

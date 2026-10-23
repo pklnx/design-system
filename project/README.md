@@ -1,69 +1,69 @@
-pklnx.space ist das Einzelunternehmen von Patrick Klein für Infrastructure & Cloud Engineering. Dieses System ist **IBM Carbon (v11), unverändert in Aufbau, Typografie und Komponenten, mit genau einer Markenentscheidung: Purple statt Blue als interaktive Farbe**. Dazu kommt die Marke selbst: die Wortmarke pklnx★space in der Leertaste, gesetzt in IBM Plex Mono.
+pklnx.space is Patrick Klein's one-person business for infrastructure and cloud engineering. This system is **IBM Carbon (v11), unchanged in structure, typography and components, with exactly one brand decision: Purple instead of Blue as the interactive color**. On top of that comes the brand itself: the wordmark pklnx★space in the space bar, set in IBM Plex Mono.
 
-Wo diese Seite nichts sagt, gilt Carbon: carbondesignsystem.com. Carbon hat Vorrang vor eigenen Ideen.
+Where this page says nothing, Carbon applies: carbondesignsystem.com. Carbon wins over ideas of our own.
 
-## Marke
+## Brand
 
-- Die Wortmarke ist **pklnx★space in der Leertaste**: `pklnx` in IBM Plex Mono Bold, der Stern als Punkt, `space` in IBM Plex Mono Regular, darunter die Klammer der Leertaste. Elf Zeichen auf dem Monospace-Raster.
-- Die Bildmarke ist **die Leertaste mit Stern**. Sie steht allein, wo für die Wortmarke kein Platz ist: Favicon, Avatar, App-Icon, Vorderseite der Visitenkarte.
-- Den Namen immer klein schreiben: `pklnx.space`, im Fließtext auch kurz `pklnx`. Nie „PKLNX“ oder „Pklnx“.
-- Der Name ist eine Kunstmarke und bleibt auch nach dem Namenswechsel von Patrick gleich. Personennamen stehen nur in Absenderzeilen, Signaturen und auf der Visitenkarte und werden dort ausgetauscht.
-- Im Web die Komponente `Logo` verwenden, für Dateien die SVGs der Gruppe **Logos**. Regeln für Schutzraum, Mindestgrößen und Verbote: Karte `LogoUsage`.
+- The wordmark is **pklnx★space in the space bar**: `pklnx` in IBM Plex Mono Bold, the star as the dot, `space` in IBM Plex Mono Regular, the space bar bracket underneath. Eleven characters on the monospace grid.
+- The mark is **the space bar with the star**. It stands alone where the wordmark does not fit: favicon, avatar, app icon, front of the business card.
+- Always write the name in lowercase: `pklnx.space`, in running text also just `pklnx`. Never "PKLNX" or "Pklnx".
+- The name is a coined brand and stays the same after Patrick's name change. Personal names appear only in sender lines, signatures and on the business card, and are swapped there.
+- On the web use the `Logo` component, for files the SVGs in the **Logos** group. Clear space, minimum sizes and don'ts: card `LogoUsage`.
 
-## Farbe
+## Color
 
-- Zwei Carbon-Themes: **G100 (Dunkel)** ist der Standard für Web, Social und Bildschirm. **White (Papier)** ist für Druck, Rechnung, Brief und helle Seiten. Im Code heißen sie `cds--g100` und `cds--white`.
-- Alle Farb-Token sind Carbon-Token mit Carbons Namen und Werten. Geändert sind nur die Token, die in Carbon Blue 60 tragen: `button-primary`, `button-tertiary`, `interactive`, `focus` (hell), `border-interactive`, `link-primary`, `link-secondary`, `icon-interactive`, `highlight`, `background-brand` und ihre Hover- und Active-Stufen. Sie tragen jetzt dieselbe Stufe aus Purple: Buttons Purple 60 `#8a3ffc` in beiden Themes, Links und interaktive Elemente hell Purple 60, im Dunkeln Purple 40 bis 50.
-- Besuchte Links (`link-visited`) werden Blue, weil Purple schon die Linkfarbe ist.
-- **`button-primary` höchstens einmal pro Ansicht.** Purple ist die Farbe für Bedienung und Links, nicht für Dekoration. Eine große Purple-Fläche (`background-brand`) höchstens einmal pro Seite.
-- `star` ist der Stern im Logo und das `$` im Prompt: Purple 60 hell, Purple 50 dunkel. Nie als Bedienfläche.
-- Flächen: `background` für die Seite, `layer-01` für Kacheln, `layer-02` für Elemente darauf. Text `text-primary`, Nebentext `text-secondary`, Hilfetext `text-helper`.
-- Status bleibt Carbon: `support-success` grün, `support-warning` gelb, `support-error` rot, `support-info` blau. Immer mit Icon und Wort (Komponente `StatusBadge`). `support-caution-undefined` ist in Carbon Purple und kollidiert mit der Marke: nicht verwenden.
-- Alle Text-Token halten 4.5:1 auf ihren Gründen in beiden Themes, Fokus, Rahmen und Icons 3:1. Ausnahmen sind Carbons eigene: `text-disabled` absichtlich, `support-warning` (Gelb) auf Weiß nur als Fläche oder Icon mit dunkler Kontur.
+- Two Carbon themes: **G100 (dark)** is the default for web, social and screen. **White (paper)** is for print, invoices, letters and light pages. In code they are `cds--g100` and `cds--white`.
+- Every color token is a Carbon token with Carbon's name and value. Only the tokens that carry Blue 60 in Carbon are changed: `button-primary`, `button-tertiary`, `interactive`, `focus` (light), `border-interactive`, `link-primary`, `link-secondary`, `icon-interactive`, `highlight`, `background-brand` and their hover and active steps. They now carry the same step of Purple: buttons Purple 60 `#8a3ffc` in both themes, links and interactive elements Purple 60 in light, Purple 40 to 50 in dark.
+- Visited links (`link-visited`) go Blue, because Purple is already the link color.
+- **`button-primary` at most once per view.** Purple is the color for actions and links, not for decoration. One large Purple area (`background-brand`) at most once per page.
+- `star` is the star in the logo and the `$` in the prompt: Purple 60 light, Purple 50 dark. Never a control.
+- Surfaces: `background` for the page, `layer-01` for tiles, `layer-02` for elements on them. Text `text-primary`, secondary text `text-secondary`, helper text `text-helper`.
+- Status stays Carbon: `support-success` green, `support-warning` yellow, `support-error` red, `support-info` blue. Always with icon and word (component `StatusBadge`). `support-caution-undefined` is Purple in Carbon and clashes with the brand: do not use it.
+- Every text token holds 4.5:1 on its grounds in both themes, focus, borders and icons 3:1. The exceptions are Carbon's own: `text-disabled` on purpose, `support-warning` (yellow) on white only as an area or as an icon with a dark outline.
 
-## Typografie
+## Typography
 
-- Nur **IBM Plex**: `font-sans` (IBM Plex Sans) für alles, `font-mono` (IBM Plex Mono) für Code, Hostnamen, Befehle, Zahlen in Tabellen und die Marke. Die Schriftdateien liegen unter `fonts/`, im Web aus `@ibm/plex-sans` und `@ibm/plex-mono`.
-- Carbons produktive Typo-Skala unverändert: Seitentitel `heading-05`, Abschnitte `heading-04`, Kacheln `heading-03`, Fließtext `body-02` im Web und `body-01` in dichten Bereichen, UI-Texte `body-compact-01`, Labels `label-01`, Hilfetexte `helper-text-01`, Kleingedrucktes `legal-01`, Code `code-01` und `code-02`.
-- Einziger eigener Stil: `prompt` (Plex Mono SemiBold 28px) für Abschnittsüberschriften als Shell-Prompt (`$ ls ./services`), sparsam.
-- Satzanfang groß, sonst normale Schreibung. Keine Versalien in Labels, Buttons oder Tabellenköpfen.
-- Fließtext höchstens 68 Zeichen breit, linksbündig, kein Blocksatz. Zahlen untereinander mit `font-variant-numeric: tabular-nums`. Im Druck Fließtext 10 pt, Kleingedrucktes nicht unter 7 pt.
+- **IBM Plex** only: `font-sans` (IBM Plex Sans) for everything, `font-mono` (IBM Plex Mono) for code, host names, commands, numbers in tables and the brand. The font files are in `fonts/`, on the web from `@ibm/plex-sans` and `@ibm/plex-mono`.
+- Carbon's productive type scale, unchanged: page titles `heading-05`, sections `heading-04`, tiles `heading-03`, body copy `body-02` on the web and `body-01` in dense areas, UI text `body-compact-01`, labels `label-01`, helper text `helper-text-01`, small print `legal-01`, code `code-01` and `code-02`.
+- The one style of our own: `prompt` (Plex Mono SemiBold 28px) for section headings as a shell prompt (`$ ls ./services`), used sparingly.
+- Sentence case everywhere. No all caps in labels, buttons or table headers.
+- Body copy at most 68 characters wide, left aligned, never justified. Numbers in columns with `font-variant-numeric: tabular-nums`. In print body copy 10 pt, small print not below 7 pt.
 
-## Abstände, Form, Raster
+## Spacing, shape, grid
 
-- Carbons Abstände `spacing-01` (2px) bis `spacing-13` (160px). Kacheln innen `spacing-05`, zwischen Kacheln 2px Fuge oder `spacing-07`, Abschnitte `spacing-10` mobil und `spacing-11` am Desktop.
-- Carbon 2x Grid: 16 Spalten ab 1056px, 8 bis 640px, 4 darunter. Seitenrand `spacing-05`.
-- Bedienhöhen aus `size-*`. Im Web Buttons und Felder `size-lg` (48px), das ist auch das Mindestmaß für Touch.
-- **Eckig.** `radius-none` für alles. `radius-icon` nur für Favicon- und App-Icon-Kachel, `radius-full` nur für Avatar und Status-Punkt.
-- Keine Schatten, außer Carbons eigenem `shadow` für schwebende Menüs. Tiefe entsteht über `layer`-Stufen und 1px-Linien in `border-subtle`.
-- Fokus wie Carbon: 2px `focus` innen, im Dunkeln Weiß, hell Purple.
+- Carbon's spacing `spacing-01` (2px) to `spacing-13` (160px). Tile padding `spacing-05`, 2px gutter between tiles or `spacing-07`, sections `spacing-10` on mobile and `spacing-11` on desktop.
+- Carbon 2x Grid: 16 columns from 1056px, 8 down to 640px, 4 below. Page margin `spacing-05`.
+- Control heights from `size-*`. On the web buttons and fields are `size-lg` (48px), which is also the minimum touch target.
+- **Square.** `radius-none` for everything. `radius-icon` only for the favicon and app icon tile, `radius-full` only for the avatar and status dot.
+- No shadows, except Carbon's own `shadow` for floating menus. Depth comes from `layer` steps and 1px lines in `border-subtle`.
+- Focus as in Carbon: 2px `focus` inside, white in dark, Purple in light.
 
-## Sprache und Ton
+## Voice and tone
 
-- Direkt, sachlich, kurz. Ich-Form auf der Webseite („Ich betreibe …“), gegenüber Kunden „Sie“.
-- Buttons nennen die Handlung als Verb: „Anfrage senden“, „Code kopieren“. Fehler sagen, was zu tun ist: „Bitte die vollständige Adresse angeben, zum Beispiel info@firma.de.“
-- Shell als Stilmittel sparsam: Abschnittsüberschriften als `Prompt` (`$ ls ./services`, `$ cat ./kontakt`), sonst normale Sprache.
-- Technische Namen exakt: Hostnamen, Befehle und Pfade in Mono, so wie sie wirklich heißen.
-- Keine Emoji, keine Ausrufezeichen, keine Marketing-Superlative.
+- Direct, factual, short. All copy is in English. First person on the website ("I run …"), plain "you" towards clients.
+- Buttons name the action as a verb: "Send request", "Copy code". Errors say what to do: "Enter the full address, for example info@company.com."
+- The shell as a stylistic device, sparingly: section headings as a `Prompt` (`$ ls ./services`, `$ cat ./contact`), normal language everywhere else.
+- Technical names exactly: host names, commands and paths in mono, spelled as they really are.
+- No emoji, no exclamation marks, no marketing superlatives.
 
-## Ikonografie
+## Iconography
 
-- **Carbon Icons** (`@carbon/icons-react`), über die Komponente `Icon` mit kurzen Namen. 16px neben Text (`icon-size-01`), 20px allein (`icon-size-02`), Farbe `currentColor`.
-- Einziges eigenes Zeichen ist der Stern, gefüllt in `star`, nur als Hervorhebung.
-- Fehlende Icons aus der Carbon-Bibliothek ergänzen. Keine fremden Icon-Sets, keine Emoji.
+- **Carbon Icons** (`@carbon/icons-react`), through the `Icon` component with short names. 16px next to text (`icon-size-01`), 20px on their own (`icon-size-02`), color `currentColor`.
+- The only drawing of our own is the star, filled in `star`, for emphasis only.
+- Add missing icons from the Carbon library. No other icon sets, no emoji.
 
-## Muster
+## Pattern
 
-- Kachelmuster aus Leertasten und Sternen in der Gruppe **Patterns**, 96px-Kachel, Linien `border-subtle-00`.
-- Nur hinter wenig Inhalt: Banner, Visitenkarten-Vorderseite, Leerzustände. Nie hinter Fließtext.
+- Tile pattern of space bars and stars in the **Patterns** group, 96px tile, lines `border-subtle-00`.
+- Only behind little content: banners, front of the business card, empty states. Never behind body copy.
 
-## Komponenten
+## Components
 
-- Web: `SiteHeader` (Carbon UI Shell Header), `Button`, `TextField` (Text Input, Text Area), `CodeBlock` (Code Snippet), `ServiceCard` (Tile), `StatusBadge` (Icon Indicator), `Icon`, dazu die Markenteile `Logo` und `Prompt`. React 18, global `window.Pklnx`, Styles in `components/bundle.css`. Weitere Carbon-Komponenten direkt aus `@carbon/react` verwenden; sie übernehmen das Theme automatisch.
-- Geschäftsausstattung im Theme White: `Letterhead` (DIN 5008), `Invoice`, `BusinessCard`, `EmailSignature`. Platzhalter stehen in eckigen Klammern.
-- Social: `SocialKit` mit Open-Graph-Bild, Avatar und Banner.
+- Web: `SiteHeader` (Carbon UI Shell Header), `Button`, `TextField` (Text Input, Text Area), `CodeBlock` (Code Snippet), `ServiceCard` (Tile), `StatusBadge` (Icon Indicator), `Icon`, plus the brand parts `Logo` and `Prompt`. React 18, global `window.Pklnx`, styles in `components/bundle.css`. Use any other Carbon component straight from `@carbon/react`; it picks up the theme automatically.
+- Stationery in the White theme: `Letterhead`, `Invoice`, `BusinessCard`, `EmailSignature`. Placeholders are in square brackets.
+- Social: `SocialKit` with Open Graph image, avatar and banner.
 
-## Im Code
+## In code
 
-- Quelle: github.com/pklnx/design-system. `theme/pklnx-carbon.css` nach dem Carbon-CSS laden und `cds--g100` oder `cds--white` auf `<html>` setzen. Für Sass gibt es `theme/_index.scss` mit `$g100`, `$white` und den Override-Mixins.
-- Werte nie von Hand in Komponenten schreiben, immer Carbon-Token (`var(--cds-…)`) verwenden.
+- Source: github.com/pklnx/design-system. Load `theme/pklnx-carbon.css` after Carbon's CSS and set `cds--g100` or `cds--white` on `<html>`. For Sass there is `theme/_index.scss` with `$g100`, `$white` and the override mixins.
+- Never hard-code values in components, always use Carbon tokens (`var(--cds-…)`).

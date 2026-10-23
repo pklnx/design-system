@@ -1,18 +1,18 @@
 # pklnx design system
 
-Das Design System von [pklnx.space](https://pklnx.space): **IBM Carbon v11 mit Purple als interaktiver Farbe** und der Wortmarke pklnx★space in IBM Plex Mono.
+The design system of [pklnx.space](https://pklnx.space): **IBM Carbon v11 with Purple as the interactive color** and the wordmark pklnx★space set in IBM Plex Mono.
 
-Dieses Repo ist die Quelle der Wahrheit für zwei Dinge:
+This repo is the source of truth for two things:
 
-1. **Das Carbon-Theme für Code** (`theme/`), einbindbar in jede Carbon-Anwendung.
-2. **Das Design System auf claude.ai** (`project/`), die durchsuchbare Referenz mit Tokens, Komponenten-Vorschauen und Assets.
+1. **The Carbon theme for code** (`theme/`), usable in any Carbon application.
+2. **The design system on claude.ai** (`project/`), the browsable reference with tokens, component previews and assets.
 
-## Theme im Code verwenden
+## Using the theme in code
 
-CSS, nach dem Carbon-CSS laden und das Theme auf `<html>` setzen:
+CSS: load it after Carbon's CSS and set the theme on `<html>`:
 
 ```html
-<html class="cds--g100">  <!-- oder cds--white -->
+<html class="cds--g100">  <!-- or cds--white -->
 ```
 
 ```js
@@ -26,43 +26,43 @@ Sass:
 @use '@pklnx/design-system/theme' as pklnx;
 @use '@carbon/styles/scss/theme' with ($theme: pklnx.$g100);
 
-.cds--g100 { @include pklnx.overrides-dark; }   // auch Komponenten-Token (Button)
+.cds--g100 { @include pklnx.overrides-dark; }   // component tokens (button) too
 .cds--white { @include pklnx.overrides-light; }
 ```
 
-Den Stern des Logos gibt es als `--pklnx-star`.
+The logo star is available as `--pklnx-star`.
 
-## Aufbau
+## Layout
 
-| Pfad | Inhalt |
+| Path | Contents |
 | --- | --- |
-| `theme/brand.json` | Die Markenentscheidungen: Primärfarbe (`purple`) und Logofarben. **Hier ändern.** |
-| `theme/pklnx-carbon.css`, `theme/_index.scss` | Erzeugt: nur die Token, die von Carbon abweichen |
-| `theme/tokens.json` | Erzeugt: alle Carbon-Farbtoken für White und G100 nach der Anpassung |
-| `theme/contrast-report.json` | Erzeugt: Kontrastprüfung der wichtigen Paare |
-| `theme/logo-geometry.json` | Erzeugt: Pfade der Wortmarke und Bildmarke |
-| `src/` | Quellen: Carbon-Komponentenauswahl (`carbon.scss`), eigene Styles (`pklnx.css`), React-Komponenten (`components.jsx`) |
-| `scripts/` | Build-Skripte |
-| `project/` | Inhalt des claude.ai Design Systems (README, Tokens, Komponenten, Vorschauen, Assets, Fonts) |
+| `theme/brand.json` | The brand decisions: primary hue (`purple`) and logo colors. **Change things here.** |
+| `theme/pklnx-carbon.css`, `theme/_index.scss` | Generated: only the tokens that differ from Carbon |
+| `theme/tokens.json` | Generated: every Carbon color token for White and G100 after the customization |
+| `theme/contrast-report.json` | Generated: contrast check of the key pairs |
+| `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
+| `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
+| `scripts/` | Build scripts |
+| `project/` | Content of the claude.ai design system (README, tokens, components, previews, assets, fonts) |
 
-## Bauen
+## Building
 
 ```sh
 npm install
 pip install fonttools brotli
-python3 scripts/build_logo.py      # Logos aus IBM Plex Mono
-npm run build                      # Tokens, Theme, bundle.css, bundle.js
-python3 scripts/build_assets.py    # Muster, Social-Bilder (nach dem Build, liest theme/tokens.json)
-node scripts/build_icons.mjs       # Carbon-Icons als SVG
-node scripts/render-previews.mjs   # alle Vorschauen in beiden Themes nach .render/ (Chromium)
+python3 scripts/build_logo.py      # logos from IBM Plex Mono
+npm run build                      # tokens, theme, bundle.css, bundle.js
+python3 scripts/build_assets.py    # pattern, social images (after the build, reads theme/tokens.json)
+node scripts/build_icons.mjs       # Carbon icons as SVG
+node scripts/render-previews.mjs   # every preview in both themes into .render/ (Chromium)
 ```
 
-## Veröffentlichen auf claude.ai
+## Publishing to claude.ai
 
-Das Design System liegt unter claude.ai als Artifact „pklnx design system“. Veröffentlicht wird von Claude aus diesem Repo:
+The design system lives on claude.ai as the artifact "pklnx design system". Claude publishes it from this repo:
 
-- Dateien unter `project/` gehen als Dateien hoch, SVGs unter `project/assets/` als Asset-Uploads. Deren IDs stehen in `project/design-system.json` (`assetGroups`).
-- Ändert sich ein SVG, muss es neu hochgeladen und die ID im Index ersetzt werden.
-- Änderungen direkt im Editor auf claude.ai landen nicht automatisch hier. Vor dem nächsten Build zurückholen und committen.
+- Files under `project/` are uploaded as files, SVGs under `project/assets/` as asset uploads. Their IDs are in `project/design-system.json` (`assetGroups`).
+- When an SVG changes, it has to be uploaded again and its ID replaced in the index.
+- Edits made directly in the claude.ai editor do not land here automatically. Pull them back and commit them before the next build.
 
-Lizenzen: Carbon (IBM, Apache-2.0), IBM Plex (SIL Open Font License 1.1).
+Licenses: Carbon (IBM, Apache-2.0), IBM Plex (SIL Open Font License 1.1).

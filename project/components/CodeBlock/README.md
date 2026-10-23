@@ -1,9 +1,9 @@
 # CodeBlock
 
-Befehle, Konfiguration und DNS-Einträge zum Kopieren, als Carbon Code Snippet mit Label darüber.
+Commands, configuration and DNS records to copy, as a Carbon Code Snippet with a label above.
 
-- Eine Zeile wird `single`, mehrere `multi`. Mit `type` lässt sich das erzwingen (`inline` für Code im Fließtext).
-- `label` benennt Sprache oder Kontext in normaler Schreibung: „Shell“, „DNS“, „YAML“.
-- Text in `code-01`/`code-02` (IBM Plex Mono). Lange Zeilen scrollen im Block, die Seite scrollt nie seitlich.
-- Der Kopieren-Button meldet „Kopiert“. Mit `copyable={false}` ausblenden, etwa bei Beispielausgaben.
-- Der Konsument liefert `code` als String.
+- One line becomes `single`, several become `multi`. `type` forces it (`inline` for code in running text).
+- `label` names the language or context in sentence case: "Shell", "DNS", "YAML".
+- Text in `code-01`/`code-02` (IBM Plex Mono). Long lines scroll inside the block, the page never scrolls sideways.
+- The copy button reports "Copied". Hide it with `copyable={false}`, for example for sample output.
+- The consumer provides `code` as a string.

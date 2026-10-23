@@ -39,8 +39,8 @@ def wordmark_group(x, y, height, ink, star):
 def pattern(ground, line, star):
     m = geo["mark"]
     # Two space bars per 96px tile, a small star in the free corner.
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Muster">'
-            f'<title>Muster</title><rect width="96" height="96" fill="{ground}"/>'
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Pattern">'
+            f'<title>Pattern</title><rect width="96" height="96" fill="{ground}"/>'
             f'<g transform="translate(8 8) scale(0.5)"><path fill="{line}" d="{m["bracket"]}"/><path fill="{line}" d="{m["star"]}"/></g>'
             f'<g transform="translate(56 56) scale(0.5)"><path fill="{line}" d="{m["bracket"]}"/></g>'
             f'<g transform="translate(64 12) scale(0.25)"><path fill="{star}" d="{m["star"]}"/></g></svg>\n')

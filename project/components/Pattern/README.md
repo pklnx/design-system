@@ -1,7 +1,7 @@
 # Pattern
 
-Kachelmuster aus Leertasten und Sternen, 96px Raster. Linien in `border-subtle-00`, ein kleiner Stern in `star` pro Kachel.
+Tile pattern of space bars and stars on a 96px grid. Lines in `border-subtle-00`, one small star in `star` per tile.
 
-- Nur als Fläche hinter wenig Inhalt: Social-Banner, Vorderseite der Visitenkarte, Leerzustände.
-- Nie hinter Fließtext. Text auf dem Muster bekommt eine `background`-Fläche.
-- Als Datei: `pattern-dark.svg` und `pattern-light.svg` aus der Gruppe Patterns, mit `background-size: 96px 96px` wiederholen.
+- Only as an area behind little content: social banners, front of the business card, empty states.
+- Never behind body copy. Text on the pattern gets a `background` area.
+- As a file: `pattern-dark.svg` and `pattern-light.svg` from the Patterns group, repeated with `background-size: 96px 96px`.

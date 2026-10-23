@@ -1,8 +1,8 @@
 # Prompt
 
-Abschnittsüberschrift im Stil einer Shell-Eingabe: `$ ls ./services`. Das `$` in `star`, der Befehl in `text-primary`, gesetzt im Stil `prompt` (IBM Plex Mono SemiBold).
+Section heading styled as shell input: `$ ls ./services`. The `$` in `star`, the command in `text-primary`, set in the `prompt` style (IBM Plex Mono SemiBold).
 
-- Das einzige Stilmittel der Marke außerhalb des Logos. Sparsam: nur für Abschnitte, die eine Liste oder Inhalte „ausgeben“: Leistungen, Projekte, Kontakt.
-- Echte, kurze Befehle verwenden (`ls`, `cat`, `whoami`). Keine erfundenen Flags oder langen Pipes.
-- Seitentitel bleiben normale Carbon-Überschriften (`heading-05`), Kacheltitel `heading-03`.
-- `as` wählt die Ebene (`h1` bis `h3`), `h3` ist kleiner gesetzt. Der Konsument liefert `cmd` oder `children`.
+- The brand's only stylistic device outside the logo. Use sparingly: only for sections that "output" a list or content: services, projects, contact.
+- Use real, short commands (`ls`, `cat`, `whoami`). No made-up flags or long pipes.
+- Page titles stay regular Carbon headings (`heading-05`), tile titles `heading-03`.
+- `as` picks the level (`h1` to `h3`), `h3` is set smaller. The consumer provides `cmd` or `children`.
