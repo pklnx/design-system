@@ -28,7 +28,10 @@ Exceptions
    "pklnx.space", the pklnx wordmark, the mark (space bar with star), the
    pattern and the social images, including the files in project/assets/Logos,
    project/assets/Patterns and project/assets/Social and the logo geometry in
-   theme/logo-geometry.json, are brand assets of pklnx.space.
+   theme/logo-geometry.json, are brand assets of pklnx.space. The same holds
+   for the marks, lockups, app icons and social images of the products
+   mail-archive and paperless-go, in project/assets/Logos/products and
+   project/assets/Social (mail-archive-social.* and paperless-go-social.*).
    Copyright (c) 2026 Patrick Klein. All rights reserved.
 
 2. Third-party code, icons and fonts keep their own licenses (Apache-2.0,
