@@ -58,6 +58,7 @@
     "@carbon/type": "^11.70.0",
     "@ibm/plex-mono": "^2.5.0",
     "@ibm/plex-sans": "^1.1.0",
+    "@resvg/resvg-js": "2.6.2",
     "esbuild": "^0.28.2",
     "marked": "^14.1.4",
     "react": "^18.3.1",

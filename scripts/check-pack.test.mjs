@@ -35,6 +35,13 @@ test('an extra brand asset fails', () => {
   assert.deepEqual(problems, ['unexpected file in the tarball: theme/logo-geometry.json']);
 });
 
+test('no brand asset under project/assets is ever expected in the tarball', () => {
+  assert.deepEqual(EXPECTED_FILES.filter((p) => p.startsWith('project/assets/') || p === 'project/assets'), []);
+  for (const asset of ['project/assets/Logos/products/mail-archive-tile.svg', 'project/assets/Social/paperless-go-social.png']) {
+    assert.deepEqual(checkPack(packText([...EXPECTED_FILES, asset]), pkg), [`unexpected file in the tarball: ${asset}`]);
+  }
+});
+
 test('a missing font fails', () => {
   const problems = checkPack(packText(EXPECTED_FILES.filter((p) => p !== 'project/fonts/IBMPlexSans-Regular.woff2')), pkg);
   assert.deepEqual(problems, ['missing from the tarball: project/fonts/IBMPlexSans-Regular.woff2']);

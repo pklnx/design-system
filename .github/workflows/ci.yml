@@ -47,6 +47,24 @@ jobs:
             exit 1
           fi
 
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Logos are generated
+        run: |
+          pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
+          python3 scripts/build_logo.py
+          python3 scripts/build_product_logos.py
+          python3 scripts/build_assets.py
+          node scripts/render_pngs.mjs
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            git diff --stat
+            echo "::error::the logo scripts changed the tree; run them (README, Building) and commit the result"
+            exit 1
+          fi
+
       - name: Tests
         run: npm test
 

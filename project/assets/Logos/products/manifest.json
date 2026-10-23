@@ -1,0 +1,101 @@
+{
+  "renderer": "@resvg/resvg-js 2.6.2",
+  "pngs": [
+    {
+      "path": "project/assets/Logos/products/mail-archive-apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "source": "project/assets/Logos/products/mail-archive-apple-touch-icon.svg",
+      "sourceSha256": "82bc848a9b09d918ab3549b4b4dabcf53c335b9c7b3ffab14f8d2e47fab78ff2",
+      "sha256": "63dd36c58e6b428e5564780c762f0645e8dc7afa82b9f8e84811b2f5e4c6460e"
+    },
+    {
+      "path": "project/assets/Logos/products/mail-archive-favicon-32.png",
+      "width": 32,
+      "height": 32,
+      "source": "project/assets/Logos/products/mail-archive-tile.svg",
+      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
+      "sha256": "c894edea9198cbde4a5137d50041ae3a6159f305e78faa9f9a397162b21569f7"
+    },
+    {
+      "path": "project/assets/Logos/products/mail-archive-icon-192.png",
+      "width": 192,
+      "height": 192,
+      "source": "project/assets/Logos/products/mail-archive-tile.svg",
+      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
+      "sha256": "89a52f4c50928a4634a8c9e216f0a0a7182ac09d031cc63931a97ae85fe20523"
+    },
+    {
+      "path": "project/assets/Logos/products/mail-archive-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/mail-archive-tile.svg",
+      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
+      "sha256": "23c21d214a15d31348adff180c2f91fb89efa4e236d43f4c5e8b0b2249ba0cf4"
+    },
+    {
+      "path": "project/assets/Logos/products/mail-archive-icon-maskable-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/mail-archive-icon-maskable.svg",
+      "sourceSha256": "763e7638cd6775841b98129779088042d95243f29ebfff00fb2a6024d90e2a61",
+      "sha256": "1c6e22e743f0a3bf4ffda4d9982c728734557300a685b090c9434ed6d4dd7435"
+    },
+    {
+      "path": "project/assets/Logos/products/paperless-go-apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "source": "project/assets/Logos/products/paperless-go-apple-touch-icon.svg",
+      "sourceSha256": "866a08469ae0f0a137901d443fe2f43c4dca78785a8f4dd83b01a326d15d3bbd",
+      "sha256": "140142dd6887c94e5129cab2dd8f301673478ef0b6282d6977d93c034023f45b"
+    },
+    {
+      "path": "project/assets/Logos/products/paperless-go-favicon-32.png",
+      "width": 32,
+      "height": 32,
+      "source": "project/assets/Logos/products/paperless-go-tile.svg",
+      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
+      "sha256": "7ad16c667a8c1069371ea5e0df7a898c567df819859d15d6ca222fa62f3055c9"
+    },
+    {
+      "path": "project/assets/Logos/products/paperless-go-icon-192.png",
+      "width": 192,
+      "height": 192,
+      "source": "project/assets/Logos/products/paperless-go-tile.svg",
+      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
+      "sha256": "5bb73120ebaf3edd55ab58b4b7fe1af6e844a62b2a7f872269147b448d6ec474"
+    },
+    {
+      "path": "project/assets/Logos/products/paperless-go-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/paperless-go-tile.svg",
+      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
+      "sha256": "aa02e7306841bcec7bf56813b9bd2338fdd0435f43f5d42a2363407b6ab43225"
+    },
+    {
+      "path": "project/assets/Logos/products/paperless-go-icon-maskable-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/paperless-go-icon-maskable.svg",
+      "sourceSha256": "05728a41393c7c3b2a148e72e42181673f649dd935555868fb74bbd01159a551",
+      "sha256": "796fcfc8cf4a958e42259b3b9e5c4b77c317723ce048ef6b19331c91b63cbb0a"
+    },
+    {
+      "path": "project/assets/Social/mail-archive-social.png",
+      "width": 1280,
+      "height": 640,
+      "source": "project/assets/Social/mail-archive-social.svg",
+      "sourceSha256": "39f26aae8e8d01c4f9faeb7d7bc2e5390bdda0760956e8c39f11df076fde49de",
+      "sha256": "0817031cdcf27ac5418c6997ea777b45aebdd459fe6c872744820ee46ff9eddf"
+    },
+    {
+      "path": "project/assets/Social/paperless-go-social.png",
+      "width": 1280,
+      "height": 640,
+      "source": "project/assets/Social/paperless-go-social.svg",
+      "sourceSha256": "78db07bcd396caafb05a4f0390b9aebf61bc65ecc6e7c977fc31fe7a6990230a",
+      "sha256": "3bfaccc2d996c3a7b24f2824848b2b085dc3347ce3065b1079929dfa35b8e982"
+    }
+  ]
+}
