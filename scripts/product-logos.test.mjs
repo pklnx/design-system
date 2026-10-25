@@ -292,6 +292,42 @@ function lum16(file) {
   return Array.from({ length: 256 }, (_, i) => luminance(px[i * 4], px[i * 4 + 1], px[i * 4 + 2]) * (px[i * 4 + 3] / 255));
 }
 const rowMean = (L, y) => L.slice(y * 16 + 2, y * 16 + 14).reduce((a, b) => a + b, 0) / 12;
+test('tiles and touch icons: the mark keeps 7 units of clear space, centred, at one scale for all products (#16)', () => {
+  const CLEAR = 7;
+  const scales = new Set();
+  const ground = [1, 3, 5].map((i) => parseInt(brand.dark.ground.slice(i, i + 2), 16));
+  for (const p of PRODUCTS) {
+    for (const k of ['tile', 'apple-touch-icon']) {
+      const svg = readText(`${DIR}/${p}-${k}.svg`);
+      const m = /<g transform="translate\(([\d.]+) ([\d.]+)\) scale\(([\d.]+)\)">/.exec(svg);
+      assert.ok(m, `${p}-${k}: the mark sits in a translate/scale group`);
+      const [tx, ty, s] = m.slice(1).map(Number);
+      scales.add(s);
+      const [x0, y0, x1, y1] = MARK_BBOX[p];
+      const sides = [tx + x0 * s, ty + y0 * s, 64 - tx - x1 * s, 64 - ty - y1 * s];
+      for (const side of sides) assert.ok(side >= CLEAR, `${p}-${k}: ${side} units of clear space`);
+      assert.ok(Math.abs(sides[0] - sides[2]) < 1e-9 && Math.abs(sides[1] - sides[3]) < 1e-9, `${p}-${k}: not centred (${sides})`);
+    }
+  }
+  assert.equal(scales.size, 1, `one scale for all tiles and touch icons: ${[...scales]}`);
+  // The rendered PNGs: no ink in the clear-space band (a pixel that straddles its edge is allowed).
+  for (const [kind, [size, src]] of Object.entries(PNG_KINDS)) {
+    if (src === 'icon-maskable') continue;
+    const band = (CLEAR * size) / 64;
+    for (const p of PRODUCTS) {
+      const { width, height, data } = decodeRGBA(read(`${DIR}/${p}-${kind}.png`));
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const i = (y * width + x) * 4;
+          if (data[i + 3] < 255 || (data[i] === ground[0] && data[i + 1] === ground[1] && data[i + 2] === ground[2])) continue;
+          const inside = x + 1 > Math.floor(band) && x < Math.ceil(size - band) && y + 1 > Math.floor(band) && y < Math.ceil(size - band);
+          assert.ok(inside, `${p}-${kind}: ink at (${x}, ${y}) in the ${band.toFixed(1)} px clear space`);
+        }
+      }
+    }
+  }
+});
+
 function difference(a, b) {
   let n = 0;
   let sum = 0;
