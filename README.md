@@ -84,7 +84,7 @@ The file's `:root` and `.dark` blocks must come after VitePress's own, so it is 
 
 The `@font-face` rules point to the font files relative to the CSS file; Vite emits them as hashed assets. The built site then carries IBM Plex, so it must also carry its license, `@pklnx/design-system/fonts/OFL.txt`.
 
-The block icons are inline `data:` SVGs in the CSS (Carbon icons from `@carbon/icons`, via `@carbon/icons-react`, Apache-2.0, see `THIRD_PARTY_NOTICES.md`), so they need no extra request. A site with a Content-Security-Policy must allow `img-src data:`; the products' docs on GitHub Pages send no CSP.
+The block icons are inline `data:` SVGs in the CSS (Carbon icons from `@carbon/icons`, via `@carbon/icons-react`, Apache-2.0, see `THIRD_PARTY_NOTICES.md`), so they need no extra request. Their notice opens the file as a `/*! … */` legal comment, which Vite's CSS minifier (esbuild) keeps, so the built docs carry it. A site with a Content-Security-Policy must allow `img-src data:`; the products' docs on GitHub Pages send no CSP.
 
 When the products move to another VitePress version, capture its fixture (see the header of `scripts/capture-vitepress-fixture.mjs`), set `VITEPRESS_VERSION` in `scripts/vitepress-map.mjs` and run `npm test`. Every new VitePress rule that sets a corner, an outline or a font fails the tests until `scripts/vitepress-map.mjs` overrides it or keeps it with a reason.
 

@@ -3,9 +3,20 @@
  "version": "2.0.0-alpha.20",
  "properties": [
   "border-radius",
+  "border-top-left-radius",
+  "border-top-right-radius",
+  "border-bottom-right-radius",
+  "border-bottom-left-radius",
+  "border-start-start-radius",
+  "border-start-end-radius",
+  "border-end-start-radius",
+  "border-end-end-radius",
   "outline",
-  "box-shadow",
+  "outline-style",
+  "outline-width",
   "font-family",
+  "font",
+  "box-shadow",
   "border",
   "border-color",
   "border-width",
@@ -28,6 +39,192 @@
   "components/VPCarbonAds.vue",
   "components/VPLocalSearchBox.vue"
  ],
+ "componentRoots": {
+  "components/VPBadge.vue": [
+   "VPBadge"
+  ],
+  "components/VPButton.vue": [
+   "VPButton",
+   "no-icon"
+  ],
+  "components/VPCarbonAds.vue": [
+   "VPCarbonAds"
+  ],
+  "components/VPContent.vue": [
+   "VPContent"
+  ],
+  "components/VPDoc.vue": [
+   "VPDoc"
+  ],
+  "components/VPDocAside.vue": [
+   "VPDocAside"
+  ],
+  "components/VPDocAsideCarbonAds.vue": [
+   "VPDocAsideCarbonAds"
+  ],
+  "components/VPDocAsideOutline.vue": [
+   "VPDocAsideOutline"
+  ],
+  "components/VPDocAsideSponsors.vue": [
+   "VPDocAsideSponsors"
+  ],
+  "components/VPDocFooter.vue": [
+   "VPDocFooter"
+  ],
+  "components/VPDocFooterLastUpdated.vue": [
+   "VPLastUpdated"
+  ],
+  "components/VPDocOutlineItem.vue": [
+   "VPDocOutlineItem"
+  ],
+  "components/VPFeature.vue": [
+   "VPFeature"
+  ],
+  "components/VPFeatures.vue": [
+   "VPFeatures"
+  ],
+  "components/VPFlyout.vue": [
+   "VPFlyout"
+  ],
+  "components/VPFooter.vue": [
+   "VPFooter"
+  ],
+  "components/VPHero.vue": [
+   "VPHero"
+  ],
+  "components/VPHome.vue": [
+   "VPHome"
+  ],
+  "components/VPHomeContent.vue": [
+   "VPHomeContent",
+   "vp-doc",
+   "container"
+  ],
+  "components/VPHomeFeatures.vue": [
+   "VPHomeFeatures"
+  ],
+  "components/VPHomeHero.vue": [
+   "VPHomeHero"
+  ],
+  "components/VPHomeSponsors.vue": [
+   "VPHomeSponsors"
+  ],
+  "components/VPIcon.vue": [
+   "VPIcon"
+  ],
+  "components/VPLink.vue": [
+   "VPLink"
+  ],
+  "components/VPLocalNav.vue": [
+   "VPLocalNav"
+  ],
+  "components/VPLocalNavOutlineDropdown.vue": [
+   "VPLocalNavOutlineDropdown"
+  ],
+  "components/VPLocalSearchBox.vue": [
+   "VPLocalSearchBox"
+  ],
+  "components/VPMenu.vue": [
+   "VPMenu"
+  ],
+  "components/VPMenuGroup.vue": [
+   "VPMenuGroup"
+  ],
+  "components/VPMenuLink.vue": [
+   "VPMenuLink"
+  ],
+  "components/VPNav.vue": [
+   "VPNav"
+  ],
+  "components/VPNavAppearance.vue": [
+   "VPNavAppearance"
+  ],
+  "components/VPNavBar.vue": [
+   "VPNavBar"
+  ],
+  "components/VPNavBarAskAiButton.vue": [
+   "VPNavBarAskAiButton"
+  ],
+  "components/VPNavBarExtra.vue": [
+   "VPNavBarExtra"
+  ],
+  "components/VPNavBarHamburger.vue": [
+   "VPNavBarHamburger"
+  ],
+  "components/VPNavBarSearch.vue": [
+   "VPNavBarSearch"
+  ],
+  "components/VPNavBarSearchButton.vue": [
+   "VPNavBarSearchButton"
+  ],
+  "components/VPNavBarTitle.vue": [
+   "VPNavBarTitle"
+  ],
+  "components/VPNavMenu.vue": [
+   "VPNavMenu"
+  ],
+  "components/VPNavMenuGroup.vue": [
+   "VPNavMenuGroup"
+  ],
+  "components/VPNavMenuLink.vue": [
+   "VPNavMenuLink"
+  ],
+  "components/VPNavSocialLinks.vue": [
+   "VPNavSocialLinks"
+  ],
+  "components/VPNavTranslations.vue": [
+   "VPNavTranslations",
+   "VPNavScreenTranslations"
+  ],
+  "components/VPPage.vue": [
+   "VPPage"
+  ],
+  "components/VPSidebar.vue": [
+   "VPSidebar"
+  ],
+  "components/VPSidebarGroup.vue": [
+   "group"
+  ],
+  "components/VPSidebarItem.vue": [
+   "VPSidebarItem"
+  ],
+  "components/VPSocialLink.vue": [
+   "VPSocialLink",
+   "no-icon"
+  ],
+  "components/VPSocialLinks.vue": [
+   "VPSocialLinks"
+  ],
+  "components/VPSponsors.vue": [
+   "VPSponsors",
+   "vp-sponsor"
+  ],
+  "components/VPSponsorsGrid.vue": [
+   "VPSponsorsGrid",
+   "vp-sponsor-grid"
+  ],
+  "components/VPSwitch.vue": [
+   "VPSwitch"
+  ],
+  "components/VPSwitchAppearance.vue": [
+   "VPSwitchAppearance"
+  ],
+  "components/VPTeamMembers.vue": [
+   "VPTeamMembers"
+  ],
+  "components/VPTeamMembersItem.vue": [
+   "VPTeamMembersItem"
+  ],
+  "components/VPTeamPage.vue": [
+   "VPTeamPage"
+  ],
+  "components/VPTeamPageSection.vue": [
+   "VPTeamPageSection"
+  ],
+  "components/VPTeamPageTitle.vue": [
+   "VPTeamPageTitle"
+  ]
+ },
  "vars": {
   ":root": [
    "--vp-backdrop-bg-color",
@@ -2120,6 +2317,108 @@
    "file": "styles/base.css",
    "line": 132,
    "selector": "button",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "input",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "select",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "optgroup",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "textarea",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "::file-selector-button",
+   "property": "font",
+   "value": "inherit",
+   "important": false,
+   "media": null,
+   "layer": "__vitepress_base",
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "file": "styles/base.css",
+   "line": 132,
+   "selector": "button",
    "property": "border-radius",
    "value": "0",
    "important": false,
@@ -2556,6 +2855,74 @@
     0,
     2,
     2
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 70,
+   "selector": ".vp-code-group div[class*='language-']",
+   "property": "border-top-left-radius",
+   "value": "0",
+   "important": true,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 70,
+   "selector": ".vp-block",
+   "property": "border-top-left-radius",
+   "value": "0",
+   "important": true,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 70,
+   "selector": ".vp-code-group div[class*='language-']",
+   "property": "border-top-right-radius",
+   "value": "0",
+   "important": true,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "file": "styles/components/vp-code-group.css",
+   "line": 70,
+   "selector": ".vp-block",
+   "property": "border-top-right-radius",
+   "value": "0",
+   "important": true,
+   "media": null,
+   "layer": null,
+   "scoped": false,
+   "async": false,
+   "specificity": [
+    0,
+    1,
+    0
    ]
   },
   {

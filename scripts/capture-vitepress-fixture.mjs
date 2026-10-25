@@ -17,21 +17,26 @@
 //   components/*.vue          every <style> block, with its scoped flag (the theme ships
 //                             SFC sources, not compiled component CSS)
 //   styles/**/*.css           with the @layer name where there is one
-// and records every rule that sets border-radius, outline, box-shadow, font-family or a
+// and records every rule that sets a corner (border-radius and its longhands), an outline
+// (outline, outline-style, outline-width), a font (font-family, font), box-shadow or a
 // border (border, border-left, border-inline, border-inline-start and their -color,
-// -width and -style):
+// -width and -style); the corner, outline and font properties are CLASSIFIED_GROUPS in
+// scripts/vitepress-map.mjs:
 // file, line, selector, media condition, scoped, layer, !important, specificity (scoped
 // rules get Vue's [data-v-…] attribute, +(0,1,0)) and whether the component is loaded
-// async (its CSS then arrives after theme/vitepress.css).
+// async (its CSS then arrives after theme/vitepress.css). It also records the static
+// classes of each component's root element (componentRoots): a scoped rule styles that
+// element or one inside it, so the tests read the root as the rule's ancestor.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseCss, specificity, splitTopLevel } from './css-selectors.mjs';
+import { CLASSIFIED } from './vitepress-map.mjs';
 
 // Border properties are recorded too: theme/vitepress.css gives custom blocks a left
 // stripe, and the tests check every border rule that reaches a custom block.
 const BORDERS = ['', '-left', '-inline', '-inline-start'].flatMap((side) => ['', '-color', '-width', '-style'].map((part) => `border${side}${part}`));
-export const PROPERTIES = ['border-radius', 'outline', 'box-shadow', 'font-family', ...BORDERS];
+export const PROPERTIES = [...CLASSIFIED, 'box-shadow', ...BORDERS];
 
 const listFiles = (dir, ext) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
   const p = path.join(dir, d.name);
@@ -49,6 +54,19 @@ function asyncComponents(themeDir) {
     }
   }
   return [...found].sort();
+}
+
+// The static classes of a component's root element: the first element of its <template>,
+// inside the built-in wrappers (Teleport, Transition, ClientOnly). A scoped rule of the
+// component styles that element or one inside it.
+const WRAPPERS = new Set(['Teleport', 'Transition', 'ClientOnly']);
+function rootClasses(src) {
+  const template = /<template>([\s\S]*)<\/template>/.exec(src)?.[1] ?? '';
+  for (const m of template.matchAll(/<([A-Za-z][\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g)) {
+    if (WRAPPERS.has(m[1])) continue;
+    return (/\sclass="([^"]*)"/.exec(m[2])?.[1] ?? '').split(/\s+/).filter(Boolean);
+  }
+  return [];
 }
 
 // The <style> blocks of a .vue file, with their CSS and the line their content starts on.
@@ -77,6 +95,13 @@ export function capture(pkgDir) {
     if (!names.length) continue;
     const key = r.media ? `@media ${r.media} { ${r.selector} }` : r.selector;
     vars[key] = [...new Set([...(vars[key] ?? []), ...names])].sort();
+  }
+
+  // The root classes of every component.
+  const roots = {};
+  for (const f of listFiles(path.join(themeDir, 'components'), '.vue').sort()) {
+    const classes = rootClasses(fs.readFileSync(f, 'utf8'));
+    if (classes.length) roots[rel(f)] = classes;
   }
 
   const sources = [
@@ -116,6 +141,7 @@ export function capture(pkgDir) {
     version: pkg.version,
     properties: PROPERTIES,
     asyncComponents: asyncFiles,
+    componentRoots: roots,
     vars,
     rules,
   };

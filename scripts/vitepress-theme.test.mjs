@@ -16,12 +16,13 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { transformSync } from 'esbuild';
 import { EXPECTED_FILES } from './check-pack.mjs';
 import {
-  compareSpecificity, elementOf, formatSpecificity, matchesCompound, parseCss, selectorMatches, specificity, splitTopLevel, subjectCompound,
+  compareSpecificity, compoundsOf, elementOf, formatSpecificity, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound,
 } from './css-selectors.mjs';
 import {
-  BLOCK_ICONS, CORNERS, CUSTOM_BLOCK_ELEMENTS, FONT_FACES, KEPT, MAP, PAIRS, RINGS, RING_GROUNDS, RULES, STRIPES, VITEPRESS_VERSION, isTargetValue, staticProperties,
+  BLOCK_ICONS, CLASSIFIED, CLASSIFIED_GROUPS, CORNERS, CUSTOM_BLOCK_ELEMENTS, FONT_FACES, KEPT, LEGAL_COMMENT, MAP, PAIRS, RINGS, RING_GROUNDS, RULES, STRIPES, VITEPRESS_VERSION, isTargetValue, staticProperties,
 } from './vitepress-map.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -74,18 +75,20 @@ const findRule = (selectors) => {
 
 const key = (file, selector, property) => `${file}|${selector}|${property}`;
 const fixtureRules = (file, selector) => fixture.rules.filter((r) => r.file === file && r.selector === selector);
-const CLASSIFIED = ['border-radius', 'outline', 'font-family'];
 const withStates = (el) => ({ states: ['focus', 'focus-visible', 'hover'], ...el });
 // Border properties (not the radius) count where they reach a custom block.
 const isBorder = (prop) => prop.startsWith('border') && prop !== 'border-radius';
 const BLOCK_ELEMENTS = CUSTOM_BLOCK_ELEMENTS.map(withStates);
 const needsClassification = (r) => (CLASSIFIED.includes(r.property) && !isTargetValue(r.property, r.value))
   || (isBorder(r.property) && BLOCK_ELEMENTS.some((el) => selectorMatches(r.selector, el)));
-// A pklnx property overrides the same property and, for border-left, the left side of
-// the border shorthands (border-inline-start is the left side in the products' LTR docs).
+// A pklnx property overrides the same property; the first property of a CLASSIFIED_GROUPS
+// group overrides the others (border-radius its longhands, outline outline-style and
+// -width, font-family the family the font shorthand sets); border-left overrides the left
+// side of the border shorthands (border-inline-start is the left side in the products' LTR docs).
 const LEFT_SIDE = ['border', 'border-color', 'border-width', 'border-style', 'border-left', 'border-left-color', 'border-left-width', 'border-left-style',
   'border-inline', 'border-inline-color', 'border-inline-width', 'border-inline-style', 'border-inline-start', 'border-inline-start-color', 'border-inline-start-width', 'border-inline-start-style'];
-const overridesProp = (ours, theirs) => ours === theirs || (ours === 'border-left' && LEFT_SIDE.includes(theirs));
+const overridesProp = (ours, theirs) => ours === theirs || (ours === 'border-left' && LEFT_SIDE.includes(theirs))
+  || Object.values(CLASSIFIED_GROUPS).some(([first, ...rest]) => ours === first && rest.includes(theirs));
 const alternatives = (selector) => splitTopLevel(selector, ',');
 const listMatches = (selector, el) => alternatives(selector).some((a) => selectorMatches(a, el));
 // The alternative of a selector list that applies to `el`: the most specific one that matches.
@@ -94,13 +97,23 @@ function applyingAlternative(selector, el) {
   return matching.sort((a, b) => compareSpecificity(specificity(b), specificity(a)))[0] ?? null;
 }
 
+// The elements r's selector sits in: for a scoped rule, the root element of its component
+// (componentRoots in the fixture), unless the selector's first compound is that root.
+function contextOf(r) {
+  const root = r.scoped ? fixture.componentRoots[r.file] : null;
+  if (!root || root.every((c) => compoundsOf(r.selector)[0].classes.includes(c))) return [];
+  return [{ tag: null, classes: root, attrs: {}, states: ['focus', 'focus-visible', 'hover'] }];
+}
+
 // Whether pklnx alternative `alt` targets the element of VitePress rule `r`: its subject
-// compound has every class of r's subject compound and matches every element r's
-// subject matches (same type, attributes and pseudo-element).
+// compound has every class of r's subject compound, and it matches the elements r's
+// selector describes, ancestors included (same type, attributes and pseudo-element for
+// the subject; every ancestor compound of `alt` found above it).
 function covers(alt, r) {
   const theirs = subjectCompound(r.selector);
   const ours = subjectCompound(alt);
-  return theirs.classes.every((c) => ours.classes.includes(c)) && matchesCompound(ours, elementOf(theirs));
+  const path = [...contextOf(r), ...compoundsOf(r.selector).map(elementOf)];
+  return theirs.classes.every((c) => ours.classes.includes(c)) && selectorMatchesPath(alt, path);
 }
 
 // Whether pklnx declaration `d` on alternative `alt` beats VitePress rule `r`.
@@ -123,6 +136,15 @@ const coveredRules = (e) => e.covers.flatMap((c) => fixtureRules(c.file, c.selec
 const COVERED_KEYS = new Set(coverEntries.flatMap((e) => coveredRules(e).map((r) => key(r.file, r.selector, r.property))));
 
 // ---------------------------------------------------------------- structure
+
+test('vitepress.css starts with the Apache-2.0 notice of the Carbon icons as a legal comment that minifying keeps', () => {
+  const css = read(CSS_PATH);
+  assert.ok(css.startsWith(`${LEGAL_COMMENT}\n`), 'the legal comment comes first (Lightning CSS keeps only a leading one)');
+  assert.match(LEGAL_COMMENT, /^\/\*![\s\S]*Carbon[\s\S]*IBM Corp\.[\s\S]*Apache-2\.0[\s\S]*\*\/$/);
+  assert.equal(css.match(/\/\*!/g).length, 1, 'one legal comment');
+  const { code } = transformSync(css, { loader: 'css', minify: true });
+  assert.ok(code.startsWith(LEGAL_COMMENT), 'esbuild (Vite\'s CSS minifier) keeps it');
+});
 
 test('vitepress.css is flat: only @font-face at-rules, at the top level', () => {
   for (const a of parsed.atRules) {
@@ -237,6 +259,10 @@ test('fonts: every @font-face url() resolves to a font file in the package', () 
 
 // ---------------------------------------------------------------- overrides
 
+test('the fixture was captured with every classified property, longhands included', () => {
+  assert.deepEqual(CLASSIFIED.filter((p) => !fixture.properties.includes(p)), []);
+});
+
 test('every VitePress rule that sets a corner, an outline, a font or a custom-block border is overridden or kept', () => {
   const open = fixture.rules.filter(needsClassification).filter((r) => !COVERED_KEYS.has(key(r.file, r.selector, r.property)) && !KEPT_KEYS.has(key(r.file, r.selector, r.property)));
   assert.deepEqual(open.map((r) => `${r.file}:${r.line} ${r.selector} { ${r.property}: ${r.value} }`), []);
@@ -259,6 +285,23 @@ test('every corner override is border-radius: 0 !important', () => {
     const rule = findRule(c.selectors);
     assert.deepEqual(rule.decls.map(declText), ['border-radius: 0 !important'], c.selectors.join(', '));
   }
+});
+
+test('covers() checks the ancestors, with the root of the component of a scoped rule', () => {
+  const rule = (file, selector, scoped) => ({ file, selector, scoped });
+  const footer = rule('components/VPDocFooter.vue', '.pager-link', true);
+  assert.equal(covers('.VPDocFooter .pager-link', footer), true);
+  assert.equal(covers('.VPDocFooter > .pager-link', footer), true);
+  assert.equal(covers('.VPNav .pager-link', footer), false, 'an ancestor the rule does not sit in');
+  assert.equal(covers('.VPDocFooter .pager-link', { ...footer, scoped: false }), false, 'unscoped: no component root');
+  const excerpt = rule('components/VPLocalSearchBox.vue', ".excerpt :deep(.vp-code-group) div[class*='language-']", true);
+  assert.equal(covers(".VPLocalSearchBox .excerpt.excerpt .vp-code-group div[class*='language-']", excerpt), true);
+  assert.equal(covers(".VPLocalSearchBox .titles .vp-code-group div[class*='language-']", excerpt), false, 'a wrong ancestor class');
+  const block = rule('styles/components/vp-doc.css', ".vp-doc .custom-block div[class*='language-']", false);
+  assert.equal(covers(".vp-doc .custom-block div[class*='language-']", block), true);
+  assert.equal(covers(".VPContent .vp-doc .custom-block div[class*='language-']", block), false);
+  // VPSidebarGroup's root carries .group, not its name.
+  assert.deepEqual(fixture.componentRoots['components/VPSidebarGroup.vue'], ['group']);
 });
 
 test('every overridden VitePress rule is targeted by the override and loses to it', () => {
@@ -298,11 +341,12 @@ test('focus, font and code rules match their elements, beat competing VitePress 
 
 test('kept VitePress outline rules still win against every pklnx rule that matches their element', () => {
   const outlineSetters = pklnxAlternatives.filter((a) => a.decls.some((d) => d.prop === 'outline'));
+  const OUTLINE = CLASSIFIED_GROUPS.outline;
   const failing = [];
   let checked = 0;
   for (const k of KEPT) {
-    if (k.property !== 'outline') continue;
-    for (const r of fixtureRules(k.file, k.selector).filter((x) => x.property === 'outline')) {
+    if (!OUTLINE.includes(k.property)) continue;
+    for (const r of fixtureRules(k.file, k.selector).filter((x) => x.property === k.property)) {
       if (r.layer) { assert.ok(!r.important, `${r.selector} is a layered !important outline`); continue; }
       assert.ok(k.element, `${k.file} ${k.selector}: a kept outline rule needs the element it styles`);
       const el = withStates(k.element);
@@ -444,7 +488,7 @@ test('the controls focus ring skips programmatic focus targets (tabindex="-1")',
 
 test('no VitePress rule sets a font on the nav title', () => {
   const title = { tag: 'a', classes: ['title'], attrs: { href: '/' } };
-  const setters = fixture.rules.filter((r) => r.property === 'font-family' && !r.layer && selectorMatches(r.selector, withStates(title)));
+  const setters = fixture.rules.filter((r) => CLASSIFIED_GROUPS.font.includes(r.property) && !r.layer && selectorMatches(r.selector, withStates(title)));
   assert.deepEqual(setters.map((r) => `${r.file}:${r.line} ${r.selector}`), []);
 });
 
