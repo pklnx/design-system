@@ -218,10 +218,11 @@ jobs:
             "$TARBALL" SHA256SUMS
 
       # Removes the tag this run created, and the draft gh leaves when an
-      # upload fails, so the next run can start over. A published release
-      # and its tag stay.
+      # upload fails, so the next run can start over; also when the job is
+      # cancelled or times out during the upload. A published release and
+      # its tag stay.
       - name: Remove the tag after a failed release
-        if: failure() && steps.tag.outcome == 'success'
+        if: (failure() || cancelled()) && steps.tag.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.build.outputs.tag }}

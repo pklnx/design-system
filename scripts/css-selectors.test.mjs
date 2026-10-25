@@ -117,4 +117,8 @@ test('selectorMatchesPath: descendant and child combinators against the ancestor
   assert.equal(selectorMatchesPath('.z .x + .c', path), false, 'the ancestors before a sibling compound still count');
   assert.equal(selectorMatchesPath('.a :not(.b) > .c', path), false);
   assert.equal(selectorMatchesPath(':not(.x) > .c', path), true);
+  // Unknown elements may lie between .a and .c: a child combinator does not match across the gap.
+  const gap = [{ tag: 'div', classes: ['a'] }, { tag: 'p', classes: ['c'], gapAbove: true }];
+  assert.equal(selectorMatchesPath('.a .c', gap), true);
+  assert.equal(selectorMatchesPath('.a > .c', gap), false);
 });

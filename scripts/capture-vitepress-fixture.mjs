@@ -25,8 +25,8 @@
 // file, line, selector, media condition, scoped, layer, !important, specificity (scoped
 // rules get Vue's [data-v-…] attribute, +(0,1,0)) and whether the component is loaded
 // async (its CSS then arrives after theme/vitepress.css). It also records the static
-// classes of each component's root element (componentRoots): a scoped rule styles that
-// element or one inside it, so the tests read the root as the rule's ancestor.
+// classes all root elements of each component carry (componentRoots): a scoped rule styles
+// a root or an element inside one, so the tests read the root as the rule's ancestor.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -56,17 +56,28 @@ function asyncComponents(themeDir) {
   return [...found].sort();
 }
 
-// The static classes of a component's root element: the first element of its <template>,
-// inside the built-in wrappers (Teleport, Transition, ClientOnly). A scoped rule of the
-// component styles that element or one inside it.
-const WRAPPERS = new Set(['Teleport', 'Transition', 'ClientOnly']);
-function rootClasses(src) {
-  const template = /<template>([\s\S]*)<\/template>/.exec(src)?.[1] ?? '';
-  for (const m of template.matchAll(/<([A-Za-z][\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g)) {
-    if (WRAPPERS.has(m[1])) continue;
-    return (/\sclass="([^"]*)"/.exec(m[2])?.[1] ?? '').split(/\s+/).filter(Boolean);
+// The static classes every root element of a component carries. The roots are the top-level
+// elements of its <template> (v-if/v-else branches and fragments have several), looking
+// through the built-in wrappers (Teleport, Transition, ClientOnly, <template v-if>). A scoped
+// rule of the component styles a root or an element inside one.
+const WRAPPERS = new Set(['Teleport', 'Transition', 'ClientOnly', 'template']);
+const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+export function rootClasses(src) {
+  const template = /^<template>([\s\S]*)^<\/template>/m.exec(src)?.[1] ?? '';
+  const roots = [];
+  const open = []; // the open elements: true for a wrapper
+  const body = template.replace(/<!--[\s\S]*?-->/g, '');
+  for (const m of body.matchAll(/<(\/?)([A-Za-z][\w-]*)((?:[^>"']|"[^"]*"|'[^']*')*?)(\/?)>/g)) {
+    const [, closing, tag, attrs, selfClosing] = m;
+    if (closing) { open.pop(); continue; }
+    if (open.every(Boolean)) {
+      if (WRAPPERS.has(tag)) { if (!selfClosing) open.push(true); continue; }
+      roots.push((/\sclass="([^"]*)"/.exec(attrs)?.[1] ?? '').split(/\s+/).filter(Boolean));
+    }
+    if (!selfClosing && !VOID.has(tag.toLowerCase())) open.push(false);
   }
-  return [];
+  if (open.length) throw new Error(`unbalanced <template>: ${open.length} element(s) left open`);
+  return roots.length ? roots[0].filter((c) => roots.every((r) => r.includes(c))) : [];
 }
 
 // The <style> blocks of a .vue file, with their CSS and the line their content starts on.

@@ -342,10 +342,11 @@ export function matchesCompound(c, el) {
 export const selectorMatches = (selector, el) => matchesCompound(subjectCompound(selector), el);
 
 // Whether `selector` (a single selector) can match the last element of `path`, a list of
-// elements from an ancestor down, each the child of the one before. Descendant and child
-// combinators are checked against the path. The compound before a sibling combinator (+, ~)
-// names a sibling, which the path does not hold, so it counts as matching (the answer errs
-// towards "matches", as in matchesCompound).
+// elements from an ancestor down, each the child of the one before, or a descendant of it
+// where the element has `gapAbove` (unknown elements may lie between). Descendant and child
+// combinators are checked against the path; a child combinator never matches across a gap.
+// The compound before a sibling combinator (+, ~) names a sibling, which the path does not
+// hold, so it counts as matching (the answer errs towards "matches", as in matchesCompound).
 export function selectorMatchesPath(selector, path) {
   const cs = compoundsOf(selector);
   const at = (ci, pi) => matchesCompound(cs[ci], path[pi]) && before(ci, pi);
@@ -353,7 +354,7 @@ export function selectorMatchesPath(selector, path) {
   const before = (ci, pi) => {
     if (ci === 0) return true;
     const comb = cs[ci].combinator;
-    if (comb === '>') return pi > 0 && at(ci - 1, pi - 1);
+    if (comb === '>') return pi > 0 && !path[pi].gapAbove && at(ci - 1, pi - 1);
     if (comb === ' ') {
       for (let p = pi - 1; p >= 0; p--) if (at(ci - 1, p)) return true;
       return false;

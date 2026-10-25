@@ -450,9 +450,12 @@ export function themeValues(tokens, theme) {
   }));
 }
 
-// The notice of the Carbon icons in the CSS. A /*! comment is a legal comment, which esbuild
-// (Vite's CSS minifier) keeps when Vite minifies the products' docs, so the built sites carry
-// it. It comes first in the file: Lightning CSS keeps only a legal comment at the start.
+// The notice of the Carbon icons in the CSS, as a /*! legal comment at the start of the file
+// (Lightning CSS keeps only a leading one). It reaches unminified builds and builds whose
+// minifier keeps legal comments. The products' VitePress build (Vite 8) drops it: its CSS
+// minifier is Lightning CSS, and this file is not first in VitePress's single CSS bundle
+// (with esbuild, Vite 8 sets legalComments: 'none'). The docs sites carry the notice as a
+// file instead, see "VitePress" in README.md.
 export const LEGAL_COMMENT = `/*! The custom-block icons are Carbon icons (@carbon/icons via @carbon/icons-react),
    Copyright IBM Corp., Apache-2.0: https://www.apache.org/licenses/LICENSE-2.0 */`;
 

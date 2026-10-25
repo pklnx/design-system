@@ -109,9 +109,6 @@
   "components/VPHomeSponsors.vue": [
    "VPHomeSponsors"
   ],
-  "components/VPIcon.vue": [
-   "VPIcon"
-  ],
   "components/VPLink.vue": [
    "VPLink"
   ],
@@ -163,9 +160,6 @@
   "components/VPNavMenu.vue": [
    "VPNavMenu"
   ],
-  "components/VPNavMenuGroup.vue": [
-   "VPNavMenuGroup"
-  ],
   "components/VPNavMenuLink.vue": [
    "VPNavMenuLink"
   ],
@@ -173,8 +167,7 @@
    "VPNavSocialLinks"
   ],
   "components/VPNavTranslations.vue": [
-   "VPNavTranslations",
-   "VPNavScreenTranslations"
+   "VPNavTranslations"
   ],
   "components/VPPage.vue": [
    "VPPage"

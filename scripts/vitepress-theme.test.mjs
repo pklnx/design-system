@@ -16,8 +16,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { transformSync } from 'esbuild';
 import { EXPECTED_FILES } from './check-pack.mjs';
+import { rootClasses } from './capture-vitepress-fixture.mjs';
 import {
   compareSpecificity, compoundsOf, elementOf, formatSpecificity, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound,
 } from './css-selectors.mjs';
@@ -105,14 +105,33 @@ function contextOf(r) {
   return [{ tag: null, classes: root, attrs: {}, states: ['focus', 'focus-visible', 'hover'] }];
 }
 
+// The elements r's selector describes, from the outermost down, one per compound. An element
+// has gapAbove where r allows other elements between it and the one before: after a
+// descendant combinator, and for the first compound (below the component root). A compound
+// before a sibling combinator (+, ~) names a sibling, not an ancestor, so it is left out, and
+// the element after it takes the sibling's link to the parent.
+function pathOf(r) {
+  const cs = compoundsOf(r.selector);
+  const isSibling = (comb) => comb === '+' || comb === '~';
+  const path = [];
+  let inherited = null;
+  cs.forEach((c, i) => {
+    const link = isSibling(c.combinator) ? inherited : c.combinator;
+    if (isSibling(cs[i + 1]?.combinator)) { inherited = link; return; }
+    path.push({ ...elementOf(c), gapAbove: link !== '>' });
+  });
+  return [...contextOf(r), ...path];
+}
+
 // Whether pklnx alternative `alt` targets the element of VitePress rule `r`: its subject
 // compound has every class of r's subject compound, and it matches the elements r's
 // selector describes, ancestors included (same type, attributes and pseudo-element for
-// the subject; every ancestor compound of `alt` found above it).
+// the subject; every ancestor compound of `alt` found above it, a child combinator only
+// where r has one).
 function covers(alt, r) {
   const theirs = subjectCompound(r.selector);
   const ours = subjectCompound(alt);
-  const path = [...contextOf(r), ...compoundsOf(r.selector).map(elementOf)];
+  const path = pathOf(r);
   return theirs.classes.every((c) => ours.classes.includes(c)) && selectorMatchesPath(alt, path);
 }
 
@@ -137,13 +156,12 @@ const COVERED_KEYS = new Set(coverEntries.flatMap((e) => coveredRules(e).map((r)
 
 // ---------------------------------------------------------------- structure
 
-test('vitepress.css starts with the Apache-2.0 notice of the Carbon icons as a legal comment that minifying keeps', () => {
+// A minified VitePress build drops this comment (see LEGAL_COMMENT); the README says so.
+test('vitepress.css starts with the Apache-2.0 notice of the Carbon icons as a legal comment', () => {
   const css = read(CSS_PATH);
   assert.ok(css.startsWith(`${LEGAL_COMMENT}\n`), 'the legal comment comes first (Lightning CSS keeps only a leading one)');
   assert.match(LEGAL_COMMENT, /^\/\*![\s\S]*Carbon[\s\S]*IBM Corp\.[\s\S]*Apache-2\.0[\s\S]*\*\/$/);
   assert.equal(css.match(/\/\*!/g).length, 1, 'one legal comment');
-  const { code } = transformSync(css, { loader: 'css', minify: true });
-  assert.ok(code.startsWith(LEGAL_COMMENT), 'esbuild (Vite\'s CSS minifier) keeps it');
 });
 
 test('vitepress.css is flat: only @font-face at-rules, at the top level', () => {
@@ -291,7 +309,7 @@ test('covers() checks the ancestors, with the root of the component of a scoped 
   const rule = (file, selector, scoped) => ({ file, selector, scoped });
   const footer = rule('components/VPDocFooter.vue', '.pager-link', true);
   assert.equal(covers('.VPDocFooter .pager-link', footer), true);
-  assert.equal(covers('.VPDocFooter > .pager-link', footer), true);
+  assert.equal(covers('.VPDocFooter > .pager-link', footer), false, 'VitePress allows elements between the root and .pager-link');
   assert.equal(covers('.VPNav .pager-link', footer), false, 'an ancestor the rule does not sit in');
   assert.equal(covers('.VPDocFooter .pager-link', { ...footer, scoped: false }), false, 'unscoped: no component root');
   const excerpt = rule('components/VPLocalSearchBox.vue', ".excerpt :deep(.vp-code-group) div[class*='language-']", true);
@@ -300,8 +318,29 @@ test('covers() checks the ancestors, with the root of the component of a scoped 
   const block = rule('styles/components/vp-doc.css', ".vp-doc .custom-block div[class*='language-']", false);
   assert.equal(covers(".vp-doc .custom-block div[class*='language-']", block), true);
   assert.equal(covers(".VPContent .vp-doc .custom-block div[class*='language-']", block), false);
+  // The VitePress rule's own combinators: a child combinator only where it has one, and a
+  // sibling compound is no ancestor.
+  const copy = rule('styles/components/vp-doc.css', ".vp-doc [class*='language-'] > button.copy", false);
+  assert.equal(covers(".vp-doc [class*='language-'] > button.copy", copy), true);
+  assert.equal(covers(".vp-doc > [class*='language-'] > button.copy", copy), false, '.vp-doc is no parent there');
+  const label = rule('styles/components/vp-code-group.css', '.vp-code-group input:checked + label', false);
+  assert.equal(covers('.vp-code-group label', label), true);
+  assert.equal(covers('.vp-code-group > label', label), false, 'input is the sibling, .vp-code-group no parent');
+  assert.equal(covers('input label', label), false, 'the sibling is no ancestor');
   // VPSidebarGroup's root carries .group, not its name.
   assert.deepEqual(fixture.componentRoots['components/VPSidebarGroup.vue'], ['group']);
+});
+
+test('the capture records the static classes every root of a component carries', () => {
+  const sfc = (t) => `<script setup>\nconst a = 1 > 0\n</script>\n\n<template>\n${t}\n</template>\n\n<style scoped>\n.x { color: red }\n</style>\n`;
+  assert.deepEqual(rootClasses(sfc('<div class="VPA x" :class="{ y: a > 0 }"><span class="inner"><input class="i"><br/></span></div>')), ['VPA', 'x']);
+  assert.deepEqual(rootClasses(sfc('<Teleport to="body"><Transition><div class="VPB"><p class="p" /></div></Transition></Teleport>')), ['VPB']);
+  assert.deepEqual(rootClasses(sfc('<a v-if="x" class="VPC link"/>\n<!-- <b class="no"> -->\n<span v-else class="VPC text"><i class="no" /></span>')), ['VPC']);
+  assert.deepEqual(rootClasses(sfc('<span ref="top" tabindex="-1" />\n<a class="VPD">x</a>')), [], 'a class-less root');
+  assert.deepEqual(rootClasses(sfc('<template v-if="a"><div class="VPE one" /></template><div v-else class="VPE two" />')), ['VPE']);
+  assert.throws(() => rootClasses(sfc('<div class="VPF"><span></div>')), /unbalanced/);
+  assert.deepEqual(fixture.componentRoots['components/VPNavTranslations.vue'], ['VPNavTranslations'], 'common to its v-if branches');
+  assert.equal(fixture.componentRoots['components/VPSkipLink.vue'], undefined, 'a fragment with a class-less root');
 });
 
 test('every overridden VitePress rule is targeted by the override and loses to it', () => {
