@@ -144,7 +144,7 @@ const LEGACY_PSEUDO_ELEMENTS = new Set(['before', 'after', 'first-line', 'first-
 // Reads one simple selector at `i`; returns { token, end }.
 // token: { kind: 'type'|'universal'|'id'|'class'|'attr'|'pseudo'|'pseudo-element'|'combinator', name, args, op, value }
 function readToken(sel, i) {
-  const ident = (j) => { const m = /^-?[_a-zA-Z -￿][-\w -￿]*|^-?\\./.exec(sel.slice(j)); return m ? m[0] : ''; };
+  const ident = (j) => { const m = /^-?[_a-zA-Z\u00a0-\uffff][-\w\u00a0-\uffff]*|^-?\\./.exec(sel.slice(j)); return m ? m[0] : ''; };
   const ch = sel[i];
   if (/[\s>+~]/.test(ch)) {
     let j = i;
@@ -255,15 +255,10 @@ export function specificity(selector, { scoped = false } = {}) {
 
 export const formatSpecificity = (s) => `(${s.join(',')})`;
 
-// The last compound selector of `selector` (after :deep() is unwrapped), as
-// { type, ids, classes, attrs: [{ name, op, value }], pseudos: [{ name, args }], pseudoElement }.
-export function subjectCompound(selector) {
-  const tokens = tokenize(unwrapDeep(selector));
-  let last = tokens.length;
-  let first = 0;
-  for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].kind === 'combinator') { first = i + 1; break; }
+// The compound selector the simple-selector tokens `tokens` make up.
+function compoundOf(tokens) {
   const c = { type: null, ids: [], classes: [], attrs: [], pseudos: [], pseudoElement: null };
-  for (const t of tokens.slice(first, last)) {
+  for (const t of tokens) {
     if (t.kind === 'type') c.type = t.name;
     else if (t.kind === 'id') c.ids.push(t.name);
     else if (t.kind === 'class') c.classes.push(t.name);
@@ -271,6 +266,30 @@ export function subjectCompound(selector) {
     else if (t.kind === 'pseudo') c.pseudos.push({ name: t.name, args: t.args });
     else if (t.kind === 'pseudo-element') c.pseudoElement = t.name;
   }
+  return c;
+}
+
+// The compound selectors of `selector` (after :deep() is unwrapped), left to right, each as
+// { type, ids, classes, attrs: [{ name, op, value }], pseudos: [{ name, args }], pseudoElement }
+// with `combinator`: the combinator before it (' ', '>', '+', '~'), null for the first.
+export function compoundsOf(selector) {
+  const out = [];
+  let tokens = [];
+  let combinator = null;
+  for (const t of tokenize(unwrapDeep(selector))) {
+    if (t.kind !== 'combinator') { tokens.push(t); continue; }
+    out.push({ ...compoundOf(tokens), combinator });
+    combinator = t.name;
+    tokens = [];
+  }
+  out.push({ ...compoundOf(tokens), combinator });
+  return out;
+}
+
+// The last compound selector of `selector` (after :deep() is unwrapped), as
+// { type, ids, classes, attrs: [{ name, op, value }], pseudos: [{ name, args }], pseudoElement }.
+export function subjectCompound(selector) {
+  const { combinator, ...c } = compoundsOf(selector).at(-1);
   return c;
 }
 
@@ -321,6 +340,29 @@ export function matchesCompound(c, el) {
 
 // Whether `selector` (a single selector) can match `el`, judged by its subject compound.
 export const selectorMatches = (selector, el) => matchesCompound(subjectCompound(selector), el);
+
+// Whether `selector` (a single selector) can match the last element of `path`, a list of
+// elements from an ancestor down, each the child of the one before, or a descendant of it
+// where the element has `gapAbove` (unknown elements may lie between). Descendant and child
+// combinators are checked against the path; a child combinator never matches across a gap.
+// The compound before a sibling combinator (+, ~) names a sibling, which the path does not
+// hold, so it counts as matching (the answer errs towards "matches", as in matchesCompound).
+export function selectorMatchesPath(selector, path) {
+  const cs = compoundsOf(selector);
+  const at = (ci, pi) => matchesCompound(cs[ci], path[pi]) && before(ci, pi);
+  // Whether the compounds before cs[ci] match, for cs[ci] on path[pi].
+  const before = (ci, pi) => {
+    if (ci === 0) return true;
+    const comb = cs[ci].combinator;
+    if (comb === '>') return pi > 0 && !path[pi].gapAbove && at(ci - 1, pi - 1);
+    if (comb === ' ') {
+      for (let p = pi - 1; p >= 0; p--) if (at(ci - 1, p)) return true;
+      return false;
+    }
+    return before(ci - 1, pi);
+  };
+  return path.length > 0 && at(cs.length - 1, path.length - 1);
+}
 
 // The element a compound describes, for a test that asks whether another selector
 // matches every element this one matches. States are those of the compound plus

@@ -1,6 +1,6 @@
 {
   "name": "@pklnx/design-system",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "pklnx design system: Carbon theme with pklnx brand, source for the claude.ai Design System artifact",

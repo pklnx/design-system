@@ -3,7 +3,7 @@
 // the numbers in the plan reviews of issue #10.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseCss, selectorMatches, specificity, splitTopLevel, subjectCompound, unwrapDeep } from './css-selectors.mjs';
+import { compoundsOf, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound, unwrapDeep } from './css-selectors.mjs';
 
 test('specificity of plain, scoped and :deep() selectors', () => {
   const cases = [
@@ -93,4 +93,32 @@ test('parseCss: at-rule context, nesting, !important and line numbers', () => {
   assert.deepEqual(atRules.map((a) => a.name), ['layer', 'media', 'font-face', 'keyframes']);
   assert.deepEqual(atRules.find((a) => a.name === 'font-face').decls.map((d) => d.prop), ['font-family', 'src']);
   assert.deepEqual(splitTopLevel(':where(a, b), c[x=","]', ','), [':where(a, b)', 'c[x=","]']);
+});
+
+test('compoundsOf: the compounds left to right with their combinators, :deep() unwrapped', () => {
+  const cs = compoundsOf(".excerpt :deep(.vp-code-group) > div[class*='language-'] + p.x");
+  assert.deepEqual(cs.map((c) => [c.combinator, c.type, c.classes]), [
+    [null, null, ['excerpt']], [' ', null, ['vp-code-group']], ['>', 'div', []], ['+', 'p', ['x']],
+  ]);
+  assert.deepEqual(cs[2].attrs, [{ name: 'class', op: '*=', value: 'language-' }]);
+  const { combinator, ...subject } = cs.at(-1);
+  assert.deepEqual(subjectCompound(".excerpt :deep(.vp-code-group) > div[class*='language-'] + p.x"), subject);
+});
+
+test('selectorMatchesPath: descendant and child combinators against the ancestors', () => {
+  const path = [{ tag: 'div', classes: ['a'] }, { tag: 'section', classes: ['b'] }, { tag: 'p', classes: ['c'] }];
+  assert.equal(selectorMatchesPath('.a .c', path), true);
+  assert.equal(selectorMatchesPath('.a > .b > .c', path), true);
+  assert.equal(selectorMatchesPath('.a > .c', path), false, '.c is no child of .a');
+  assert.equal(selectorMatchesPath('.b .a .c', path), false, 'order of the ancestors');
+  assert.equal(selectorMatchesPath('.x .c', path), false, 'an ancestor the path does not hold');
+  assert.equal(selectorMatchesPath('.a .x', path), false, 'the subject');
+  assert.equal(selectorMatchesPath('.a .x + .c', path), true, 'a sibling compound counts as matching');
+  assert.equal(selectorMatchesPath('.z .x + .c', path), false, 'the ancestors before a sibling compound still count');
+  assert.equal(selectorMatchesPath('.a :not(.b) > .c', path), false);
+  assert.equal(selectorMatchesPath(':not(.x) > .c', path), true);
+  // Unknown elements may lie between .a and .c: a child combinator does not match across the gap.
+  const gap = [{ tag: 'div', classes: ['a'] }, { tag: 'p', classes: ['c'], gapAbove: true }];
+  assert.equal(selectorMatchesPath('.a .c', gap), true);
+  assert.equal(selectorMatchesPath('.a > .c', gap), false);
 });

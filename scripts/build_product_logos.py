@@ -27,6 +27,7 @@ OUT = os.path.join(ROOT, "project/assets/Logos/products")
 
 S = 7  # stroke of the pklnx mark
 TILE_RX = 14  # corner radius of the tile, as pklnx-favicon.svg
+TILE_CLEAR = S  # clear space around the mark on the tile and the touch icon: one stroke
 
 FONT_SIZE = 100  # name size in lockup units
 STEM = 12.8  # stem of the "l" in Plex Mono SemiBold at size 100 (glyf x 236-364 of 1000)
@@ -85,6 +86,22 @@ def mark_bbox(product):
     pts += star_points(p["star"])
     xs, ys = [x for x, _ in pts], [y for _, y in pts]
     return min(xs), min(ys), max(xs), max(ys)
+
+
+# One scale for the marks of all products on the tile and the touch icon, so both icons
+# have the same stroke: the largest that keeps TILE_CLEAR on every side of the widest or
+# tallest mark, rounded down to eighths so the transforms are exact in the SVG.
+_extent = max(max(x1 - x0, y1 - y0) for x0, y0, x1, y1 in map(mark_bbox, PRODUCTS))
+TILE_SCALE = math.floor((64 - 2 * TILE_CLEAR) / _extent * 8) / 8
+
+
+def tile_transform(product):
+    """The transform that centres the mark's bounding box on the 64-unit tile at TILE_SCALE."""
+    x0, y0, x1, y1 = mark_bbox(product)
+    tx, ty = 32 - (x0 + x1) / 2 * TILE_SCALE, 32 - (y0 + y1) / 2 * TILE_SCALE
+    clear = min(tx + x0 * TILE_SCALE, ty + y0 * TILE_SCALE, 64 - tx - x1 * TILE_SCALE, 64 - ty - y1 * TILE_SCALE)
+    assert clear >= TILE_CLEAR, f"{product}: {clear} units of clear space on the tile"
+    return f"translate({tx:g} {ty:g}) scale({TILE_SCALE:g})"
 
 
 def mark_paths(product, ink, star):
@@ -151,11 +168,13 @@ def files(product):
         out[f"{product}-lockup-{name}.svg"] = svg(" ".join(fmt(v) for v in vb), product, body)
 
     mark = mark_paths(product, dark["ink"], dark["star"])
+    # The mark scaled down and centred, with TILE_CLEAR units of clear space on every side.
+    tiled = f'<g transform="{tile_transform(product)}">{mark}</g>'
     out[f"{product}-tile.svg"] = svg(
-        "0 0 64 64", product, f'<rect width="64" height="64" rx="{TILE_RX}" fill="{ground}"/>{mark}')
+        "0 0 64 64", product, f'<rect width="64" height="64" rx="{TILE_RX}" fill="{ground}"/>{tiled}')
     # iOS rounds the corners itself, so the square is full bleed; the mark keeps the tile's place.
     out[f"{product}-apple-touch-icon.svg"] = svg(
-        "0 0 64 64", product, f'<rect width="64" height="64" fill="{ground}"/>{mark}')
+        "0 0 64 64", product, f'<rect width="64" height="64" fill="{ground}"/>{tiled}')
     # Maskable: the mark's bounding box centred, inside the safe circle of radius 0.4 x size.
     x0, y0, x1, y1 = mark_bbox(product)
     c = MASKABLE / 2

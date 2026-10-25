@@ -6,32 +6,32 @@
       "width": 180,
       "height": 180,
       "source": "project/assets/Logos/products/mail-archive-apple-touch-icon.svg",
-      "sourceSha256": "82bc848a9b09d918ab3549b4b4dabcf53c335b9c7b3ffab14f8d2e47fab78ff2",
-      "sha256": "63dd36c58e6b428e5564780c762f0645e8dc7afa82b9f8e84811b2f5e4c6460e"
+      "sourceSha256": "a9f9e2a3d8ac77a096f7b1b103f1943acbfe63c43c998684688d68b174e6ca76",
+      "sha256": "1621447b7630756ec0991b3ffbcb5eafb830fec8aca974dcb4e7fb9ae0f67b2c"
     },
     {
       "path": "project/assets/Logos/products/mail-archive-favicon-32.png",
       "width": 32,
       "height": 32,
       "source": "project/assets/Logos/products/mail-archive-tile.svg",
-      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
-      "sha256": "c894edea9198cbde4a5137d50041ae3a6159f305e78faa9f9a397162b21569f7"
+      "sourceSha256": "63850680ca5f25fdb69206553efefcbda6d613a329d08ea4feb4fbe948c6af07",
+      "sha256": "4d28120f6fba87cf84d2e47648197f65f34a8d3922d7537a8ad5e085733ab2fe"
     },
     {
       "path": "project/assets/Logos/products/mail-archive-icon-192.png",
       "width": 192,
       "height": 192,
       "source": "project/assets/Logos/products/mail-archive-tile.svg",
-      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
-      "sha256": "89a52f4c50928a4634a8c9e216f0a0a7182ac09d031cc63931a97ae85fe20523"
+      "sourceSha256": "63850680ca5f25fdb69206553efefcbda6d613a329d08ea4feb4fbe948c6af07",
+      "sha256": "aaee5cf5f3db54c4ff9404e76c2a455f30280a7fd327d16df8ee93ddca24bcde"
     },
     {
       "path": "project/assets/Logos/products/mail-archive-icon-512.png",
       "width": 512,
       "height": 512,
       "source": "project/assets/Logos/products/mail-archive-tile.svg",
-      "sourceSha256": "cce68cf8f3f028042971038a7067694e53a112cc4a301e9360d35a0fc28a0ad1",
-      "sha256": "23c21d214a15d31348adff180c2f91fb89efa4e236d43f4c5e8b0b2249ba0cf4"
+      "sourceSha256": "63850680ca5f25fdb69206553efefcbda6d613a329d08ea4feb4fbe948c6af07",
+      "sha256": "ade51e8f6ab8ec8e8cfd03d7447766abec92140c5331b0fb46814f0a7661b0e7"
     },
     {
       "path": "project/assets/Logos/products/mail-archive-icon-maskable-512.png",
@@ -46,32 +46,32 @@
       "width": 180,
       "height": 180,
       "source": "project/assets/Logos/products/paperless-go-apple-touch-icon.svg",
-      "sourceSha256": "866a08469ae0f0a137901d443fe2f43c4dca78785a8f4dd83b01a326d15d3bbd",
-      "sha256": "140142dd6887c94e5129cab2dd8f301673478ef0b6282d6977d93c034023f45b"
+      "sourceSha256": "0cfc68f3452558ff3d0dd7de9881c2076a4cc7c8e81de13736cb30efc170bcac",
+      "sha256": "eeab0cf99e328379e8c700d71dc87ee4040eadb85280b6a3b2dfdda7f6b94bad"
     },
     {
       "path": "project/assets/Logos/products/paperless-go-favicon-32.png",
       "width": 32,
       "height": 32,
       "source": "project/assets/Logos/products/paperless-go-tile.svg",
-      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
-      "sha256": "7ad16c667a8c1069371ea5e0df7a898c567df819859d15d6ca222fa62f3055c9"
+      "sourceSha256": "fd222cc31939cfed8387efe28309c8f26beadc04b8ffd2d825a7aa3e62e47dca",
+      "sha256": "fe20a1ed287442fb5db23e3b92899b267153979e88a69484e51773ee45b24554"
     },
     {
       "path": "project/assets/Logos/products/paperless-go-icon-192.png",
       "width": 192,
       "height": 192,
       "source": "project/assets/Logos/products/paperless-go-tile.svg",
-      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
-      "sha256": "5bb73120ebaf3edd55ab58b4b7fe1af6e844a62b2a7f872269147b448d6ec474"
+      "sourceSha256": "fd222cc31939cfed8387efe28309c8f26beadc04b8ffd2d825a7aa3e62e47dca",
+      "sha256": "f9970331b8bb5d2beaa7875a64382989b420588a4750042aefd8726614e15e47"
     },
     {
       "path": "project/assets/Logos/products/paperless-go-icon-512.png",
       "width": 512,
       "height": 512,
       "source": "project/assets/Logos/products/paperless-go-tile.svg",
-      "sourceSha256": "fc7d8a73d57e064565addc2a9ae86ae7652e13cda3d07139f5c62d83499cafac",
-      "sha256": "aa02e7306841bcec7bf56813b9bd2338fdd0435f43f5d42a2363407b6ab43225"
+      "sourceSha256": "fd222cc31939cfed8387efe28309c8f26beadc04b8ffd2d825a7aa3e62e47dca",
+      "sha256": "ad265d874c3d353ebad472de845a74350b783efaa70971d61e086b954afd569b"
     },
     {
       "path": "project/assets/Logos/products/paperless-go-icon-maskable-512.png",
