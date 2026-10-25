@@ -25,7 +25,6 @@ defaults:
 jobs:
   # Runs the npm dependencies, so it gets read access only.
   build:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -36,8 +35,7 @@ jobs:
       tag: ${{ steps.version.outputs.tag }}
       tarball: ${{ steps.pack.outputs.tarball }}
     steps:
-      # The job's `if:` already skips other refs; this step states the rule
-      # in the job itself.
+      # A run from any other ref fails here, red, before anything else runs.
       - name: Started on main
         run: |
           if [ "$GITHUB_REF" != "refs/heads/main" ]; then
@@ -181,12 +179,11 @@ jobs:
         working-directory: dist
         run: sha256sum -c SHA256SUMS
 
-      # Creates the tag on the built commit ($GITHUB_SHA). An existing tag
-      # would be used as it is (--target ignored), so the tag check of the
-      # build job is repeated. gh fails if the release exists, so published
-      # assets are never replaced.
-      - name: Create the tag and the release
-        working-directory: dist
+      # Creates the tag on the built commit ($GITHUB_SHA) through the API.
+      # Creating a ref fails when it exists, so a tag pushed since the build
+      # job's check is never reused.
+      - name: Create the tag
+        id: tag
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.build.outputs.tag }}
@@ -197,14 +194,47 @@ jobs:
             echo "::error::unexpected tag '$TAG' or tarball '$TARBALL' from the build job"
             exit 1
           fi
-          refs="$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/tags/$TAG" --jq '.[].ref')"
-          if grep -qxF "refs/tags/$TAG" <<< "$refs"; then
-            echo "::error::tag $TAG exists"
+          if ! gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f "ref=refs/tags/$TAG" -f "sha=$GITHUB_SHA" --silent; then
+            echo "::error::could not create tag $TAG on $GITHUB_SHA; does it exist?"
             exit 1
           fi
+
+      # The release on the tag of the previous step (--verify-tag: gh never
+      # creates one). gh fails if the release exists, so published assets are
+      # never replaced.
+      - name: Create the release
+        working-directory: dist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.build.outputs.tag }}
+          TARBALL: ${{ needs.build.outputs.tarball }}
+        run: |
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
+            --verify-tag \
             --title "$TAG" \
             --notes-file notes.md \
             "$TARBALL" SHA256SUMS
+
+      # Removes the tag this run created, and the draft gh leaves when an
+      # upload fails, so the next run can start over. A published release
+      # and its tag stay.
+      - name: Remove the tag after a failed release
+        if: failure() && steps.tag.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.build.outputs.tag }}
+        run: |
+          if out="$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>&1)"; then
+            if [ "$out" != "true" ]; then
+              echo "::error::release $TAG is published although a step failed; check it, the tag stays"
+              exit 1
+            fi
+            gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes
+          elif [ "$out" != "release not found" ]; then
+            echo "::error::could not check for release $TAG: $out; delete tag $TAG by hand if no release uses it"
+            exit 1
+          fi
+          gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" --silent
+          echo "::notice::removed tag $TAG; fix the failure and run the workflow again"

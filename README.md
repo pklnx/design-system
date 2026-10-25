@@ -112,7 +112,7 @@ echo "sha512-$(openssl dgst -sha512 -binary pklnx-design-system-X.Y.Z.tgz | open
 
 The release notes print the install command and this integrity, too.
 
-The release workflow runs only on `main` and creates the tag itself, on the commit it built. The attestation records the ref the workflow ran on, so `--source-ref refs/heads/main` fails for a tarball built from any other branch. When you update a consumer, also check that the release's commit is on `main`, for example `git merge-base --is-ancestor vX.Y.Z origin/main` in a clone of this repository.
+The release workflow runs only on `main` and creates the tag itself, on the commit it built. The attestation records the ref the workflow ran on, so `--source-ref refs/heads/main` fails for a tarball built from any other ref. When you update a consumer, also check that the release's commit is on `main`, for example `git merge-base --is-ancestor vX.Y.Z origin/main` in a clone of this repository.
 
 ### Version policy
 
@@ -139,7 +139,7 @@ No release-age delay (`minimumReleaseAge`) applies: it only covers registry pack
 1. Bump `version` in `package.json` in a pull request and merge it.
 2. Actions → Release → Run workflow, on `main`. Tick "dry run" first if you want to see the tarball and the notes without releasing anything.
 
-Nobody pushes a tag: `.github/workflows/release.yml` creates the tag `vX.Y.Z` together with the release, on the `main` commit it built. It checks that it runs on `main`, that the `package.json` version is `X.Y.Z` and that neither the tag nor a release `vX.Y.Z` exists yet, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball and writes `SHA256SUMS` and the notes (shown in the run's summary). Unless it is a dry run, it then attests the tarball and creates the tag and the release. A failed check stops the workflow before anything is attested or published. A release that exists is never replaced: running the workflow again for the same version fails, so the next release needs a version bump. The token diff in the notes compares against the newest `v*` tag on `main` before the released commit.
+Nobody pushes a tag: `.github/workflows/release.yml` creates the tag `vX.Y.Z` together with the release, on the `main` commit it built. It checks that it runs on `main`, that the `package.json` version is `X.Y.Z` and that neither the tag nor a release `vX.Y.Z` exists yet, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball and writes `SHA256SUMS` and the notes (shown in the run's summary). Unless it is a dry run, it then attests the tarball, creates the tag through the API (which fails if the tag exists, so a tag pushed in the meantime is never reused) and creates the release on it. A failed check stops the workflow before anything is attested or published; a run started from any other ref than `main` fails in its first step. If creating the release fails, the workflow removes the tag it created (and a draft release gh left behind), so the next run starts over; a published release and its tag are never removed. A release that exists is never replaced: running the workflow again for the same version fails, so the next release needs a version bump. The token diff in the notes compares against the newest `v*` tag on `main` before the released commit. If the build fails with `No tags can describe …`, a `v*` tag exists that is not on `main`: delete that stray tag (`git push origin :refs/tags/vX.Y.Z`) and run the workflow again.
 
 What protects a release is the `main`-only check plus the permission to run the workflow: only people with write access to this repository can start it. Anyone with write access can also push to `main` or start the workflow from a branch with a changed `release.yml`; the second case shows up in the attestation, which then does not name `refs/heads/main`.
 
@@ -158,7 +158,7 @@ What protects a release is the `main`-only check plus the permission to run the 
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
 | `scripts/requirements-logo.txt` | The Python packages of the logo scripts, exact versions with hashes |
 | `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
-| `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`) |
+| `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`); `workflows.test.mjs`, the rules every workflow follows |
 | `scripts/vitepress-map.mjs` | The VitePress theme: variable → token map, the contrast pairs, the overridden and the kept VitePress rules |
 | `scripts/css-selectors.mjs` | The CSS parser, specificity and selector matching the VitePress tests and the capture use |
 | `scripts/capture-vitepress-fixture.mjs` | Captures `scripts/fixtures/vitepress-<version>.json` from the VitePress npm tarball, run by hand; the tests read the fixture |
@@ -167,7 +167,7 @@ What protects a release is the `main`-only check plus the permission to run the 
 ## Building
 
 ```sh
-npm install
+npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI
 pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
 python3 scripts/build_logo.py           # logos from IBM Plex Mono (before the build: build.mjs reads theme/logo-geometry.json)
 python3 scripts/build_product_logos.py  # mail-archive and paperless-go marks, lockups and icon SVGs
@@ -185,7 +185,7 @@ npm run site                            # documentation site into site/
 
 The same content as on claude.ai, as a static site on GitHub Pages: **https://pklnx.github.io/design-system/**
 
-- `.github/workflows/pages.yml` builds it on every push to `main` (`npm ci`, `npm run build`, `npm run site`) and deploys it with GitHub Pages.
+- `.github/workflows/pages.yml` builds it on every push to `main` (`npm ci --ignore-scripts`, `npm run build`, `npm run site`, with the actions pinned by SHA as in `ci.yml`) and deploys it with GitHub Pages in a second job that runs no repository code. `scripts/workflows.test.mjs` checks these rules for every workflow.
 - Overview (brand book), colors, typography, spacing and size, assets, and one page per component with its live preview and guidelines. Theme switch between G100 and White.
 - Repo and site are public.
 
