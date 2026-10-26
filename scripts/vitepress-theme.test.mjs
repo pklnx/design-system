@@ -18,11 +18,12 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { EXPECTED_FILES } from './check-pack.mjs';
 import { rootClasses } from './capture-vitepress-fixture.mjs';
+import { transformSync } from 'esbuild';
 import {
   compareSpecificity, compoundsOf, elementOf, formatSpecificity, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound,
 } from './css-selectors.mjs';
 import {
-  BLOCK_ICONS, CLASSIFIED, CLASSIFIED_GROUPS, CORNERS, CUSTOM_BLOCK_ELEMENTS, FONT_FACES, KEPT, LEGAL_COMMENT, MAP, PAIRS, RINGS, RING_GROUNDS, RULES, STRIPES, VITEPRESS_VERSION, isTargetValue, staticProperties,
+  BLOCK_ICONS, CLASSIFIED, CLASSIFIED_GROUPS, CORNERS, CUSTOM_BLOCK_ELEMENTS, FONT_FACES, KEPT, LEGAL_COMMENT, MAP, iconNotice, PAIRS, RINGS, RING_GROUNDS, RULES, STRIPES, VITEPRESS_VERSION, isTargetValue, staticProperties,
 } from './vitepress-map.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -156,7 +157,8 @@ const COVERED_KEYS = new Set(coverEntries.flatMap((e) => coveredRules(e).map((r)
 
 // ---------------------------------------------------------------- structure
 
-// A minified VitePress build drops this comment (see LEGAL_COMMENT); the README says so.
+// A minified VitePress build drops this comment (see LEGAL_COMMENT); the notice inside
+// each icon (next test) reaches the built docs.
 test('vitepress.css starts with the Apache-2.0 notice of the Carbon icons as a legal comment', () => {
   const css = read(CSS_PATH);
   assert.ok(css.startsWith(`${LEGAL_COMMENT}\n`), 'the legal comment comes first (Lightning CSS keeps only a leading one)');
@@ -478,8 +480,27 @@ function dataSvg(value) {
   const m = /^url\("data:image\/svg\+xml,([^"]+)"\)$/.exec(value);
   assert.ok(m, `not a data: SVG url: ${value.slice(0, 60)}`);
   const svg = decodeURIComponent(m[1]);
-  return { viewBox: /viewBox="([^"]+)"/.exec(svg)[1], paths: [...svg.matchAll(/<path fill="([^"]+)" d="([^"]+)"\/>/g)].map((p) => ({ fill: p[1], d: p[2] })) };
+  return { svg, viewBox: /viewBox="([^"]+)"/.exec(svg)[1], paths: [...svg.matchAll(/<path fill="([^"]+)" d="([^"]+)"\/>/g)].map((p) => ({ fill: p[1], d: p[2] })) };
 }
+
+test('every icon carries the Apache-2.0 notice inside its SVG, which minifying keeps', () => {
+  const b = blocks();
+  const css = read(CSS_PATH);
+  // Vite 8 minifies CSS with Lightning CSS, or with esbuild and legalComments: 'none';
+  // esbuild's setting stands in for both: comments go, url() contents stay.
+  const { code } = transformSync(css, { loader: 'css', minify: true, legalComments: 'none' });
+  assert.ok(!code.includes('/*!'), 'the minifier drops the legal comment');
+  for (const [kind, name] of Object.entries(BLOCK_ICONS)) {
+    assert.match(iconNotice(name), new RegExp(`^<!-- Carbon icon ${name} \\(@carbon/icons\\), Copyright IBM Corp\\., Apache-2\\.0: https://www\\.apache\\.org/licenses/LICENSE-2\\.0 -->$`));
+    for (const theme of ['light', 'dark']) {
+      const value = b[theme].get(`--pklnx-vp-icon-${kind}`);
+      const { svg, viewBox } = dataSvg(value);
+      assert.ok(svg.startsWith(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${iconNotice(name)}<path `), `${theme} ${kind}: the notice opens the SVG`);
+      const encoded = /^url\("([^"]+)"\)$/.exec(value)[1];
+      assert.ok(code.includes(encoded), `${theme} ${kind}: the minified CSS keeps the icon with its notice`);
+    }
+  }
+});
 
 test("custom blocks: each kind has Carbon's filled icon before its title, details has none", () => {
   // Pinned here: Carbon's InlineNotification icons per kind.
