@@ -19,6 +19,7 @@ import { createRequire } from 'node:module';
 import { EXPECTED_FILES } from './check-pack.mjs';
 import { rootClasses } from './capture-vitepress-fixture.mjs';
 import { transformSync } from 'esbuild';
+import { transform as lightningTransform } from 'lightningcss';
 import {
   compareSpecificity, compoundsOf, elementOf, formatSpecificity, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound,
 } from './css-selectors.mjs';
@@ -486,10 +487,17 @@ function dataSvg(value) {
 test('every icon carries the Apache-2.0 notice inside its SVG, which minifying keeps', () => {
   const b = blocks();
   const css = read(CSS_PATH);
-  // Vite 8 minifies CSS with Lightning CSS, or with esbuild and legalComments: 'none';
-  // esbuild's setting stands in for both: comments go, url() contents stay.
+  // Vite 8 minifies CSS with esbuild and legalComments: 'none' (cssMinify: 'esbuild'): the
+  // comments go, each url() stays byte for byte.
   const { code } = transformSync(css, { loader: 'css', minify: true, legalComments: 'none' });
-  assert.ok(!code.includes('/*!'), 'the minifier drops the legal comment');
+  assert.ok(!code.includes('/*!'), 'esbuild drops the legal comment');
+  // By default Vite 8 minifies with Lightning CSS, and VitePress puts this file after its own
+  // CSS: the leading /*! comment goes, each url() keeps its value but loses its quotes and
+  // gets ( and ) escaped, so its decoded SVG is compared.
+  const lightning = lightningTransform({ filename: 'style.css', code: Buffer.from(`.vp{color:red}\n${css}`), minify: true }).code.toString();
+  assert.ok(!lightning.includes('/*!'), 'Lightning CSS drops the legal comment after other CSS');
+  const lightningSvgs = (kind) => [...lightning.matchAll(new RegExp(`--pklnx-vp-icon-${kind}:url\\(((?:\\\\.|[^)\\\\])*)\\)`, 'g'))]
+    .map((m) => decodeURIComponent(m[1].replace(/\\(.)/g, '$1').replace(/^(["'])(.*)\1$/, '$2').replace(/^data:image\/svg\+xml,/, '')));
   for (const [kind, name] of Object.entries(BLOCK_ICONS)) {
     assert.match(iconNotice(name), new RegExp(`^<!-- Carbon icon ${name} \\(@carbon/icons\\), Copyright IBM Corp\\., Apache-2\\.0: https://www\\.apache\\.org/licenses/LICENSE-2\\.0 -->$`));
     for (const theme of ['light', 'dark']) {
@@ -497,8 +505,10 @@ test('every icon carries the Apache-2.0 notice inside its SVG, which minifying k
       const { svg, viewBox } = dataSvg(value);
       assert.ok(svg.startsWith(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${iconNotice(name)}<path `), `${theme} ${kind}: the notice opens the SVG`);
       const encoded = /^url\("([^"]+)"\)$/.exec(value)[1];
-      assert.ok(code.includes(encoded), `${theme} ${kind}: the minified CSS keeps the icon with its notice`);
+      assert.ok(code.includes(encoded), `${theme} ${kind}: esbuild keeps the icon with its notice`);
     }
+    // :root (light) first, then .dark.
+    assert.deepEqual(lightningSvgs(kind), ['light', 'dark'].map((t) => dataSvg(b[t].get(`--pklnx-vp-icon-${kind}`)).svg), `${kind}: Lightning CSS keeps both icons with their notice`);
   }
 });
 

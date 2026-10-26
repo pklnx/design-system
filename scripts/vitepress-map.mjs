@@ -410,8 +410,9 @@ export function withAlpha(hex, alpha) {
   return `rgba(${[0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)).join(', ')}, ${alpha})`;
 }
 
-// The Apache-2.0 notice inside each icon's SVG. Minifiers leave the content of a url()
-// alone, so unlike LEGAL_COMMENT it reaches the products' minified docs builds.
+// The Apache-2.0 notice inside each icon's SVG. Minifiers keep the value of a url() (esbuild
+// byte for byte; Lightning CSS drops the quotes and escapes the parentheses), so unlike
+// LEGAL_COMMENT it reaches the products' minified docs builds.
 export const iconNotice = (name) => `<!-- Carbon icon ${name} (@carbon/icons), Copyright IBM Corp., Apache-2.0: https://www.apache.org/licenses/LICENSE-2.0 -->`;
 
 // The icon custom properties for one theme: a data: SVG per block kind. shapes: the
