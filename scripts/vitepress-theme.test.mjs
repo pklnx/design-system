@@ -496,8 +496,11 @@ test('every icon carries the Apache-2.0 notice inside its SVG, which minifying k
   // gets ( and ) escaped, so its decoded SVG is compared.
   const lightning = lightningTransform({ filename: 'style.css', code: Buffer.from(`.vp{color:red}\n${css}`), minify: true }).code.toString();
   assert.ok(!lightning.includes('/*!'), 'Lightning CSS drops the legal comment after other CSS');
-  const lightningSvgs = (kind) => [...lightning.matchAll(new RegExp(`--pklnx-vp-icon-${kind}:url\\(((?:\\\\.|[^)\\\\])*)\\)`, 'g'))]
-    .map((m) => decodeURIComponent(m[1].replace(/\\(.)/g, '$1').replace(/^(["'])(.*)\1$/, '$2').replace(/^data:image\/svg\+xml,/, '')));
+  // A url() token is either quoted (raw parentheses allowed inside) or unquoted (with ( and )
+  // escaped); the value is unquoted, unescaped and URI-decoded.
+  const URL_VALUE = /--pklnx-vp-icon-([a-z]+):url\(("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|(?:\\.|[^)\\])*)\)/g;
+  const lightningSvgs = (kind) => [...lightning.matchAll(URL_VALUE)].filter((m) => m[1] === kind)
+    .map((m) => decodeURIComponent(m[2].replace(/^(["'])([^]*)\1$/, '$2').replace(/\\(.)/g, '$1').replace(/^data:image\/svg\+xml,/, '')));
   for (const [kind, name] of Object.entries(BLOCK_ICONS)) {
     assert.match(iconNotice(name), new RegExp(`^<!-- Carbon icon ${name} \\(@carbon/icons\\), Copyright IBM Corp\\., Apache-2\\.0: https://www\\.apache\\.org/licenses/LICENSE-2\\.0 -->$`));
     for (const theme of ['light', 'dark']) {
