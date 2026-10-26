@@ -410,6 +410,10 @@ export function withAlpha(hex, alpha) {
   return `rgba(${[0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)).join(', ')}, ${alpha})`;
 }
 
+// The Apache-2.0 notice inside each icon's SVG. Minifiers leave the content of a url()
+// alone, so unlike LEGAL_COMMENT it reaches the products' minified docs builds.
+export const iconNotice = (name) => `<!-- Carbon icon ${name} (@carbon/icons), Copyright IBM Corp., Apache-2.0: https://www.apache.org/licenses/LICENSE-2.0 -->`;
+
 // The icon custom properties for one theme: a data: SVG per block kind. shapes: the
 // icon name → { viewBox, outer, inner } from @carbon/icons-react; black: Carbon's
 // $black-100 for the filled inner path.
@@ -418,7 +422,7 @@ export function iconProperties(tokens, theme, shapes, black) {
     const shape = shapes[name];
     if (!shape) throw new Error(`vitepress-map: icon ${name} missing`);
     const fill = tokens[theme][STRIPES[kind]];
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shape.viewBox}"><path fill="${fill}" d="${shape.outer}"/>`;
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shape.viewBox}">${iconNotice(name)}<path fill="${fill}" d="${shape.outer}"/>`;
     if (FILLED_INNER.includes(name)) svg += `<path fill="${black}" d="${shape.inner}"/>`;
     svg += '</svg>';
     return [`--pklnx-vp-icon-${kind}`, `url("data:image/svg+xml,${encodeURIComponent(svg)}")`];
@@ -454,8 +458,8 @@ export function themeValues(tokens, theme) {
 // (Lightning CSS keeps only a leading one). It reaches unminified builds and builds whose
 // minifier keeps legal comments. The products' VitePress build (Vite 8) drops it: its CSS
 // minifier is Lightning CSS, and this file is not first in VitePress's single CSS bundle
-// (with esbuild, Vite 8 sets legalComments: 'none'). The docs sites carry the notice as a
-// file instead, see "VitePress" in README.md.
+// (with esbuild, Vite 8 sets legalComments: 'none'). There, the notice inside each icon
+// (iconNotice) carries it.
 export const LEGAL_COMMENT = `/*! The custom-block icons are Carbon icons (@carbon/icons via @carbon/icons-react),
    Copyright IBM Corp., Apache-2.0: https://www.apache.org/licenses/LICENSE-2.0 */`;
 
