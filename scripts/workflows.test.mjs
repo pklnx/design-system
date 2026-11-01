@@ -51,3 +51,17 @@ test('the workflows grant no permissions at the top level of pages and release',
     assert.match(w.text, /^permissions: \{\}$/m, w.name);
   }
 });
+
+test('the CI step "Logos are generated" runs the commands of README "Building" in the same order', () => {
+  const ci = workflows.find((w) => w.name === 'ci.yml').text;
+  const step = /- name: Logos are generated\n\s+run: \|\n((?:\s{10}.*\n)+)/.exec(ci);
+  assert.ok(step, 'step "Logos are generated" with a run block');
+  const isCommand = (l) => /^(?:pip|python3|node) /.test(l);
+  const ciCommands = step[1].split('\n').map((l) => l.trim()).filter(isCommand);
+  const readme = readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+  const building = /^## Building\n\n```sh\n([\s\S]*?)```/m.exec(readme);
+  assert.ok(building, 'README "Building" code block');
+  const readmeCommands = building[1].split('\n').map((l) => l.replace(/\s+#.*$/, '').trim()).filter(isCommand);
+  const inReadme = readmeCommands.filter((c) => ciCommands.includes(c));
+  assert.deepEqual(inReadme, ciCommands, 'README "Building" and the CI step differ in commands or order');
+});

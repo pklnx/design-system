@@ -384,6 +384,7 @@ test('CI regenerates the logos with pinned Python and hashed requirements, then 
     'python3 scripts/build_product_logos.py',
     'python3 scripts/build_assets.py',
     'node scripts/render_pngs.mjs',
+    'node scripts/build_icons.mjs',
     'git status --porcelain',
   ].map((c) => body.indexOf(c));
   assert.ok(order.every((i) => i >= 0), 'a command is missing from the step');
