@@ -165,6 +165,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
 | `project/assets/Logos/products/` | Generated: marks, lockups and app icons (SVG and PNG) of mail-archive and paperless-go, with `manifest.json` and a README |
 | `.node-version` | The Node major for development and CI (workflows, `devEngines`, tests); see Building |
+| `.github/workflows/`, `.github/actions/setup/` | `ci.yml` (checks on every push and pull request; on `main` it also builds and deploys the documentation site once the checks pass) and `release.yml`; the composite action `setup` holds the Node and `npm ci` steps they share and the only pin of `actions/setup-node` |
 | `scripts/build_all.mjs` | `npm run build:all`: the one entry point that runs all generation steps below, in their dependency order (see Building) |
 | `scripts/build_logo.py`, `scripts/build_product_logos.py`, `scripts/build_assets.py` | The pklnx logos; the product marks, lockups and icon SVGs; pattern and social images (pklnx and products) |
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
@@ -179,7 +180,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 
 ## Building
 
-Node 26, as declared in `.node-version`: the one place for the version. The three workflows read it through `actions/setup-node` (`node-version-file`), `scripts/workflows.test.mjs` checks that nothing else names a Node version, and `devEngines` in `package.json` makes npm warn on an older Node when you work in this repository. `devEngines` (unlike `engines`) is ignored when the package is installed as a dependency, so the tarball puts no requirement on consumers ([npm docs, `devEngines`](https://docs.npmjs.com/cli/configuring-npm/package-json#devengines)).
+Node 26, as declared in `.node-version`: the one place for the version. The workflows read it through the local action `.github/actions/setup` (`actions/setup-node` with `node-version-file`, then `npm ci --ignore-scripts`), `scripts/workflows.test.mjs` checks that nothing else names a Node version, and `devEngines` in `package.json` makes npm warn on an older Node when you work in this repository. `devEngines` (unlike `engines`) is ignored when the package is installed as a dependency, so the tarball puts no requirement on consumers ([npm docs, `devEngines`](https://docs.npmjs.com/cli/configuring-npm/package-json#devengines)).
 
 `react` and `react-dom` stay on 18.x in `package.json` (JSON has no comments, so the reason is here): `scripts/build_site.mjs` and `scripts/render-previews.mjs` load `node_modules/react/umd/react.production.min.js` and `node_modules/react-dom/umd/react-dom.production.min.js`, and React 19 dropped the `umd/` directory. `npm outdated` still lists 19 under "Latest"; "Wanted" stays 18. Moving to 19 means bundling React with esbuild in the site build and the previews first.
 
@@ -210,7 +211,7 @@ Each step reads files that an earlier step wrote. The order only works because t
 
 The same content as on claude.ai, as a static site on GitHub Pages: **https://pklnx.github.io/design-system/**
 
-- `.github/workflows/pages.yml` builds it on every push to `main` (`npm ci --ignore-scripts`, `npm run build`, `npm run site`, with the actions pinned by SHA as in `ci.yml`) and deploys it with GitHub Pages in a second job that runs no repository code. `scripts/workflows.test.mjs` checks these rules for every workflow.
+- `.github/workflows/ci.yml` builds and deploys it, only on `main` (a push, or the workflow started by hand there) and only after the `check` job of the same run is green: the `pages-build` job (`npm run build`, `npm run site`) needs `check`, and the `pages-deploy` job needs `pages-build`, so a red CI run on `main` deploys nothing. Pull requests and other branches only run the checks. The deploy job runs no repository code (GitHub Pages deployment of the uploaded artifact, the only job with `pages: write` and `id-token: write`); a newer push to `main` cancels a deploy that is still running. The Node and npm steps come from `.github/actions/setup`, and every action is pinned by SHA with its version in a comment, to the same SHA wherever it is used (`actions/checkout` has to be in every job, and `actions/download-artifact` in the two release jobs that run no repository code). Only the Node prelude exists once, in the composite action. `scripts/workflows.test.mjs` checks these rules for every workflow and fails as soon as two occurrences of an action differ.
 - Overview (brand book), colors, typography, spacing and size, assets, and one page per component with its live preview and guidelines. Theme switch between G100 and White.
 - Repo and site are public.
 
