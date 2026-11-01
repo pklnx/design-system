@@ -1,5 +1,5 @@
 // Rules every workflow in .github/workflows follows (design-system #6): actions pinned by
-// commit SHA, npm without install scripts, IBM's telemetry off where npm runs, one Node
+// commit SHA (the same SHA wherever an action is used), npm without install scripts, IBM's telemetry off where npm runs, one Node
 // version (`.node-version`), checkouts without persisted credentials. The composite action
 // in .github/actions/setup holds the Node and npm prelude and its pins; the Pages site
 // deploys only after the check job of ci.yml passed (design-system #21).
@@ -40,8 +40,6 @@ const waitsFor = (jobs, job, target, seen = new Set()) => needsOf(job).some((n) 
   const next = jobs.find((j) => j.name === n);
   return next ? waitsFor(jobs, next, target, seen) : false;
 });
-// Every `uses: owner/repo@sha` of the workflows and the local actions.
-const pins = () => sources.flatMap((s) => [...s.text.matchAll(/uses:\s*([\w.-]+\/[\w.-]+)@([0-9a-f]{40})/g)].map((m) => ({ file: s.name, action: m[1], sha: m[2] })));
 
 test('the workflows are ci and release, the local action is setup', () => {
   assert.deepEqual(workflows.map((w) => w.name), ['ci.yml', 'release.yml']);
@@ -62,25 +60,23 @@ test('every action is pinned by commit SHA with its version in a comment', () =>
   }
 });
 
-// ---- the pins live in one place (design-system #21)
-// actions/checkout runs before a local action can (the action is a file of the repository),
-// so each job pins it itself, always to the same SHA. actions/download-artifact is the one
-// other repeat: the attest and release jobs must run no repository code, so they cannot use a
-// local action that would wrap it (it would need a checkout).
-const REPEATED = new Set(['actions/checkout', 'actions/download-artifact']);
-
-test('every pinned action SHA appears once, except the checkout pins (identical everywhere)', () => {
-  const byAction = Map.groupBy(pins(), (p) => p.action);
-  assert.ok(byAction.size > 5, 'pins found');
+// ---- one pin per action, everywhere (design-system #21)
+// Every occurrence of an action carries the same SHA and the same version comment, so a bump
+// cannot be done halfway. actions/checkout has to be repeated in every job (a local action is a
+// file of the repository), and actions/download-artifact in the release jobs that run no
+// repository code; the rule needs no exception for either. The shared Node prelude is the one
+// thing that exists once (next test).
+test('all occurrences of an action use the same SHA and the same version comment', () => {
+  const uses = sources.flatMap((s) => [...s.text.matchAll(/^\s*(?:-\s+)?uses:\s*([\w.-]+\/[\w.-]+)@([0-9a-f]{40})(.*)$/gm)]
+    .map((m) => ({ file: s.name, action: m[1], sha: m[2], comment: m[3] })));
+  assert.ok(uses.length > 0, 'pinned uses found');
+  const byAction = Map.groupBy(uses, (u) => u.action);
+  assert.ok([...byAction.values()].some((list) => list.length > 1), 'at least one action is used more than once (the rule is exercised)');
   for (const [action, list] of byAction) {
-    if (REPEATED.has(action)) {
-      assert.equal(new Set(list.map((p) => p.sha)).size, 1, `${action}: all pins identical (${list.map((p) => `${p.file} ${p.sha}`).join(', ')})`);
-    } else {
-      assert.equal(list.length, 1, `${action} is pinned ${list.length} times (${list.map((p) => p.file).join(', ')}); pin it once, e.g. in a local action`);
-    }
+    const where = list.map((u) => `${u.file} ${u.sha}${u.comment}`).join(', ');
+    assert.equal(new Set(list.map((u) => u.sha)).size, 1, `${action}: occurrences pin different SHAs (${where})`);
+    assert.equal(new Set(list.map((u) => u.comment)).size, 1, `${action}: occurrences carry different version comments (${where})`);
   }
-  assert.ok(byAction.get('actions/checkout').length >= 3, 'checkout pins found');
-  assert.equal(byAction.get('actions/download-artifact').length, 2, 'download-artifact: the attest and the release job');
 });
 
 test('the Node prelude is pinned in the setup action only', () => {
