@@ -2,7 +2,7 @@
 //   theme/          the Carbon theme for code (CSS and SCSS overrides, tokens as JSON) and
 //                   the VitePress theme (theme/vitepress.css)
 //   project/        the files of the claude.ai Design System artifact
-// Run: npm run build   (the logo is built separately: python3 scripts/build_logo.py)
+// Run: npm run build   (the logo is built before it: scripts/build_logo.py; npm run build:all runs every step in order)
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
