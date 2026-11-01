@@ -2,3 +2,12 @@ node_modules/
 .render/
 __pycache__/
 site/
+*.tgz
+.venv/
+venv/
+*.pyc
+.python-version
+dist/
+.DS_Store
+.idea/
+.vscode/
