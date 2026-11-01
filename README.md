@@ -185,7 +185,7 @@ npm run build                           # tokens, themes (Carbon, VitePress), bu
 python3 scripts/build_assets.py         # pattern, social images (after the build, reads theme/tokens.json)
 node scripts/render_pngs.mjs            # product icon and social PNGs, products/manifest.json (last: needs the social SVGs)
 node scripts/build_icons.mjs            # Carbon icons as SVG
-node scripts/render-previews.mjs        # every preview in both themes into .render/ (Chromium)
+CHROME=/path/to/chromium node scripts/render-previews.mjs  # every preview in both themes into .render/ (needs a Chromium; CHROME is required, not run in CI)
 npm run site                            # documentation site into site/
 ```
 

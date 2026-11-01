@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import * as sass from 'sass';
 import * as esbuild from 'esbuild';
 import { noteFor } from './token-notes.mjs';
@@ -17,7 +18,7 @@ const colors = require('@carbon/colors');
 const type = require('@carbon/type');
 const layout = require('@carbon/layout');
 
-const ROOT = path.dirname(path.dirname(new URL(import.meta.url).pathname));
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const P = (...p) => path.join(ROOT, ...p);
 const write = (p, s) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, s); };
 const brand = JSON.parse(fs.readFileSync(P('theme/brand.json'), 'utf8'));
@@ -192,13 +193,12 @@ const decl = (obj) => Object.entries(obj).map(([k, v]) => `  --${k}: ${v};`).joi
 const darkVals = Object.fromEntries(order.map((n) => [n, all.dark[n]]));
 const lightVals = Object.fromEntries(order.map((n) => [n, all.light[n]]));
 const flat = (fam) => Object.fromEntries(fam.tokens.map((t) => [t.name, t.value]));
-const rem = (v) => v;
 let tcss = `/* ${brand.name} — generated from tokens.json */\n`;
 tcss += `:root, [data-theme="dark"] {\n${decl(darkVals)}\n}\n[data-theme="light"] {\n${decl(lightVals)}\n}\n`;
 tcss += `:root {\n${decl({ ...flat(spacing), ...flat(size), ...flat(radius), 'font-sans': typeTokens.families.sans, 'font-mono': typeTokens.families.mono })}\n}\n`;
 for (const g of typeTokens.groups) for (const s of g.styles) {
   const fam = s.family || g.family;
-  tcss += `.${s.name} { font-family: var(--font-${fam}); font-size: ${rem(s.fontSize)}; line-height: ${s.lineHeight}; font-weight: ${s.fontWeight};${s.letterSpacing ? ` letter-spacing: ${s.letterSpacing};` : ''} }\n`;
+  tcss += `.${s.name} { font-family: var(--font-${fam}); font-size: ${s.fontSize}; line-height: ${s.lineHeight}; font-weight: ${s.fontWeight};${s.letterSpacing ? ` letter-spacing: ${s.letterSpacing};` : ''} }\n`;
 }
 for (const f of typeTokens.fonts) tcss += `@font-face { font-family: "${f.family}"; src: url("${f.file}") format("woff2"); font-weight: ${f.weight}; font-style: ${f.style || 'normal'}; font-display: swap; }\n`;
 write(P('project/tokens.css'), tcss);

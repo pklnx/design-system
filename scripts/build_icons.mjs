@@ -2,11 +2,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url);
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const I = require('@carbon/icons-react');
-const ROOT = path.dirname(path.dirname(new URL(import.meta.url).pathname));
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const out = path.join(ROOT, 'project/assets/Icons');
 fs.mkdirSync(out, { recursive: true });
 const map = { terminal: 'Terminal', server: 'BareMetalServer', mail: 'Email', cloud: 'Cloud', shield: 'Security', key: 'Password', lock: 'Locked', database: 'DataBase', globe: 'Earth', 'arrow-right': 'ArrowRight', external: 'Launch', check: 'Checkmark', close: 'Close', copy: 'Copy' };

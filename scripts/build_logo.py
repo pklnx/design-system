@@ -18,7 +18,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, "node_modules/@ibm/plex-mono/fonts/complete/woff2")
 SIZE = 100  # font size in SVG units
 
-COLORS = json.load(open(os.path.join(ROOT, "theme/brand.json")))["logo"]
+with open(os.path.join(ROOT, "theme/brand.json"), encoding="utf-8") as f:
+    COLORS = json.load(f)["logo"]
 
 
 def glyph_path(font, char, x, scale):
@@ -94,7 +95,9 @@ def main():
     }
     geo = {"word": {"text": " ".join(paths), "star": star, "bracket": bracket, "viewBox": vb}, "mark": mark}
     os.makedirs(os.path.join(ROOT, "theme"), exist_ok=True)
-    json.dump(geo, open(os.path.join(ROOT, "theme/logo-geometry.json"), "w"), indent=1)
+    with open(os.path.join(ROOT, "theme/logo-geometry.json"), "w", encoding="utf-8") as f:
+        json.dump(geo, f, indent=1)
+        f.write("\n")
 
     out = os.path.join(ROOT, "project/assets/Logos")
     os.makedirs(out, exist_ok=True)
@@ -129,7 +132,8 @@ def main():
         "pklnx-avatar.svg": mark_svg(c["dark"]["ink"], c["dark"]["star"], c["dark"]["ground"], "circle"),
     }
     for name, svg in files.items():
-        open(os.path.join(out, name), "w").write(svg)
+        with open(os.path.join(out, name), "w", encoding="utf-8") as f:
+            f.write(svg)
     print("viewBox", vb, "cell", cell, "x-height", xh)
 
 
