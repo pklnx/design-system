@@ -189,7 +189,7 @@ node scripts/render-previews.mjs        # every preview in both themes into .ren
 npm run site                            # documentation site into site/
 ```
 
-`requirements-logo.txt` pins fontTools and brotli with the hashes of their wheels. CI runs the logo scripts and `render_pngs.mjs` (step "Logos are generated", Python 3.13) and fails when they change the tree; `npm test` also fails on a PNG that was not rendered again after its SVG changed.
+`requirements-logo.txt` pins fontTools and brotli with the hashes of their wheels. CI runs the logo scripts, `render_pngs.mjs` and `build_icons.mjs` (step "Logos are generated", Python 3.13; the same commands in the same order as above) and fails when they change the tree; `npm test` also fails on a PNG that was not rendered again after its SVG changed.
 
 ## Documentation site
 

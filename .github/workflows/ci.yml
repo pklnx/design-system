@@ -58,10 +58,11 @@ jobs:
           python3 scripts/build_product_logos.py
           python3 scripts/build_assets.py
           node scripts/render_pngs.mjs
+          node scripts/build_icons.mjs
           if [ -n "$(git status --porcelain)" ]; then
             git status --porcelain
             git diff --stat
-            echo "::error::the logo scripts changed the tree; run them (README, Building) and commit the result"
+            echo "::error::the logo and icon scripts changed the tree; run them (README, Building) and commit the result"
             exit 1
           fi
 
