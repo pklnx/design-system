@@ -151,7 +151,7 @@ test('every checkout leaves no credentials behind', () => {
 
 test('release grants no permissions at the top level, ci only contents: read', () => {
   assert.match(workflows.find((x) => x.name === 'release.yml').text, /^permissions: \{\}$/m, 'release.yml');
-  assert.match(workflows.find((x) => x.name === 'ci.yml').text, /^permissions:\n {2}contents: read\n/m, 'ci.yml');
+  assert.match(workflows.find((x) => x.name === 'ci.yml').text, /^permissions:\n {2}contents: read\n(?! {2}\S)/m, 'ci.yml: only contents: read at the top level');
 });
 
 // ---- Pages deploys only after CI is green on main (design-system #21)
