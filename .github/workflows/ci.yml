@@ -61,7 +61,7 @@ jobs:
   # fails (the implicit success() of this if) and on every ref but main.
   pages-build:
     needs: check
-    if: ${{ (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')) || (github.event_name == 'pull_request' && github.head_ref == 'claude/dreamy-hawking-sopj4b') }}
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -90,7 +90,7 @@ jobs:
   # from running at once.
   pages-deploy:
     needs: pages-build
-    if: ${{ (github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')) || (github.event_name == 'pull_request' && github.head_ref == 'claude/dreamy-hawking-sopj4b') }}
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
