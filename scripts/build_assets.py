@@ -13,8 +13,13 @@ from build_logo import glyph_path, fmt, ROOT, FONTS
 from build_product_logos import lockup, K
 from fontTools.ttLib import TTFont
 
-geo = json.load(open(os.path.join(ROOT, "theme/logo-geometry.json")))
-tokens = json.load(open(os.path.join(ROOT, "theme/tokens.json")))
+def read_json(rel):
+    with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
+        return json.load(f)
+
+
+geo = read_json("theme/logo-geometry.json")
+tokens = read_json("theme/tokens.json")
 D, L = tokens["dark"], tokens["light"]
 
 
@@ -126,17 +131,22 @@ def product_social(product, description):
             f'<g transform="translate({fmt(lx)} {fmt(ly)}) scale({s:.4f})">{body}</g>{desc}{word}</svg>\n')
 
 
+def write(path, content):
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
 def main():
     pd = os.path.join(ROOT, "project/assets/Patterns")
     sd = os.path.join(ROOT, "project/assets/Social")
     os.makedirs(pd, exist_ok=True)
     os.makedirs(sd, exist_ok=True)
-    open(os.path.join(pd, "pattern-dark.svg"), "w").write(pattern(D["background"], D["border-subtle-00"], D["star"]))
-    open(os.path.join(pd, "pattern-light.svg"), "w").write(pattern(L["background"], L["border-subtle-00"], L["star"]))
-    open(os.path.join(sd, "pklnx-og-image.svg"), "w").write(social(1200, 630, 104, 96, 210, 30, 72))
-    open(os.path.join(sd, "pklnx-banner.svg"), "w").write(social(1280, 320, 64, 80, 72, 22, 44))
+    write(os.path.join(pd, "pattern-dark.svg"), pattern(D["background"], D["border-subtle-00"], D["star"]))
+    write(os.path.join(pd, "pattern-light.svg"), pattern(L["background"], L["border-subtle-00"], L["star"]))
+    write(os.path.join(sd, "pklnx-og-image.svg"), social(1200, 630, 104, 96, 210, 30, 72))
+    write(os.path.join(sd, "pklnx-banner.svg"), social(1280, 320, 64, 80, 72, 22, 44))
     for product, description in PRODUCT_SOCIAL.items():
-        open(os.path.join(sd, f"{product}-social.svg"), "w").write(product_social(product, description))
+        write(os.path.join(sd, f"{product}-social.svg"), product_social(product, description))
 
 
 if __name__ == "__main__":

@@ -4,10 +4,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 
 const require = createRequire(import.meta.url);
-const ROOT = path.dirname(path.dirname(new URL(import.meta.url).pathname));
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const P = (...p) => path.join(ROOT, ...p);
 const OUT = P('site');
 const write = (p, s) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, s); };

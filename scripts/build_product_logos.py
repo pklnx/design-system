@@ -22,7 +22,8 @@ import os
 from build_logo import star_path, glyph_path, fmt, FONTS, ROOT
 from fontTools.ttLib import TTFont
 
-COLORS = json.load(open(os.path.join(ROOT, "theme/brand.json")))["logo"]
+with open(os.path.join(ROOT, "theme/brand.json"), encoding="utf-8") as f:
+    COLORS = json.load(f)["logo"]
 OUT = os.path.join(ROOT, "project/assets/Logos/products")
 
 S = 7  # stroke of the pklnx mark
@@ -100,7 +101,8 @@ def tile_transform(product):
     x0, y0, x1, y1 = mark_bbox(product)
     tx, ty = 32 - (x0 + x1) / 2 * TILE_SCALE, 32 - (y0 + y1) / 2 * TILE_SCALE
     clear = min(tx + x0 * TILE_SCALE, ty + y0 * TILE_SCALE, 64 - tx - x1 * TILE_SCALE, 64 - ty - y1 * TILE_SCALE)
-    assert clear >= TILE_CLEAR, f"{product}: {clear} units of clear space on the tile"
+    if clear < TILE_CLEAR:
+        raise ValueError(f"{product}: {clear} units of clear space on the tile, need {TILE_CLEAR}")
     return f"translate({tx:g} {ty:g}) scale({TILE_SCALE:g})"
 
 
@@ -190,7 +192,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     for product in PRODUCTS:
         for name, content in files(product).items():
-            with open(os.path.join(OUT, name), "w") as f:
+            with open(os.path.join(OUT, name), "w", encoding="utf-8") as f:
                 f.write(content)
         print(product, "lockup viewBox", " ".join(fmt(v) for v in lockup(product, "", "")[1]))
 
