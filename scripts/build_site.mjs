@@ -25,6 +25,7 @@ const title = index.title;
 // ---------------------------------------------------------------- static files
 for (const f of ['tokens.css', 'components/bundle.css', 'components/bundle.js', 'THIRD_PARTY_NOTICES.txt']) copy(P('project', f), path.join(OUT, f));
 for (const f of fs.readdirSync(P('project/fonts'))) copy(P('project/fonts', f), path.join(OUT, 'fonts', f));
+// React 18 only: the browser gets the UMD builds, which React 19 dropped (no umd/ directory). package.json pins react and react-dom to 18.x (README, "Building"); bundling React instead is what would allow 19.
 copy(P('node_modules/react/umd/react.production.min.js'), path.join(OUT, 'lib/react.production.min.js'));
 copy(P('node_modules/react-dom/umd/react-dom.production.min.js'), path.join(OUT, 'lib/react-dom.production.min.js'));
 copy(P('theme/pklnx-carbon.css'), path.join(OUT, 'theme/pklnx-carbon.css'));

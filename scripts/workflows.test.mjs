@@ -1,6 +1,6 @@
 // Rules every workflow in .github/workflows follows (design-system #6): actions pinned by
 // commit SHA, npm without install scripts, IBM's telemetry off where npm runs, one Node
-// version, checkouts without persisted credentials.
+// version (`.node-version`), checkouts without persisted credentials.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const DIR = '.github/workflows';
+const NODE_VERSION = readFileSync(path.join(ROOT, '.node-version'), 'utf8').trim();
 const workflows = readdirSync(path.join(ROOT, DIR)).filter((f) => /\.ya?ml$/.test(f)).sort()
   .map((f) => ({ name: f, text: readFileSync(path.join(ROOT, DIR, f), 'utf8') }));
 
@@ -26,16 +27,49 @@ test('every action is pinned by commit SHA with its version in a comment', () =>
   }
 });
 
-test('npm installs without install scripts, with IBM telemetry off, on Node 26', () => {
+test('npm installs without install scripts, with IBM telemetry off', () => {
   for (const w of workflows) {
     const installs = [...w.text.matchAll(/\bnpm (?:ci|install|i)\b.*$/gm)].map((m) => m[0]);
     for (const line of installs) assert.match(line, /^npm ci --ignore-scripts$/, `${w.name}: ${line}`);
     if (!installs.length) continue;
     assert.match(w.text, /IBM_TELEMETRY_DISABLED: 'true'/, `${w.name}: telemetry`);
-    const versions = [...w.text.matchAll(/node-version:\s*(\S+)/g)].map((m) => m[1]);
-    assert.deepEqual([...new Set(versions)], ['26'], `${w.name}: node-version`);
     assert.match(w.text, /package-manager-cache: false/, `${w.name}: no dependency cache`);
   }
+});
+
+// ---- one place for the Node version (design-system #26)
+test('.node-version holds one Node major', () => {
+  assert.match(NODE_VERSION, /^\d+$/);
+});
+
+test('every setup-node step reads .node-version and no workflow names a Node version', () => {
+  for (const w of workflows) {
+    const steps = [...w.text.matchAll(/uses: actions\/setup-node@\S+.*\n((?:\s+.*\n){0,4})/g)];
+    assert.ok(steps.length, `${w.name}: has a setup-node step`);
+    for (const m of steps) {
+      assert.match(m[1], /^\s+node-version-file: \.node-version$/m, `${w.name}: setup-node without node-version-file: .node-version`);
+    }
+    assert.doesNotMatch(w.text, /^\s*node-version:/m, `${w.name}: literal node-version`);
+    assert.equal([...w.text.matchAll(/uses: actions\/setup-node@/g)].length, steps.length, `${w.name}: setup-node steps`);
+  }
+});
+
+test('package.json devEngines and the README name the Node major of .node-version', () => {
+  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  assert.deepEqual(pkg.devEngines.runtime, { name: 'node', version: `>=${NODE_VERSION}`, onFail: 'warn' });
+  assert.equal(pkg.engines, undefined, 'engines would bind consumers of the tarball; devEngines does not');
+  const building = /^## Building\n([\s\S]*?)^## /m.exec(readFileSync(path.join(ROOT, 'README.md'), 'utf8'));
+  assert.ok(building, 'README "Building" section');
+  assert.match(building[1], new RegExp(`^Node ${NODE_VERSION}, as declared in \`\\.node-version\``, 'm'), 'README "Building" names Node and .node-version');
+});
+
+test('react and react-dom stay on 18.x while the scripts load the UMD builds (README says why)', () => {
+  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const usesUmd = ['build_site.mjs', 'render-previews.mjs'].filter((f) => /node_modules\/react(-dom)?\/umd\//.test(readFileSync(path.join(ROOT, 'scripts', f), 'utf8')));
+  assert.deepEqual(usesUmd, ['build_site.mjs', 'render-previews.mjs']);
+  for (const name of ['react', 'react-dom']) assert.match(pkg.devDependencies[name], /^(18\.x|~18\.\d+\.\d+)$/, `${name} range`);
+  const readme = readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+  assert.match(readme, /React 19 dropped the `umd\/` directory/);
 });
 
 test('every checkout leaves no credentials behind', () => {
