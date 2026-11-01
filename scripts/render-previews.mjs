@@ -33,6 +33,7 @@ if (unknown.length) die(`no preview.html for: ${unknown.join(', ')}`);
 
 fs.mkdirSync(out, { recursive: true });
 const fileUrl = (p) => pathToFileURL(p).href;
+// React 18 only: the browser gets the UMD builds, which React 19 dropped (no umd/ directory). package.json pins react and react-dom to 18.x (README, "Building"); bundling React instead is what would allow 19.
 const react = path.join(ROOT, 'node_modules/react/umd/react.production.min.js');
 const reactDom = path.join(ROOT, 'node_modules/react-dom/umd/react-dom.production.min.js');
 

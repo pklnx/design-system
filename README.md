@@ -164,6 +164,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `theme/contrast-report.json` | Generated: contrast check of the key pairs |
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
 | `project/assets/Logos/products/` | Generated: marks, lockups and app icons (SVG and PNG) of mail-archive and paperless-go, with `manifest.json` and a README |
+| `.node-version` | The Node major for development and CI (workflows, `devEngines`, tests); see Building |
 | `scripts/build_all.mjs` | `npm run build:all`: the one entry point that runs all generation steps below, in their dependency order (see Building) |
 | `scripts/build_logo.py`, `scripts/build_product_logos.py`, `scripts/build_assets.py` | The pklnx logos; the product marks, lockups and icon SVGs; pattern and social images (pklnx and products) |
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
@@ -177,6 +178,10 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `project/` | Content of the claude.ai design system (README, tokens, components, previews, assets, fonts) |
 
 ## Building
+
+Node 26, as declared in `.node-version`: the one place for the version. The three workflows read it through `actions/setup-node` (`node-version-file`), `scripts/workflows.test.mjs` checks that nothing else names a Node version, and `devEngines` in `package.json` makes npm warn on an older Node when you work in this repository. `devEngines` (unlike `engines`) is ignored when the package is installed as a dependency, so the tarball puts no requirement on consumers ([npm docs, `devEngines`](https://docs.npmjs.com/cli/configuring-npm/package-json#devengines)).
+
+`react` and `react-dom` stay on 18.x in `package.json` (JSON has no comments, so the reason is here): `scripts/build_site.mjs` and `scripts/render-previews.mjs` load `node_modules/react/umd/react.production.min.js` and `node_modules/react-dom/umd/react-dom.production.min.js`, and React 19 dropped the `umd/` directory. `npm outdated` still lists 19 under "Latest"; "Wanted" stays 18. Moving to 19 means bundling React with esbuild in the site build and the previews first.
 
 ```sh
 npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI; before pip: the logo scripts read the fonts from node_modules
