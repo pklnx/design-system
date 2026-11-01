@@ -4,7 +4,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -97,4 +97,29 @@ test('README "Building" lists the steps of scripts/build_all.mjs in its order', 
   assert.ok(steps?.length, 'README "Building" step block');
   // build.mjs is `npm run build`; the README says so in its comment.
   assert.deepEqual(steps, STEPS.map(commandOf), 'README step list and STEPS differ in commands or order');
+});
+
+// A plain (unquoted) single-line scalar must not contain ": " or " #" and must not start with a YAML
+// indicator, or GitHub refuses the whole file (ci.yml once had `run: pip install ... :all: ...`).
+// No YAML parser is a dependency, so the rule is checked on the text; multi-line `run: |` blocks are exempt.
+test('YAML rule: a single-line `run:` value has no ": ", no " #" and does not start with a YAML indicator', () => {
+  const files = [...workflows.map((w) => [`${DIR}/${w.name}`, w.text])];
+  const actions = path.join(ROOT, '.github/actions');
+  const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : /^action\.ya?ml$/.test(e.name) ? [path.join(d, e.name)] : []));
+  if (existsSync(actions)) for (const f of walk(actions)) files.push([path.relative(ROOT, f), readFileSync(f, 'utf8')]);
+  let checked = 0;
+  for (const [name, text] of files) {
+    text.split('\n').forEach((line, i) => {
+      const m = /^\s*(?:-\s+)?run:[ \t]+(\S.*)$/.exec(line);
+      if (!m) return;
+      const value = m[1].trimEnd();
+      if (/^[|>][+-]?\d?(?:\s+#.*)?$/.test(value)) return; // block scalar
+      if (/^["']/.test(value)) return; // quoted scalar: ": " is fine inside
+      checked++;
+      assert.doesNotMatch(value, /: /, `${name}:${i + 1}: plain scalar contains ": " (use a \`run: |\` block): ${value}`);
+      assert.doesNotMatch(value, / #/, `${name}:${i + 1}: plain scalar contains " #" (a comment starts there): ${value}`);
+      assert.doesNotMatch(value, /^[-?:,[\]{}#&*!|>'"%@`]/, `${name}:${i + 1}: plain scalar starts with a YAML indicator: ${value}`);
+    });
+  }
+  assert.ok(checked > 0, 'at least one single-line run: value is checked');
 });

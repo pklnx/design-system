@@ -40,7 +40,8 @@ jobs:
           python-version: '3.13'
 
       - name: Install the Python packages of the logo scripts
-        run: pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
+        run: |
+          pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
 
       - name: Generated files are committed
         run: |

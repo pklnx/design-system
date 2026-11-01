@@ -375,7 +375,7 @@ test('requirements-logo.txt pins exact versions with hashes only', () => {
 
 test('CI regenerates the logos with pinned Python and hashed requirements, then checks the tree', () => {
   const ci = readText('.github/workflows/ci.yml');
-  const step = /- uses: actions\/setup-python@([0-9a-f]{40}) # v[\d.]+\n\s+with:\n\s+python-version: '3\.13'\n\n\s+- name: Install the Python packages of the logo scripts\n\s+run: (pip install[^\n]*)\n\n\s+- name: Generated files are committed\n([\s\S]*?)(?=\n\s+- (?:name|uses):)/.exec(ci);
+  const step = /- uses: actions\/setup-python@([0-9a-f]{40}) # v[\d.]+\n\s+with:\n\s+python-version: '3\.13'\n\n\s+- name: Install the Python packages of the logo scripts\n\s+run: \|\n\s+(pip install[^\n]*)\n\n\s+- name: Generated files are committed\n([\s\S]*?)(?=\n\s+- (?:name|uses):)/.exec(ci);
   assert.ok(step, 'setup-python pinned by SHA with python-version 3.13, then the pip step, then the step "Generated files are committed"');
   assert.equal(step[2], 'pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt');
   const body = step[3];
