@@ -1,9 +1,12 @@
 name: CI
 
+# A run on main (push, or started by hand) deploys the documentation site once
+# the check job is green; every other run only checks.
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,13 +30,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .node-version
-          package-manager-cache: false
-
-      - name: Install dependencies without install scripts
-        run: npm ci --ignore-scripts
+      - uses: ./.github/actions/setup
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -58,3 +55,53 @@ jobs:
 
       - name: Package contents
         run: npm pack --dry-run --json --ignore-scripts | node scripts/check-pack.mjs
+
+  # Builds the site from the commit the check job passed. Runs the npm
+  # dependencies, so it gets read access only. Skipped when the check job
+  # fails (the implicit success() of this if) and on every ref but main.
+  pages-build:
+    needs: check
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      IBM_TELEMETRY_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup
+
+      - name: Build
+        run: npm run build
+
+      - name: Site
+        run: npm run site
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  # Deploys the site. Runs no repository or dependency code. The same if as the
+  # build job, so a deploy can start only after the check job succeeded on main.
+  # The workflow's cancel-in-progress cancels a deploy that a newer push to main
+  # overtakes, as the old Pages workflow did; the pages group keeps two deploys
+  # from running at once.
+  pages-deploy:
+    needs: pages-build
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
