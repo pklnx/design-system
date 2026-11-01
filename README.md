@@ -136,12 +136,22 @@ No release-age delay (`minimumReleaseAge`) applies: it only covers registry pack
 
 ### Releasing
 
-1. Bump `version` in `package.json` in a pull request and merge it.
-2. Actions → Release → Run workflow, on `main`. Tick "dry run" first if you want to see the tarball and the notes without releasing anything.
+1. Every issue of the release's milestone is closed and CI on `main` is green ([Milestones](#milestones)).
+2. Bump `version` in `package.json` to the milestone title in a pull request and merge it.
+3. Actions → Release → Run workflow, on `main`. Tick "dry run" first if you want to see the tarball and the notes without releasing anything.
 
 Nobody pushes a tag: `.github/workflows/release.yml` creates the tag `vX.Y.Z` together with the release, on the `main` commit it built. It checks that it runs on `main`, that the `package.json` version is `X.Y.Z` and that neither the tag nor a release `vX.Y.Z` exists yet, then builds with `--ignore-scripts`, runs the tests and the package check, packs the tarball and writes `SHA256SUMS` and the notes (shown in the run's summary). Unless it is a dry run, it then attests the tarball, creates the tag through the API (which fails if the tag exists, so a tag pushed in the meantime is never reused) and creates the release on it. A failed check stops the workflow before anything is attested or published; a run started from any other ref than `main` fails in its first step. If creating the release fails or the job is cancelled, the workflow removes the tag it created (and a draft release gh left behind), so the next run starts over; should a tag remain without a release anyway, delete it (`git push origin :refs/tags/vX.Y.Z`) before the next run; a published release and its tag are never removed. A release that exists is never replaced: running the workflow again for the same version fails, so the next release needs a version bump. The token diff in the notes compares against the newest `v*` tag on `main` before the released commit. If the build fails with `No tags can describe …`, a `v*` tag exists that is not on `main`: delete that stray tag (`git push origin :refs/tags/vX.Y.Z`) and run the workflow again.
 
 What protects a release is the `main`-only check plus the permission to run the workflow: only people with write access to this repository can start it. Anyone with write access can also push to `main` or start the workflow from a branch with a changed `release.yml`; the second case shows up in the attestation, which then does not name `refs/heads/main`.
+
+### Milestones
+
+Releases are planned with GitHub milestones, as in mail-archive: one milestone per planned release, titled `X.Y.Z` (no `v`), with a one-sentence goal as description.
+
+- The coordinator proposes the scope and order of a milestone; the maintainer confirms. Adding or removing an issue after that needs the maintainer's OK, except for bugs in the milestone's own work. A pull request gets the milestone of its issue.
+- The title follows the [version policy](#version-policy) for the milestone's issues. If the scope changes the bump (for example a removed export slips in), the coordinator renames the milestone and tells the maintainer.
+- A bug goes into the next patch milestone. Releases come from `main` without release branches, so once the first pull request of the next minor milestone is merged, open bug fixes move into that milestone.
+- After the release the coordinator closes the milestone. An issue closed as not planned is removed from its milestone.
 
 ## Layout
 
