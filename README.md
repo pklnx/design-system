@@ -164,6 +164,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `theme/contrast-report.json` | Generated: contrast check of the key pairs |
 | `theme/logo-geometry.json` | Generated: paths of the wordmark and the mark |
 | `project/assets/Logos/products/` | Generated: marks, lockups and app icons (SVG and PNG) of mail-archive and paperless-go, with `manifest.json` and a README |
+| `scripts/build_all.mjs` | `npm run build:all`: the one entry point that runs all generation steps below, in their dependency order (see Building) |
 | `scripts/build_logo.py`, `scripts/build_product_logos.py`, `scripts/build_assets.py` | The pklnx logos; the product marks, lockups and icon SVGs; pattern and social images (pklnx and products) |
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
 | `project/design-system.json` | The asset index of the claude.ai design system, edited by hand (no script writes it): per group in `project/assets/` every file with its `blob` id (from the claude.ai upload), byte `size` and `type`. The Pages "Assets" page lists it. `scripts/design-system-index.test.mjs` checks that every file directly in a group directory (except `README.md`, the generated `Logos/products/` and the product social images) is indexed and that each `size` equals the file's size |
@@ -178,19 +179,27 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 ## Building
 
 ```sh
-npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI
+npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI; before pip: the logo scripts read the fonts from node_modules
 pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
-python3 scripts/build_logo.py           # logos from IBM Plex Mono (before the build: build.mjs reads theme/logo-geometry.json)
-python3 scripts/build_product_logos.py  # mail-archive and paperless-go marks, lockups and icon SVGs
-npm run build                           # tokens, themes (Carbon, VitePress), bundle.css, bundle.js
-python3 scripts/build_assets.py         # pattern, social images (after the build, reads theme/tokens.json)
-node scripts/render_pngs.mjs            # product icon and social PNGs, products/manifest.json (last: needs the social SVGs)
-node scripts/build_icons.mjs            # Carbon icons as SVG
+npm run build:all                       # every generated file, in the order below (PYTHON=/path/to/python3 selects the interpreter, default python3)
 CHROME=/path/to/chromium node scripts/render-previews.mjs  # every preview in both themes into .render/ (needs a Chromium; CHROME is required, not run in CI)
 npm run site                            # documentation site into site/
 ```
 
-`requirements-logo.txt` pins fontTools and brotli with the hashes of their wheels. CI runs the logo scripts, `render_pngs.mjs` and `build_icons.mjs` (step "Logos are generated", Python 3.13; the same commands in the same order as above) and fails when they change the tree; `npm test` also fails on a PNG that was not rendered again after its SVG changed.
+`npm run build:all` (`scripts/build_all.mjs`) is the one place that defines the order of the generation steps. It runs these commands, in this order, and stops at the first one that fails:
+
+```sh
+python3 scripts/build_logo.py           # logos from IBM Plex Mono; writes theme/logo-geometry.json
+python3 scripts/build_product_logos.py  # mail-archive and paperless-go marks, lockups and icon SVGs
+node scripts/build.mjs                  # = npm run build: tokens, themes (Carbon, VitePress), bundle.css, bundle.js; reads theme/logo-geometry.json, writes theme/tokens.json
+python3 scripts/build_assets.py         # pattern, social images; reads theme/tokens.json and theme/logo-geometry.json
+node scripts/render_pngs.mjs            # product icon and social PNGs, products/manifest.json; needs the social SVGs
+node scripts/build_icons.mjs            # Carbon icons as SVG
+```
+
+Each step reads files that an earlier step wrote. The order only works because the intermediate files (`theme/logo-geometry.json`, `theme/tokens.json`, the SVGs) are committed: a step run on its own, or out of order, still finds its inputs and silently uses the committed, possibly stale, version. Running `npm run build:all` is what makes them consistent. The single steps can be run by hand in this order, for example `npm run build` after changing `theme/brand.json`, but then the later steps are not refreshed.
+
+`requirements-logo.txt` pins fontTools and brotli with the hashes of their wheels. CI (step "Generated files are committed", Python 3.13) runs `npm run build:all` after the two install lines and fails when it changes the tree; `npm test` also fails on a PNG that was not rendered again after its SVG changed, and on a README or CI that names the steps differently from `scripts/build_all.mjs`.
 
 ## Documentation site
 

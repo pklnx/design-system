@@ -375,18 +375,11 @@ test('requirements-logo.txt pins exact versions with hashes only', () => {
 
 test('CI regenerates the logos with pinned Python and hashed requirements, then checks the tree', () => {
   const ci = readText('.github/workflows/ci.yml');
-  const step = /- uses: actions\/setup-python@([0-9a-f]{40}) # v[\d.]+\n\s+with:\n\s+python-version: '3\.13'\n\n\s+- name: Logos are generated\n([\s\S]*?)(?=\n\s+- (?:name|uses):)/.exec(ci);
-  assert.ok(step, 'setup-python pinned by SHA with python-version 3.13, then the step "Logos are generated"');
-  const body = step[2];
-  const order = [
-    'pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt',
-    'python3 scripts/build_logo.py',
-    'python3 scripts/build_product_logos.py',
-    'python3 scripts/build_assets.py',
-    'node scripts/render_pngs.mjs',
-    'node scripts/build_icons.mjs',
-    'git status --porcelain',
-  ].map((c) => body.indexOf(c));
+  const step = /- uses: actions\/setup-python@([0-9a-f]{40}) # v[\d.]+\n\s+with:\n\s+python-version: '3\.13'\n\n\s+- name: Install the Python packages of the logo scripts\n\s+run: \|\n\s+(pip install[^\n]*)\n\n\s+- name: Generated files are committed\n([\s\S]*?)(?=\n\s+- (?:name|uses):)/.exec(ci);
+  assert.ok(step, 'setup-python pinned by SHA with python-version 3.13, then the pip step, then the step "Generated files are committed"');
+  assert.equal(step[2], 'pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt');
+  const body = step[3];
+  const order = ['npm run build:all', 'git status --porcelain', '::error::', 'exit 1'].map((c) => body.indexOf(c));
   assert.ok(order.every((i) => i >= 0), 'a command is missing from the step');
   assert.deepEqual([...order].sort((a, b) => a - b), order, 'the commands are out of order');
 });

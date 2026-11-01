@@ -3,7 +3,7 @@
 //
 //   node scripts/render_pngs.mjs
 //
-// Run last: after build_product_logos.py (icons) and build_assets.py (social images).
+// Run after build_product_logos.py (icons) and build_assets.py (social images); npm run build:all keeps the order.
 // Each PNG carries the sha256 of its source SVG in a tEXt chunk (SOURCE_KEY), and the
 // manifest lists every PNG with its size, source, source sha256 and PNG sha256, so the
 // tests catch a PNG that was not rendered again after its SVG changed.
