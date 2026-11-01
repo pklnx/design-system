@@ -166,6 +166,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `project/assets/Logos/products/` | Generated: marks, lockups and app icons (SVG and PNG) of mail-archive and paperless-go, with `manifest.json` and a README |
 | `scripts/build_logo.py`, `scripts/build_product_logos.py`, `scripts/build_assets.py` | The pklnx logos; the product marks, lockups and icon SVGs; pattern and social images (pklnx and products) |
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
+| `project/design-system.json` | The asset index of the claude.ai design system, edited by hand (no script writes it): per group in `project/assets/` every file with its `blob` id (from the claude.ai upload), byte `size` and `type`. The Pages "Assets" page lists it. `scripts/design-system-index.test.mjs` checks that every file directly in a group directory (except `README.md`, the generated `Logos/products/` and the product social images) is indexed and that each `size` equals the file's size |
 | `scripts/requirements-logo.txt` | The Python packages of the logo scripts, exact versions with hashes |
 | `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
 | `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`); `workflows.test.mjs`, the rules every workflow follows |
@@ -205,7 +206,7 @@ The same content as on claude.ai, as a static site on GitHub Pages: **https://pk
 The design system lives on claude.ai as the artifact "pklnx design system". Claude publishes it from this repo:
 
 - Files under `project/` are uploaded as files, SVGs under `project/assets/` as asset uploads. Their IDs are in `project/design-system.json` (`assetGroups`).
-- When an SVG changes, it has to be uploaded again and its ID replaced in the index.
+- When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
 - Edits made directly in the claude.ai editor do not land here automatically. Pull them back and commit them before the next build.
 
 ## License
