@@ -173,6 +173,8 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `scripts/requirements-logo.txt` | The Python packages of the logo scripts, exact versions with hashes |
 | `src/` | Sources: Carbon component selection (`carbon.scss`), own styles (`pklnx.css`), React components (`components.jsx`) |
 | `scripts/` | Build scripts; `check-pack.mjs` (package contents) and `release-notes.mjs` with their tests (`npm test`); `workflows.test.mjs`, the rules every workflow follows |
+| `project/components/index.d.ts` | The TypeScript declarations of the components, edited by hand: `scripts/components-types.test.mjs` fails when a name on `window.Pklnx` in `src/components.jsx` has no `export declare function` here or the other way round, and for the `IconName` and `Status` unions against `ICONS` and `STATUS` |
+| `scripts/build-output.test.mjs` | Tests what the build scripts write: `build_site.mjs` and `build_icons.mjs` run into a temp directory (pages, previews, assets page, links, icon list), `token-notes.mjs`, and the committed pklnx wordmark and pattern SVGs against `theme/logo-geometry.json`, `theme/brand.json` and `theme/tokens.json`. `build_icons.mjs [dir]` also takes an output directory |
 | `scripts/vitepress-map.mjs` | The VitePress theme: variable → token map, the contrast pairs, the overridden and the kept VitePress rules |
 | `scripts/css-selectors.mjs` | The CSS parser, specificity and selector matching the VitePress tests and the capture use |
 | `scripts/capture-vitepress-fixture.mjs` | Captures `scripts/fixtures/vitepress-<version>.json` from the VitePress npm tarball, run by hand; the tests read the fixture |
@@ -189,7 +191,7 @@ npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), 
 pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
 npm run build:all                       # every generated file, in the order below (PYTHON=/path/to/python3 selects the interpreter, default python3)
 CHROME=/path/to/chromium node scripts/render-previews.mjs  # every preview in both themes into .render/ (needs a Chromium; CHROME is required, not run in CI)
-npm run site                            # documentation site into site/
+npm run site                            # documentation site into site/ (node scripts/build_site.mjs <dir> builds into another directory; it empties a previous site build there first, and refuses a non-empty directory without index.html and .nojekyll, the checkout, any directory above or inside it other than site/, and a symbolic link to one of them)
 ```
 
 `npm run build:all` (`scripts/build_all.mjs`) is the one place that defines the order of the generation steps. It runs these commands, in this order, and stops at the first one that fails:
