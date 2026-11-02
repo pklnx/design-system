@@ -1,6 +1,6 @@
 // Tests of the build scripts' robustness (design-system #27): a checkout path with a space,
 // render-previews.mjs exiting non-zero on a failed render, and the rules the Python logo
-// scripts follow (UTF-8 files closed by `with`, no `assert`, JSON files end with a newline).
+// scripts follow (files opened by `with`, text files as UTF-8, no `assert`, checked with `ast`; JSON files end with a newline).
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -113,18 +113,172 @@ test('render-previews: requires CHROME to be set to an executable file', (t) => 
   assert.match(directory.stderr, /not an executable file/);
 });
 
-test('the Python scripts open files with `with` and UTF-8, and do not use assert', () => {
-  for (const f of scripts.filter((s) => s.endsWith('.py'))) {
-    const lines = read(`scripts/${f}`).split('\n');
-    lines.forEach((line, i) => {
-      const where = `${f}:${i + 1}`;
-      if (/\bopen\(/.test(line)) {
-        assert.match(line, /^\s*with open\(/, `${where}: open() outside \`with\``);
-        assert.match(line, /encoding="utf-8"/, `${where}: open() without encoding="utf-8"`);
-      }
-      assert.doesNotMatch(line, /^\s*assert\b/, `${where}: assert is stripped by python -O; raise an exception`);
-    });
-  }
+// The rules the Python scripts follow, checked with Python's own parser (`ast`), so comments,
+// docstrings and string contents never count and `x = 1; assert x` is seen like any assert.
+// Run as `python3 -I -c <checker> <directory>`; it prints one `file:line: message` per violation.
+const PYTHON_CHECKER = String.raw`
+import ast, os, sys
+
+TEXT_RULE = 'encoding="utf-8"'
+
+def keyword(call, name):
+    for kw in call.keywords:
+        if kw.arg == name:
+            return kw.value
+    return None
+
+def has_utf8(call):
+    value = keyword(call, "encoding")
+    return isinstance(value, ast.Constant) and value.value == "utf-8"
+
+def open_mode(call, index):
+    """The mode of an open() call: a str, "r" if absent, None if it is not a literal."""
+    value = keyword(call, "mode")
+    if value is None and len(call.args) > index:
+        value = call.args[index]
+    if value is None:
+        return "r"
+    if isinstance(value, ast.Constant) and isinstance(value.value, str):
+        return value.value
+    return None
+
+def check(path, name):
+    with open(path, encoding="utf-8") as f:
+        source = f.read()
+    try:
+        tree = ast.parse(source, filename=name)
+    except SyntaxError as e:
+        return [f"{name}:{e.lineno or 1}: not valid Python ({e.msg})"]
+    with_items = {id(item.context_expr) for node in ast.walk(tree) if isinstance(node, (ast.With, ast.AsyncWith)) for item in node.items}
+    problems = []
+    for node in ast.walk(tree):
+        where = f"{name}:{getattr(node, 'lineno', 1)}"
+        if isinstance(node, ast.Assert):
+            problems.append(f"{where}: assert is stripped by python -O; raise an exception")
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if isinstance(func, ast.Name) and func.id == "open":
+            mode_index = 1
+        elif isinstance(func, ast.Attribute) and func.attr == "open" and not (isinstance(func.value, ast.Name) and func.value.id == "os"):
+            # Path.open(mode) takes the mode first, io.open(file, mode) second; os.open is a different call.
+            mode_index = 1 if isinstance(func.value, ast.Name) and func.value.id in ("io", "codecs") else 0
+        elif isinstance(func, ast.Attribute) and func.attr in ("read_text", "write_text"):
+            if not has_utf8(node):
+                problems.append(f"{where}: {func.attr}() without {TEXT_RULE}")
+            continue
+        else:
+            continue
+        if id(node) not in with_items:
+            problems.append(f"{where}: open() outside a with statement")
+        mode = open_mode(node, mode_index)
+        if mode is None:
+            problems.append(f"{where}: open() mode is not a string literal, so the encoding rule cannot be checked")
+        elif "b" not in mode and not has_utf8(node):
+            problems.append(f"{where}: open() in text mode without {TEXT_RULE}")
+    return problems
+
+problems = []
+for name in sorted(os.listdir(sys.argv[1])):
+    if name.endswith(".py"):
+        problems += check(os.path.join(sys.argv[1], name), name)
+print("\n".join(problems))
+sys.exit(1 if problems else 0)
+`;
+
+// The violations of the Python rules in every *.py of a directory, as `file:line: message`.
+function lintPython(dir) {
+  const python = process.env.PYTHON || 'python3';
+  const r = spawnSync(python, ['-I', '-c', PYTHON_CHECKER, dir], { encoding: 'utf8', timeout: 60000 });
+  assert.ifError(r.error && new Error(`cannot run ${python} for the Python lint (set PYTHON to a Python 3): ${r.error.message}`));
+  assert.ok(r.status === 0 || r.status === 1, `the Python lint crashed (${python}, exit ${r.status}): ${r.stderr}`);
+  return r.stdout.split('\n').filter(Boolean);
+}
+
+// A throw-away directory with one Python file per entry of `files` ({name: source}).
+function pythonDir(t, files) {
+  const { dir } = spaced(t, 'py');
+  for (const [name, source] of Object.entries(files)) writeFileSync(path.join(dir, name), source);
+  return dir;
+}
+
+test('the Python scripts open files with `with` and UTF-8 (or binary), and do not use assert', () => {
+  assert.ok(scripts.some((s) => s.endsWith('.py')), 'no Python scripts found; the lint would pass on nothing');
+  assert.deepEqual(lintPython(path.join(ROOT, 'scripts')), []);
+});
+
+test('the Python lint accepts comments, docstrings, strings and binary files', (t) => {
+  const dir = pythonDir(t, {
+    'ok.py': [
+      '"""Docstring with open(x) and a line that starts with',
+      'assert x',
+      '"""',
+      'import io, os',
+      '# open(x) in a comment, assert y, Path(p).read_text()',
+      'note = "open(x); assert x; p.read_text()"',
+      'with open(p, "rb") as f:',
+      '    data = f.read()',
+      'with open(p, mode="wb") as f, open(q, "r+b") as g:',
+      '    pass',
+      'with open(p, "w", encoding="utf-8") as f:',
+      '    pass',
+      'with open(p, encoding="utf-8") as f:',
+      '    pass',
+      'with Path(p).open("ab") as f:',
+      '    pass',
+      'with Path(p).open("w", encoding="utf-8") as f:',
+      '    pass',
+      'with io.open(p, "rb") as f:',
+      '    pass',
+      'fd = os.open(p, os.O_RDONLY)',
+      'text = Path(p).read_text(encoding="utf-8")',
+      'Path(p).write_text(text, encoding="utf-8")',
+      'raw = Path(p).read_bytes()',
+      'if not ok:',
+      '    raise ValueError("x")',
+      '',
+    ].join('\n'),
+  });
+  assert.deepEqual(lintPython(dir), []);
+});
+
+test('the Python lint reports each violation with file and line', (t) => {
+  const cases = {
+    'read_text() without encoding': ['text = Path(p).read_text()', 'read_text() without encoding="utf-8"'],
+    'write_text() without encoding': ['Path(p).write_text(text)', 'write_text() without encoding="utf-8"'],
+    'read_text() with another encoding': ['text = Path(p).read_text(encoding="latin-1")', 'read_text() without encoding="utf-8"'],
+    'assert after a semicolon': ['x = 1; assert x', 'assert is stripped by python -O'],
+    'assert in a function': ['def f(x):\n    assert x', 'assert is stripped by python -O'],
+    'open outside with': ['f = open(p, encoding="utf-8")', 'open() outside a with statement'],
+    'open in a call argument': ['data = json.load(open(p, encoding="utf-8"))', 'open() outside a with statement'],
+    'text open without encoding': ['with open(p) as f:\n    pass', 'open() in text mode without encoding="utf-8"'],
+    'write open without encoding': ['with open(p, "w") as f:\n    pass', 'open() in text mode without encoding="utf-8"'],
+    'Path.open in text mode without encoding': ['with Path(p).open() as f:\n    pass', 'open() in text mode without encoding="utf-8"'],
+    'second open of one with without encoding': ['with open(p, "rb") as f, open(q, "w") as g:\n    pass', 'open() in text mode without encoding="utf-8"'],
+    'mode that is not a literal': ['with open(p, mode, encoding="utf-8") as f:\n    pass', 'mode is not a string literal'],
+    'a syntax error': ['def f(:', 'not valid Python'],
+  };
+  const files = Object.fromEntries(Object.entries(cases).map(([name, [source]], i) => [`case${i}.py`, `# line 1\n${source}\n`]));
+  const dir = pythonDir(t, files);
+  const problems = lintPython(dir);
+  Object.entries(cases).forEach(([name, [source, message]], i) => {
+    const line = source.includes('def f(x)') ? 3 : 2;
+    const found = problems.filter((p) => p.startsWith(`case${i}.py:`));
+    assert.equal(found.length, 1, `${name}: expected one report, got ${JSON.stringify(found)}`);
+    assert.match(found[0], new RegExp(`^case${i}\\.py:${line}: .*${message.replace(/[.*+?^${}()|[\]\\`]/g, '\\$&')}`), name);
+  });
+  assert.equal(problems.length, Object.keys(cases).length);
+});
+
+test('the Python lint fails loudly when the interpreter cannot be started', (t) => {
+  const dir = pythonDir(t, { 'a.py': 'x = 1\n' });
+  const saved = process.env.PYTHON;
+  t.after(() => {
+    if (saved === undefined) delete process.env.PYTHON;
+    else process.env.PYTHON = saved;
+  });
+  process.env.PYTHON = path.join(dir, 'no-such-python');
+  assert.throws(() => lintPython(dir), /cannot run .*no-such-python/);
 });
 
 test('the JSON files the logo scripts and the index keep end with a newline', () => {
