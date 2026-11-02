@@ -68,10 +68,12 @@ test('theme README: the changed tokens it names are the `changed` set of theme/t
   const named = [...bullet.matchAll(/`([a-z][a-z0-9-]*)`/g)].map((m) => m[1]).filter((n) => n !== 'changed' && n !== stays);
   // Everything the bullet names as a token is changed ...
   for (const n of named) assert.ok(all.has(n), `${n} is named as changed but is not in "changed"`);
-  // ... and every changed token is named there, as itself or as the stem of its hover, active or text step,
-  // or in the paragraphs of the Color section about the visited links and the star.
-  const stems = new Set([...named, ...[...color.matchAll(/`([a-z][a-z0-9-]*)`/g)].map((m) => m[1])]);
+  // ... and every changed token is named in the Color section exactly, or is the hover, active or
+  // text-hover step of a token named there. No other suffix passes, so a visited-link token or an
+  // invented `link-inverse-bogus` has to be named itself.
+  const names = new Set([...color.matchAll(/`([a-z][a-z0-9-]*)`/g)].map((m) => m[1]));
+  const STEPS = ['', '-hover', '-active', '-text-hover'];
   for (const t of all) {
-    assert.ok([...stems].some((n) => t === n || t.startsWith(`${n}-`)), `${t} is changed but the theme README does not name it or its stem`);
+    assert.ok(STEPS.some((suffix) => t.endsWith(suffix) && names.has(t.slice(0, t.length - suffix.length))), `${t} is changed but the theme README does not name it or its base token`);
   }
 });

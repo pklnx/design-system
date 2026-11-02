@@ -206,7 +206,7 @@ Node 26, as declared in `.node-version`: the one place for the version. The work
 
 `react` and `react-dom` stay on 18.x in `package.json` (JSON has no comments, so the reason is here): `scripts/build_site.mjs` and `scripts/render-previews.mjs` load `node_modules/react/umd/react.production.min.js` and `node_modules/react-dom/umd/react-dom.production.min.js`, and React 19 dropped the `umd/` directory. `npm outdated` still lists 19 under "Latest"; "Wanted" stays 18. Moving to 19 means bundling React with esbuild in the site build and the previews first.
 
-`lightningcss` is the one exact pin (`1.33.0`) among the caret ranges: only `scripts/vitepress-theme.test.mjs` uses it, to check how Vite 8's CSS minifier treats `theme/vitepress.css` (the legal comment, the escaping in `url()`), and that result can change between releases of Lightning CSS. Move the pin together with `VITEPRESS_VERSION` (see VitePress).
+`lightningcss` (`1.33.0`) is one of two exact pins among the caret ranges, with `@resvg/resvg-js` (`2.6.2`, see `render_pngs.mjs` in Layout): only `scripts/vitepress-theme.test.mjs` uses it, to check how Vite 8's CSS minifier treats `theme/vitepress.css` (the legal comment, the escaping in `url()`), and that result can change between releases of Lightning CSS. Move the pin together with `VITEPRESS_VERSION` (see VitePress).
 
 ```sh
 npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI; before pip: the logo scripts read the fonts from node_modules
@@ -245,7 +245,7 @@ The same content as on claude.ai, as a static site on GitHub Pages: **https://pk
 The design system lives on claude.ai as the artifact "pklnx design system". Claude publishes it from this repo:
 
 - Files under `project/` are uploaded as files, SVGs under `project/assets/` as asset uploads. Their IDs are in `project/design-system.json` (`assetGroups`).
-- When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
+- When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. A preview that shows the SVG hard-codes its blob ID as `/_blob/<id>` (for example `project/components/SocialKit/preview.html`): replace the ID there, too, wherever it appears (`grep -rn <old id> project/`). Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
 - The previews link `../preview-shared.css`, `../preview-shared.js`, `../preview-din5008.css` and `../preview-din5008.js` (`project/components/`, see "Layout"): upload these four files with the previews, next to `bundle.js` and `bundle.css`, or the previews lose their body style, `P`/`h` and logos.
 - Edits made directly in the claude.ai editor do not land here automatically. Pull them back and commit them before the next build.
 
