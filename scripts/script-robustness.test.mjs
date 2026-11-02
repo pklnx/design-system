@@ -311,6 +311,8 @@ test('the Python lint reports a crash of the checker or of the interpreter, neve
   // Exit 0 or 3 without the completion marker, as an interpreter that does nothing would give.
   assert.throws(() => lintPython(dir, 'pass'), /the Python lint crashed .*exit 0, no completion marker/);
   assert.throws(() => lintPython(dir, 'print("a.py:1: x"); raise SystemExit(3)'), /the Python lint crashed .*exit 3, no completion marker/);
+  // The marker alone does not make a run valid: a checker that prints it and then exits 1 crashed.
+  assert.throws(() => lintPython(dir, 'print("pklnx-python-lint: done"); raise SystemExit(1)'), /the Python lint crashed .*exit 1/);
   // An interpreter that exits 1 without output.
   const saved = process.env.PYTHON;
   t.after(() => {
