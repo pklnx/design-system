@@ -106,7 +106,7 @@ test('diffTokens lists added, removed and changed tokens per theme', () => {
   assert.deepEqual(diff.light, {
     added: [{ name: 'new-token', value: '#abcdef' }],
     removed: [{ name: 'old-token', value: '#123456' }],
-    changed: [{ name: 'interactive', from: '#8a3ffc', to: '#6929c4' }],
+    changed: [{ name: 'interactive', from: '#7c3aed', to: '#6929c4' }],
   });
   assert.deepEqual(diff.dark, { added: [], removed: [], changed: [] });
 });
@@ -152,7 +152,7 @@ test('a later release lists the token diff against the previous tag', () => {
       '',
       '- added `new-token`: `#abcdef`',
       '- removed `old-token` (was `#123456`)',
-      '- changed `interactive`: `#8a3ffc` → `#6929c4`',
+      '- changed `interactive`: `#7c3aed` → `#6929c4`',
       '',
       '### G100 (dark)',
       '',

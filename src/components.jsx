@@ -36,15 +36,14 @@ const ICONS = {
   globe: Earth, 'arrow-right': ArrowRight, external: Launch, check: Checkmark, close: Close, copy: Copy,
   database: DataBase, lock: Locked,
 };
-const STAR = 'M10.8 2 L13.2 2 L15.4 8.6 L22 10.8 L22 13.2 L15.4 15.4 L13.2 22 L10.8 22 L8.6 15.4 L2 13.2 L2 10.8 L8.6 8.6 Z';
 
 /** Carbon icon by pklnx name, or the brand star. 16, 20, 24 or 32px. */
 export function Icon({ name, size = 20, label, className }) {
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   if (name === 'star') {
     return (
-      <svg viewBox="0 0 24 24" width={size} height={size} className={cx('pk-icon', className)} {...a11y}>
-        <path style={{ fill: 'var(--star)' }} d={STAR} />
+      <svg viewBox={GEO.icon.viewBox} width={size} height={size} className={cx('pk-icon', className)} {...a11y}>
+        <path style={{ fill: 'var(--star)' }} d={GEO.icon.star} />
       </svg>
     );
   }

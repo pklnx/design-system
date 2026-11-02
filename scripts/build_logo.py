@@ -4,8 +4,9 @@ The wordmark: "pklnx" in Plex Mono Bold, the star as the dot, "space" in
 Plex Mono Regular, all eleven cells on the monospace grid, the space bar
 bracket underneath. Text is converted to paths, so the files need no fonts.
 
-Output: theme/logo-geometry.json (used by the component bundle) and the
-SVG files in project/assets/Logos/.
+Output: theme/logo-geometry.json (the one source of the star and wordmark
+geometry: the component bundle, the site, the asset scripts, the icon script
+and the tests read it) and the SVG files in project/assets/Logos/.
 """
 import json
 import os
@@ -93,7 +94,9 @@ def main():
         "star": star_path(32, 28, 15, 15 * 0.34),
         "viewBox": "0 0 64 64",
     }
-    geo = {"word": {"text": " ".join(paths), "star": star, "bracket": bracket, "viewBox": vb}, "mark": mark}
+    # Icon: the star alone on a 24 grid, for the Icon component and Icons/star.svg.
+    icon = {"star": star_path(12, 12, 10, 10 * 0.34), "viewBox": "0 0 24 24"}
+    geo = {"word": {"text": " ".join(paths), "star": star, "bracket": bracket, "viewBox": vb}, "mark": mark, "icon": icon}
     os.makedirs(os.path.join(ROOT, "theme"), exist_ok=True)
     with open(os.path.join(ROOT, "theme/logo-geometry.json"), "w", encoding="utf-8") as f:
         json.dump(geo, f, indent=1)

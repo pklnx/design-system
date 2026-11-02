@@ -13,7 +13,7 @@
 //   3. build.mjs              reads theme/logo-geometry.json; writes theme/tokens.json, the themes, bundles
 //   4. build_assets.py        reads theme/tokens.json and theme/logo-geometry.json; writes patterns and social SVGs
 //   5. render_pngs.mjs        renders the product icon and social SVGs to PNG; writes products/manifest.json
-//   6. build_icons.mjs        writes the Carbon icon SVGs (needs nothing from the steps above)
+//   6. build_icons.mjs        writes the Carbon icon SVGs; reads theme/brand.json and the icon star in theme/logo-geometry.json
 //
 // Each step reads files an earlier step wrote, so a clean run is consistent. The order does not
 // make a checkout self-sufficient: all intermediate files (theme/logo-geometry.json,
