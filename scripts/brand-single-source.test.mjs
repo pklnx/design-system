@@ -6,10 +6,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const require = createRequire(import.meta.url);
 const read = (p) => readFileSync(path.join(ROOT, p), 'utf8');
 const brand = JSON.parse(read('theme/brand.json')).logo;
 const geo = JSON.parse(read('theme/logo-geometry.json'));
@@ -19,7 +22,7 @@ const LOGOS = 'project/assets/Logos';
 const ICONS = 'project/assets/Icons';
 
 // The <path> elements of an SVG as [{ fill, d }], in document order.
-const paths = (svg) => [...svg.matchAll(/<path ([^>]*)\/>/g)].map((m) => ({
+const paths = (svg) => [...svg.matchAll(/<path ([^>]*?)\/?>/g)].map((m) => ({
   fill: /fill="([^"]*)"/.exec(m[1])?.[1],
   d: /\sd="([^"]*)"/.exec(` ${m[1]}`)?.[1],
 }));
@@ -61,13 +64,23 @@ test('the mark, favicon and avatar SVGs carry the mark geometry and the brand.js
   assert.equal(attr(read(`${LOGOS}/pklnx-avatar.svg`), 'circle', 'fill'), brand.dark.ground, 'avatar ground');
 });
 
-test('the pattern, og image, banner and product social images carry the star of the geometry in the brand.json colour', () => {
-  const social = ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social'].map((n) => [`project/assets/Social/${n}.svg`, geo.word.star]);
-  const patterns = [['dark', brand.dark.star], ['light', brand.light.star]].map(([t, c]) => [`project/assets/Patterns/pattern-${t}.svg`, geo.mark.star, c]);
-  for (const [file, star, colour = brand.dark.star] of [...social, ...patterns]) {
-    const stars = paths(read(file)).filter((p) => p.d === star);
+test('the social images carry the word star in the brand.json colour', () => {
+  for (const n of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social']) {
+    const file = `project/assets/Social/${n}.svg`;
+    const stars = paths(read(file)).filter((p) => p.d === geo.word.star);
     assert.ok(stars.length > 0, `${file}: has the star path from theme/logo-geometry.json`);
-    assert.ok(stars.some((p) => p.fill === colour), `${file}: a star path in ${colour}`);
+    assert.ok(stars.some((p) => p.fill === brand.dark.star), `${file}: a star path in ${brand.dark.star}`);
+  }
+});
+
+test('the pattern tiles are the mark geometry in the border-subtle-00 line colour, plus one star in the brand.json colour', () => {
+  for (const theme of ['dark', 'light']) {
+    const file = `project/assets/Patterns/pattern-${theme}.svg`;
+    const line = tokens[theme]['border-subtle-00'];
+    assert.deepEqual(paths(read(file)), [
+      { fill: line, d: geo.mark.bracket }, { fill: line, d: geo.mark.star },
+      { fill: line, d: geo.mark.bracket }, { fill: brand[theme].star, d: geo.mark.star },
+    ], file);
   }
 });
 
@@ -88,10 +101,24 @@ test('the G100 and White star tokens are the brand.json star colours', () => {
   assert.equal(tokens.light.star, brand.light.star);
 });
 
-test('the component bundle carries the geometry of theme/logo-geometry.json (Logo and Icon)', () => {
-  const bundle = read('project/components/bundle.js');
-  for (const [name, value] of Object.entries({ 'word.text': geo.word.text, 'word.star': geo.word.star, 'word.bracket': geo.word.bracket, 'mark.star': geo.mark.star, 'icon.star': geo.icon.star })) {
-    assert.ok(bundle.includes(JSON.stringify(value)), `bundle.js carries ${name}`);
+test('the component bundle renders Logo and Icon from the geometry of theme/logo-geometry.json', () => {
+  // Run the bundle as the browser does (window.React, window.ReactDOM) and render with react-dom/server.
+  const React = require('react');
+  const { renderToStaticMarkup } = require('react-dom/server');
+  const context = { console, React, ReactDOM: require('react-dom') };
+  context.window = context;
+  vm.runInNewContext(read('project/components/bundle.js'), context);
+  const { Icon, Logo } = context.Pklnx;
+  const render = (C, props) => renderToStaticMarkup(React.createElement(C, props));
+
+  const star = render(Icon, { name: 'star' });
+  assert.equal(attr(star, 'svg', 'viewBox'), geo.icon.viewBox, 'Icon star: viewBox');
+  assert.deepEqual(paths(star).map((p) => p.d), [geo.icon.star], 'Icon star: path');
+
+  for (const [variant, g] of [['wordmark', geo.word], ['mark', geo.mark]]) {
+    const svg = render(Logo, { variant });
+    assert.equal(attr(svg, 'svg', 'viewBox'), g.viewBox, `Logo ${variant}: viewBox`);
+    assert.deepEqual(paths(svg).map((p) => p.d), variant === 'mark' ? [g.star, g.bracket] : [g.text, g.star, g.bracket], `Logo ${variant}: paths`);
   }
 });
 

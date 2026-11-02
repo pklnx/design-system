@@ -31,6 +31,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const read = (p) => readFileSync(path.join(ROOT, p), 'utf8');
 const CSS_PATH = 'theme/vitepress.css';
 const tokens = JSON.parse(read('theme/tokens.json'));
+const brandPrimary = JSON.parse(read('theme/brand.json')).primary;
 const families = JSON.parse(read('project/tokens.json')).type.families;
 const fixture = JSON.parse(read(`scripts/fixtures/vitepress-${VITEPRESS_VERSION}.json`));
 const parsed = parseCss(read(CSS_PATH));
@@ -201,9 +202,17 @@ test('vitepress.css: every colour equals tokens.json for its mapped token', () =
 
 test('vitepress.css: pinned values', () => {
   const { light, dark } = blocks();
-  assert.equal(light.get('--vp-c-brand-1'), tokens.light.interactive);
-  assert.equal(dark.get('--vp-c-brand-1'), '#be95ff');
-  assert.equal(dark.get('--vp-button-brand-bg'), tokens.dark['button-primary']);
+  // The brand step for step: Carbon's interactive Blue 60 / 40 become the primary hue's 60 / 40
+  // (scripts/build.mjs), whatever hue theme/brand.json names. The value is taken from @carbon/colors,
+  // the mapping from the tokens vitepress-map.mjs names, so a wrong step or a wrong token fails here.
+  const step = (n) => requireFromRoot('@carbon/colors')[`${brandPrimary}${n}`].toLowerCase();
+  assert.deepEqual(MAP['--vp-c-brand-1'], { light: 'link-primary', dark: 'link-primary' }, 'brand-1 follows link-primary');
+  assert.equal(light.get('--vp-c-brand-1'), step(60));
+  assert.equal(tokens.light['link-primary'], step(60));
+  assert.equal(dark.get('--vp-c-brand-1'), step(40));
+  assert.equal(tokens.dark['link-primary'], step(40));
+  assert.equal(dark.get('--vp-button-brand-bg'), step(60));
+  assert.equal(tokens.dark['button-primary'], step(60));
   assert.equal(light.get('--vp-c-bg'), '#ffffff');
   assert.equal(dark.get('--vp-c-bg'), '#161616');
   assert.equal(light.get('--vp-local-search-highlight-text'), '#161616');
