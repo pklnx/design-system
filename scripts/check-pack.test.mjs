@@ -83,3 +83,23 @@ test('the repository package.json has no lifecycle script', () => {
   assert.deepEqual(checkLifecycleScripts(real), []);
   assert.deepEqual(checkLifecycleScripts({}), []);
 });
+
+// design-system #30: `exports["./theme"]` once had a `default` condition that pointed at the
+// Sass file, so a plain JS import of the package resolved to Sass instead of failing. Only
+// Sass tooling (the `sass` condition) resolves it now; dropping a condition is a minor release
+// while the version is 0.x (README, "Version policy").
+const repoPkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+
+test('exports["./theme"] has the sass condition and nothing else', () => {
+  assert.deepEqual(repoPkg.exports['./theme'], { sass: './theme/_index.scss' });
+});
+
+test('every export without a wildcard points at a file of the expected tarball', () => {
+  for (const [name, target] of Object.entries(repoPkg.exports)) {
+    const targets = typeof target === 'string' ? [target] : Object.values(target);
+    for (const t of targets) {
+      if (t.includes('*')) continue;
+      assert.ok(EXPECTED_FILES.includes(t.replace(/^\.\//, '')), `${name}: ${t} is not in EXPECTED_FILES`);
+    }
+  }
+});
