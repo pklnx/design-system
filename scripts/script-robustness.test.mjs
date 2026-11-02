@@ -115,7 +115,16 @@ test('render-previews: requires CHROME to be set to an executable file', (t) => 
 
 // The rules the Python scripts follow, checked with Python's own parser (`ast`), so comments,
 // docstrings and string contents never count and `x = 1; assert x` is seen like any assert.
-// Run as `python3 -I -c <checker> <directory>`; it prints one `file:line: message` per violation.
+// Run as `python3 -I -c <checker> <directory>`; it prints one `file:line: message` per violation
+// and exits 0 (clean) or 3 (violations). Any other exit status is a crash: Python itself exits 1 on
+// an uncaught exception, so 1 must not mean "violations". The last line it prints on either exit is
+// the marker `pklnx-python-lint: done`; without it (an interpreter that exits 0 and prints nothing,
+// such as /bin/true) the run is a crash too.
+//
+// What it does not follow:
+// - any attribute call named `open` counts as a file open, except `os.open`;
+// - `encoding` must be the literal `"utf-8"` keyword;
+// - aliases such as `op = open` are not seen.
 const PYTHON_CHECKER = String.raw`
 import ast, os, sys
 
@@ -183,16 +192,24 @@ for name in sorted(os.listdir(sys.argv[1])):
     if name.endswith(".py"):
         problems += check(os.path.join(sys.argv[1], name), name)
 print("\n".join(problems))
-sys.exit(1 if problems else 0)
+print("pklnx-python-lint: done")
+sys.stdout.flush()
+sys.exit(3 if problems else 0)
 `;
 
+const VIOLATIONS_EXIT = 3;
+const DONE_MARKER = 'pklnx-python-lint: done';
+
 // The violations of the Python rules in every *.py of a directory, as `file:line: message`.
-function lintPython(dir) {
+// `checker` is the Python source to run; only the tests of the lint itself pass another one.
+function lintPython(dir, checker = PYTHON_CHECKER) {
   const python = process.env.PYTHON || 'python3';
-  const r = spawnSync(python, ['-I', '-c', PYTHON_CHECKER, dir], { encoding: 'utf8', timeout: 60000 });
+  const r = spawnSync(python, ['-I', '-c', checker, dir], { encoding: 'utf8', timeout: 60000 });
   assert.ifError(r.error && new Error(`cannot run ${python} for the Python lint (set PYTHON to a Python 3): ${r.error.message}`));
-  assert.ok(r.status === 0 || r.status === 1, `the Python lint crashed (${python}, exit ${r.status}): ${r.stderr}`);
-  return r.stdout.split('\n').filter(Boolean);
+  assert.ok(r.status === 0 || r.status === VIOLATIONS_EXIT, `the Python lint crashed (${python}, exit ${r.status}): ${r.stderr}`);
+  const lines = r.stdout.split('\n').filter(Boolean);
+  assert.ok(lines.at(-1) === DONE_MARKER, `the Python lint crashed (${python}, exit ${r.status}, no completion marker): ${r.stderr}`);
+  return lines.slice(0, -1);
 }
 
 // A throw-away directory with one Python file per entry of `files` ({name: source}).
@@ -279,6 +296,34 @@ test('the Python lint fails loudly when the interpreter cannot be started', (t) 
   });
   process.env.PYTHON = path.join(dir, 'no-such-python');
   assert.throws(() => lintPython(dir), /cannot run .*no-such-python/);
+});
+
+test('the Python lint reports a crash of the checker or of the interpreter, never "violations found"', (t) => {
+  const dir = pythonDir(t, { 'a.py': 'x = 1\n' });
+  // The real checker, clean and with the completion marker, returns no violations.
+  assert.deepEqual(lintPython(dir), []);
+  // A checker that raises at startup: Python exits 1, as for violations before the distinct code.
+  assert.throws(() => lintPython(dir, `raise RuntimeError("checker bug")\n${PYTHON_CHECKER}`), /the Python lint crashed .*exit 1.*RuntimeError: checker bug/s);
+  // A checker that exits with some other status.
+  assert.throws(() => lintPython(dir, 'import sys; sys.exit(2)'), /the Python lint crashed .*exit 2/);
+  // Violations are reported, not thrown, with the same wrapper.
+  assert.deepEqual(lintPython(dir, 'print("a.py:1: x"); print("pklnx-python-lint: done"); raise SystemExit(3)'), ['a.py:1: x']);
+  // Exit 0 or 3 without the completion marker, as an interpreter that does nothing would give.
+  assert.throws(() => lintPython(dir, 'pass'), /the Python lint crashed .*exit 0, no completion marker/);
+  assert.throws(() => lintPython(dir, 'print("a.py:1: x"); raise SystemExit(3)'), /the Python lint crashed .*exit 3, no completion marker/);
+  // The marker alone does not make a run valid: a checker that prints it and then exits 1 crashed.
+  assert.throws(() => lintPython(dir, 'print("pklnx-python-lint: done"); raise SystemExit(1)'), /the Python lint crashed .*exit 1/);
+  // An interpreter that exits 1 without output.
+  const saved = process.env.PYTHON;
+  t.after(() => {
+    if (saved === undefined) delete process.env.PYTHON;
+    else process.env.PYTHON = saved;
+  });
+  process.env.PYTHON = '/bin/false';
+  assert.throws(() => lintPython(dir), /the Python lint crashed .*exit 1/);
+  // An interpreter that exits 0 without output.
+  process.env.PYTHON = '/bin/true';
+  assert.throws(() => lintPython(dir), /the Python lint crashed .*exit 0, no completion marker/);
 });
 
 test('the JSON files the logo scripts and the index keep end with a newline', () => {
