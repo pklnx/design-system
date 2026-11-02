@@ -191,7 +191,7 @@ npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), 
 pip install --require-hashes --only-binary :all: -r scripts/requirements-logo.txt
 npm run build:all                       # every generated file, in the order below (PYTHON=/path/to/python3 selects the interpreter, default python3)
 CHROME=/path/to/chromium node scripts/render-previews.mjs  # every preview in both themes into .render/ (needs a Chromium; CHROME is required, not run in CI)
-npm run site                            # documentation site into site/ (node scripts/build_site.mjs <dir> builds into another directory, which it empties first)
+npm run site                            # documentation site into site/ (node scripts/build_site.mjs <dir> builds into another directory; it empties a previous site build there first, and refuses a non-empty directory without index.html and .nojekyll, the checkout, any directory above or inside it other than site/, and a symbolic link to one of them)
 ```
 
 `npm run build:all` (`scripts/build_all.mjs`) is the one place that defines the order of the generation steps. It runs these commands, in this order, and stops at the first one that fails:

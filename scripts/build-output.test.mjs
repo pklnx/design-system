@@ -113,31 +113,146 @@ test('build_site.mjs: no page or preview links to a file that is not in the site
   }
 });
 
-test('build_site.mjs: can run twice into one directory', (t) => {
-  const out = tempDir(t);
-  runScript('build_site.mjs', [out]);
-  writeFileSync(path.join(out, 'stale.txt'), 'left over from an earlier build');
-  runScript('build_site.mjs', [out]);
-  assert.ok(!existsSync(path.join(out, 'stale.txt')), 'the output directory is emptied first');
-  assert.ok(existsSync(path.join(out, 'index.html')));
-});
-
-// The script empties its output directory, so this test never points it at the real checkout:
-// the script runs from a throw-away "checkout" (only the script, in scripts/) and is given
-// that directory and its parent. If the guard is gone, only the temp directories are emptied.
-test('build_site.mjs: refuses an output directory that contains the checkout', (t) => {
+// build_site.mjs empties its output directory, so these tests never point it at a real directory:
+// each runs a copy of the script in a throw-away "checkout" in a temp dir (the script, project/,
+// theme/ and package.json; node_modules is a symlink that is never an output directory), and every
+// directory it is given lies inside that temp dir. If a guard is gone, only temp files are lost.
+function throwaway(t, name = 'checkout') {
   const base = tempDir(t);
-  const checkout = path.join(base, 'checkout');
+  const checkout = path.join(base, name);
   mkdirSync(path.join(checkout, 'scripts'), { recursive: true });
   cpSync(path.join(ROOT, 'scripts/build_site.mjs'), path.join(checkout, 'scripts/build_site.mjs'));
+  for (const d of ['project', 'theme']) cpSync(path.join(ROOT, d), path.join(checkout, d), { recursive: true });
+  cpSync(path.join(ROOT, 'package.json'), path.join(checkout, 'package.json'));
   symlinkSync(path.join(ROOT, 'node_modules'), path.join(checkout, 'node_modules'));
+  writeFileSync(path.join(checkout, 'UNTRACKED.txt'), 'work that git does not have');
   writeFileSync(path.join(base, 'keep.txt'), 'x');
-  for (const dir of [checkout, base]) {
-    const r = spawnSync(process.execPath, [path.join(checkout, 'scripts/build_site.mjs'), dir], { encoding: 'utf8', timeout: 120000 });
-    assert.notEqual(r.status, 0, dir);
-    assert.match(r.stderr, /refusing to empty/, dir);
-    assert.ok(existsSync(path.join(checkout, 'scripts/build_site.mjs')) && existsSync(path.join(base, 'keep.txt')), `${dir} was emptied`);
+  const site = (...args) => spawnSync(process.execPath, [path.join(checkout, 'scripts/build_site.mjs'), ...args], { encoding: 'utf8', timeout: 120000, cwd: base });
+  // Nothing of the checkout or its surroundings is gone.
+  const intact = (message) => {
+    for (const f of ['scripts/build_site.mjs', 'project/design-system.json', 'theme/logo-geometry.json', 'UNTRACKED.txt']) assert.ok(existsSync(path.join(checkout, f)), `${message}: ${f} is gone`);
+    assert.ok(existsSync(path.join(base, 'keep.txt')), `${message}: keep.txt is gone`);
+  };
+  return { base, checkout, site, intact };
+}
+const refused = (r, message, pattern = /refusing to (?:empty|replace)/) => {
+  assert.notEqual(r.status, 0, `${message}: exit status`);
+  assert.match(r.stderr, pattern, message);
+};
+
+test('build_site.mjs: the default output is site/ in the checkout, and a second run replaces it', (t) => {
+  const { checkout, site, intact } = throwaway(t);
+  assert.equal(site().status, 0);
+  assert.ok(existsSync(path.join(checkout, 'site/index.html')) && existsSync(path.join(checkout, 'site/.nojekyll')));
+  writeFileSync(path.join(checkout, 'site/stale.txt'), 'left over from an earlier build');
+  const again = site();
+  assert.equal(again.status, 0, again.stderr);
+  assert.ok(!existsSync(path.join(checkout, 'site/stale.txt')), 'the previous site build is emptied first');
+  assert.ok(existsSync(path.join(checkout, 'site/index.html')));
+  intact('default');
+});
+
+test('build_site.mjs: builds into a missing, an empty and a previous-build directory outside the checkout', (t) => {
+  const { base, site, intact } = throwaway(t);
+  const missing = path.join(base, 'new', 'deeper', 'out');
+  const empty = path.join(base, 'empty');
+  mkdirSync(empty);
+  const previous = path.join(base, 'previous');
+  for (const dir of [missing, empty, previous]) {
+    const r = site(dir);
+    assert.equal(r.status, 0, `${dir}: ${r.stderr}`);
+    assert.ok(existsSync(path.join(dir, 'index.html')) && existsSync(path.join(dir, '.nojekyll')), dir);
   }
+  writeFileSync(path.join(previous, 'stale.txt'), 'left over');
+  assert.equal(site(previous).status, 0);
+  assert.ok(!existsSync(path.join(previous, 'stale.txt')));
+  intact('outside');
+});
+
+test('build_site.mjs: refuses the checkout and the directories above it', (t) => {
+  const { base, checkout, site, intact } = throwaway(t);
+  for (const dir of [checkout, `${checkout}/`, `${checkout}/scripts/..`, base, path.dirname(base), '/']) {
+    refused(site(dir), dir, /is or contains the checkout/);
+    intact(dir);
+  }
+});
+
+test('build_site.mjs: refuses any other directory inside the checkout', (t) => {
+  const { checkout, site, intact } = throwaway(t);
+  for (const sub of ['scripts', 'project', 'project/assets', 'theme', 'site/nested']) {
+    refused(site(path.join(checkout, sub)), sub, /inside the checkout other than site\//);
+    intact(sub);
+  }
+  assert.ok(!existsSync(path.join(checkout, 'site')), 'nothing was built');
+});
+
+test('build_site.mjs: refuses a symbolic link to the checkout, or to a directory above or inside it', (t) => {
+  const { base, checkout, site, intact } = throwaway(t);
+  symlinkSync(checkout, path.join(base, 'link-to-checkout'));
+  symlinkSync(base, path.join(base, 'link-to-base'));
+  symlinkSync(path.join(checkout, 'scripts'), path.join(base, 'link-to-scripts'));
+  for (const dir of [
+    path.join(base, 'link-to-checkout'),
+    path.join(base, 'link-to-base', 'checkout'),
+    path.join(base, 'link-to-base'),
+    path.join(base, 'link-to-scripts'),
+    path.join(base, 'link-to-checkout', 'scripts'),
+    path.join(base, 'link-to-checkout', 'not-yet', 'there'), // a missing tail below a link into the checkout
+  ]) {
+    refused(site(dir), dir);
+    intact(dir);
+  }
+  // Run through a link with --preserve-symlinks-main, the script's own location is the link: the checkout is still found.
+  const viaLink = spawnSync(process.execPath, ['--preserve-symlinks-main', path.join(base, 'link-to-checkout/scripts/build_site.mjs'), checkout], { encoding: 'utf8', timeout: 120000, cwd: base });
+  refused(viaLink, 'script run through a link', /is or contains the checkout/);
+  intact('script run through a link');
+  // A link whose target does not exist cannot be checked.
+  symlinkSync(path.join(checkout, 'not-there'), path.join(base, 'dangling'));
+  refused(site(path.join(base, 'dangling')), 'dangling', /dangling symbolic link/);
+  assert.ok(!existsSync(path.join(checkout, 'not-there')));
+  intact('links');
+});
+
+test('build_site.mjs: refuses a non-empty directory that is not a previous site build, and a file', (t) => {
+  const { base, checkout, site, intact } = throwaway(t);
+  const unrelated = path.join(base, 'unrelated');
+  mkdirSync(unrelated);
+  writeFileSync(path.join(unrelated, 'notes.txt'), 'untracked');
+  const halfBuilt = path.join(base, 'half-built');
+  mkdirSync(halfBuilt);
+  writeFileSync(path.join(halfBuilt, 'index.html'), '<html></html>'); // no .nojekyll
+  writeFileSync(path.join(halfBuilt, 'notes.txt'), 'untracked');
+  const onlyMarker = path.join(base, 'only-marker');
+  mkdirSync(onlyMarker);
+  writeFileSync(path.join(onlyMarker, '.nojekyll'), ''); // no index.html
+  writeFileSync(path.join(onlyMarker, 'notes.txt'), 'untracked');
+  for (const dir of [unrelated, halfBuilt, onlyMarker]) {
+    refused(site(dir), dir, /does not look like a previous site build/);
+    assert.equal(readFileSync(path.join(dir, 'notes.txt'), 'utf8'), 'untracked', `${dir}: untouched`);
+    assert.ok(!existsSync(path.join(dir, 'assets.html')), `${dir}: nothing was built`);
+  }
+  refused(site(path.join(base, 'keep.txt')), 'a file', /refusing to replace .*keep\.txt, which is not a directory/);
+  intact('unrelated');
+  // The site directory of the checkout is protected the same way.
+  mkdirSync(path.join(checkout, 'site'));
+  writeFileSync(path.join(checkout, 'site/mine.txt'), 'untracked');
+  refused(site(), 'site/ with other files', /does not look like a previous site build/);
+  assert.ok(existsSync(path.join(checkout, 'site/mine.txt')));
+});
+
+test('build_site.mjs: a name that starts with two dots is a name, not a parent', (t) => {
+  // ROOT is <base>/..repo: relative(<base>, ROOT) is '..repo', which a bare startsWith('..') takes for "outside".
+  const { base, checkout, site, intact } = throwaway(t, '..repo');
+  refused(site(base), 'the parent of ..repo', /is or contains the checkout/);
+  intact('parent');
+  // A sibling called '..site' is outside the checkout and fine.
+  const sibling = path.join(base, '..site');
+  const r = site(sibling);
+  assert.equal(r.status, 0, r.stderr);
+  assert.ok(existsSync(path.join(sibling, 'index.html')));
+  // A directory called '..x' inside the checkout is still inside it.
+  refused(site(path.join(checkout, '..x')), 'inside', /inside the checkout other than site\//);
+  intact('dotdot names');
 });
 
 // ------------------------------------------------------------------ the icon SVGs
@@ -176,6 +291,7 @@ test('the committed icon SVGs are what build_icons.mjs writes', (t) => {
 const colorTokens = json('project/tokens.json').color.tokens.map((x) => x.name);
 
 test('token-notes: every exact note names a token and reads as one sentence', () => {
+  assert.ok(Object.keys(exact).length > 0 && prefix.length > 0, 'the note lists must not be empty by accident');
   for (const [name, note] of Object.entries(exact)) {
     assert.ok(colorTokens.includes(name), `${name}: not a color token of project/tokens.json`);
     assert.match(note, /^[A-Z`].*[.)`]$/, `${name}: a note starts with a capital letter and ends with a full stop`);

@@ -1,6 +1,6 @@
 // Builds the documentation site for GitHub Pages from project/ into site/.
 // Same content as the claude.ai design system: brand book, tokens, live component previews, assets.
-// Run after `npm run build`: node scripts/build_site.mjs [output-dir]   (default: site/; the tests build into a temp dir)
+// Run after `npm run build`: node scripts/build_site.mjs [output-dir]   (default: site/; see the checks on the output directory below)
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -10,10 +10,36 @@ import { marked } from 'marked';
 const require = createRequire(import.meta.url);
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const P = (...p) => path.join(ROOT, ...p);
-const OUT = process.argv[2] ? path.resolve(process.argv[2]) : P('site');
-// The output directory is emptied first; never the checkout itself or a directory above it.
-const rootInOut = path.relative(OUT, ROOT);
-if (!rootInOut.startsWith('..') && !path.isAbsolute(rootInOut)) { console.error(`build_site: refusing to empty ${OUT}, which contains the checkout`); process.exit(1); }
+// The output directory is emptied first, so it is checked on real paths (symlinks resolved):
+//   - it is `<checkout>/site`, or a directory outside the checkout that is not above it;
+//   - never the checkout, a directory above it, or any other directory inside it (scripts/, project/, .git, ...);
+//   - a non-empty directory is emptied only when it is a previous site build (index.html and .nojekyll, both
+//     written by this script), so a wrong argument never wipes a directory with other files in it.
+const die = (message) => { console.error(`build_site: ${message}`); process.exit(1); };
+// The real path of p; the part that does not exist yet is appended to the real path of its nearest existing ancestor.
+function realPath(p) {
+  const rest = [];
+  for (let cur = path.resolve(p); ; cur = path.dirname(cur)) {
+    try { return path.join(fs.realpathSync(cur), ...rest); } catch (e) {
+      if (e.code !== 'ENOENT' && e.code !== 'ENOTDIR') throw e;
+      if (fs.lstatSync(cur, { throwIfNoEntry: false })?.isSymbolicLink()) die(`refusing to empty ${p}: a dangling symbolic link at ${cur}`);
+      if (path.dirname(cur) === cur) throw e;
+      rest.unshift(path.basename(cur));
+    }
+  }
+}
+// Is p the directory dir or inside it? (`..foo` is a name, not a parent: compare whole segments.)
+const within = (dir, p) => { const r = path.relative(dir, p); return r === '' || (r !== '..' && !r.startsWith('..' + path.sep) && !path.isAbsolute(r)); };
+const OUT = realPath(process.argv[2] || P('site'));
+const REAL_ROOT = fs.realpathSync(ROOT);
+if (within(OUT, REAL_ROOT)) die(`refusing to empty ${OUT}, which is or contains the checkout`);
+if (within(REAL_ROOT, OUT) && OUT !== path.join(REAL_ROOT, 'site')) die(`refusing to empty ${OUT}, a directory inside the checkout other than site/`);
+if (fs.existsSync(OUT)) {
+  if (!fs.statSync(OUT).isDirectory()) die(`refusing to replace ${OUT}, which is not a directory`);
+  if (fs.readdirSync(OUT).length && !['index.html', '.nojekyll'].every((f) => fs.existsSync(path.join(OUT, f)))) {
+    die(`refusing to empty ${OUT}: it is not empty and does not look like a previous site build (no index.html and .nojekyll); empty or remove it first`);
+  }
+}
 const write = (p, s) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, s); };
 const copy = (from, to) => { fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); };
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
