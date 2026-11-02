@@ -1,0 +1,8 @@
+/* The DIN 5008 Form B page of Invoice and Letterhead (595 x 842 px = A4 at 72 dpi).
+   Linked after preview-shared.css; the page content is built by preview-din5008.js. */
+.desk{padding:24px;display:flex;justify-content:center;background:var(--layer-01)}
+.page{position:relative;width:595px;height:842px;background:var(--background);color:var(--text-primary);box-shadow:0 0 0 1px var(--border-subtle-00)}
+.mk{position:absolute;left:0;border-top:1px solid var(--border-strong-01)}
+.ab{position:absolute;color:var(--text-secondary)}
+.lbl{font-weight:600;color:var(--text-primary)}
+.foot{position:absolute;left:71px;right:57px;bottom:34px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding-top:8px;border-top:1px solid var(--border-subtle-00);font-size:7.5px;line-height:11px;color:var(--text-secondary)}

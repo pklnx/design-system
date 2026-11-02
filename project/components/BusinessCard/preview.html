@@ -2,8 +2,8 @@
 <!doctype html>
 <html lang="de">
 <head><meta charset="utf-8"><title>Business card</title>
+<link rel="stylesheet" href="../preview-shared.css">
 <style>
-body{margin:0;background:var(--background);font-family:var(--font-sans)}
 .desk{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;padding:40px 24px;background:var(--layer-01)}
 .card{position:relative;width:482px;height:312px;overflow:hidden;box-shadow:0 0 0 1px var(--border-subtle-00)}
 .front{background:var(--background)}
@@ -34,10 +34,6 @@ body{margin:0;background:var(--background);font-family:var(--font-sans)}
     <div class="ct">[mail]@pklnx.space<br>[Telefon]<br><b>pklnx.space</b></div>
   </div>
 </div>
-<script>
-document.querySelectorAll('[data-logo]').forEach(function (el) {
-  ReactDOM.createRoot(el).render(React.createElement(window.Pklnx.Logo, { variant: el.getAttribute('data-logo'), height: +el.getAttribute('data-h'), mono: el.hasAttribute('data-mono') }));
-});
-</script>
+<script src="../preview-shared.js"></script>
 </body>
 </html>
