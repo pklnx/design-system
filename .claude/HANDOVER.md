@@ -4,11 +4,10 @@ Read at session start (CLAUDE.md, "Session handover"). At session end, replace t
 
 ## State (2026-11-02)
 
-Released: v0.3.0 (milestone 0.3.0, PR #52). Next milestone: none planned yet.
+Released: v0.3.0 (PR #52); milestones 0.2.3 and 0.3.0 are closed. Next milestone: none planned yet.
 
 Open:
 - #51 (maintainer action): at the next claude.ai publish, re-upload `project/assets/Social/pklnx-og-image.svg` and `pklnx-banner.svg` and put their new blob ids into `project/design-system.json` and `project/components/SocialKit/preview.html`.
-- Milestones 0.2.3 and 0.3.0: all issues closed; close them (REST, dev-process `decisions.md` G26) if still open.
 - Dependabot (since #49): weekly version update PRs arrive; each gets one review (Sonnet) unless it touches the risk class (CLAUDE.md, step 6).
 
 Decisions to keep:
