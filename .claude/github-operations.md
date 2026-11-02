@@ -19,7 +19,7 @@ Read before the first GitHub write (CLAUDE.md, "GitHub operations"). Local sessi
 | Assign an issue or PR to a milestone | `gh issue edit <n> --milestone 1.3.0` (`gh pr edit` for a PR) | `mcp__github__issue_write` method `update` with `milestone`: the milestone **number**, not its title |
 
 ## REST fallback in cloud sessions
-Maintainer decision (2026-11-01): agents perform GitHub operations that have no MCP tool themselves (milestones above); they do not hand them to the maintainer. In a cloud session without `gh`, call the REST API with the session's token, only for the repositories in the session's scope:
+Maintainer decision (2026-11-01), the rule [G26 in pklnx/dev-process `decisions.md`](https://github.com/pklnx/dev-process/blob/main/decisions.md): agents perform GitHub operations that have no MCP tool themselves (milestones above); they do not hand them to the maintainer. In a cloud session without `gh`, call the REST API with the session's token, only for the repositories in the session's scope:
 
 ```bash
 curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -27,5 +27,5 @@ curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $G
 ```
 
 - The `Content-Type: application/json` header is required (the proxy refuses a body without it). Build JSON bodies with a JSON encoder, not by hand.
-- Use it only where no MCP tool covers the operation; everything else stays on the MCP tools. Never print or log the token.
+- Use it only where no MCP tool covers the operation; everything else stays on the MCP tools. Only the channel is green: every operation keeps its own tier, so releases, tags, repository settings, rulesets and secrets stay with the maintainer (red, R2 and R3). A call that the permission system, a safety classifier or the proxy refuses by policy stays undone and is reported, never tried another way; a request error (missing header, malformed JSON, 422) is corrected and sent again. Never print or log the token.
 - GraphQL (`gh` subcommands other than `gh api`) is refused in cloud sessions; REST is not.
