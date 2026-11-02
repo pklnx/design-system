@@ -48,7 +48,7 @@ const md = (s) => marked.parse(s, { gfm: true });
 // The components are read before the previous site is removed, so a broken source leaves it alone.
 // A component is a directory of project/components with a preview.html. The @dsCard comment on its first line
 // holds the card settings: group="...", subtitle="...", height=N, width=N, and the flags `page`
-// and `cover` (the overview's banner: a preview and a README, but no page and no sidebar entry of its own; exactly one).
+// and `cover` (the overview's banner: a preview, but no page and no sidebar entry of its own; exactly one. claude.ai finds the cover by the path components/Cover/, which a test holds).
 const compDirs = fs.readdirSync(P('project/components')).filter((d) => fs.existsSync(P('project/components', d, 'preview.html')));
 const cardOf = (name) => {
   const src = fs.readFileSync(P('project/components', name, 'preview.html'), 'utf8');

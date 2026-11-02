@@ -49,7 +49,7 @@ const previewDirs = readdirSync(path.join(ROOT, 'project/components'), { withFil
   .filter((e) => e.isDirectory() && existsSync(path.join(ROOT, 'project/components', e.name, 'preview.html')))
   .map((e) => e.name).sort();
 const dsCard = (name) => /@dsCard([^>]*)-->/.exec(readFileSync(path.join(ROOT, 'project/components', name, 'preview.html'), 'utf8'))?.[1] || '';
-const coverDirs = previewDirs.filter((n) => /\scover(?:\s|$)/.test(dsCard(n)));
+const coverDirs = previewDirs.filter((n) => /(?:^|\s)cover(?=\s|$)/.test(dsCard(n)));
 const componentPages = previewDirs.filter((n) => !coverDirs.includes(n));
 
 // The files every preview links instead of repeating them (design-system #29).
@@ -225,12 +225,28 @@ test('preview-din5008.js: puts the frame before and the footer after the content
   }
 });
 
-test('Cover: the @dsCard comment marks the banner and it has a README, like every component', () => {
-  assert.deepEqual(coverDirs, ['Cover'], 'exactly one preview carries the cover flag');
-  for (const name of previewDirs) assert.ok(existsSync(path.join(ROOT, 'project/components', name, 'README.md')), `${name}: README.md`);
+// claude.ai finds the cover of a design system by the path components/Cover/preview.html. A README.md or a
+// .d.ts beside it, or `Cover` in the bundle header, makes it an ordinary component and the system has no
+// cover (artifact-type reference cover.md). So the folder stays bare, and the flag sits on that preview.
+test('Cover: the flagged preview is components/Cover/preview.html and the folder stays bare for claude.ai', () => {
+  assert.deepEqual(coverDirs, ['Cover'], 'the cover flag sits on components/Cover/preview.html and nowhere else');
+  const dir = path.join(ROOT, 'project/components/Cover');
+  assert.deepEqual(files(dir), ['preview.html'], 'components/Cover/ holds the preview only: no README.md, no .d.ts, nothing else');
+  assert.ok(!existsSync(path.join(ROOT, 'project/components/Cover.d.ts')), 'no components/Cover.d.ts either');
+  const header = /^\/\* @ds-bundle: (.*) \*\//.exec(read('project/components/bundle.js').split('\n')[0]);
+  assert.ok(header, 'bundle.js starts with the @ds-bundle header');
+  const listed = JSON.parse(header[1]).components.map((c) => c.name);
+  assert.ok(listed.length > 0 && !listed.includes('Cover'), `the bundle header names Cover as a component: ${listed}`);
 });
 
-// The banner is found by its flag, never by its name: the flag moved to another preview moves the banner.
+test('previews: every component but the cover has a README', () => {
+  assert.ok(componentPages.length > 0 && !componentPages.includes('Cover'));
+  for (const name of componentPages) assert.ok(existsSync(path.join(ROOT, 'project/components', name, 'README.md')), `${name}: README.md`);
+});
+
+// The site build finds the banner by its flag, never by its name: the flag moved to another preview moves
+// the banner there. This is the build's behaviour only; the committed state is held to claude.ai's rule by
+// the Cover test above.
 function withCard(t, edits) {
   const env = throwaway(t);
   for (const [name, from, to] of edits) {
@@ -242,7 +258,7 @@ function withCard(t, edits) {
   return env;
 }
 
-test('build_site.mjs: the banner is the preview with the cover flag, whatever its name', (t) => {
+test('build_site.mjs: the site banner is the preview with the cover flag, whatever its name', (t) => {
   const { base, site } = withCard(t, [['Cover', 'height=288 cover -->', 'height=288 -->'], ['Button', 'height=140 ', 'height=140 cover ']]);
   const out = path.join(base, 'out');
   const r = site(out);
