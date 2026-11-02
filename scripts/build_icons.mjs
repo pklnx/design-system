@@ -1,4 +1,5 @@
 // Writes the Carbon icons the system uses as SVG files (project/assets/Icons), for use outside React.
+// Usage: node scripts/build_icons.mjs [output-dir]   (default: project/assets/Icons; the tests write into a temp dir)
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -8,7 +9,7 @@ const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const I = require('@carbon/icons-react');
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const out = path.join(ROOT, 'project/assets/Icons');
+const out = process.argv[2] ? path.resolve(process.argv[2]) : path.join(ROOT, 'project/assets/Icons');
 fs.mkdirSync(out, { recursive: true });
 const map = { terminal: 'Terminal', server: 'BareMetalServer', mail: 'Email', cloud: 'Cloud', shield: 'Security', key: 'Password', lock: 'Locked', database: 'DataBase', globe: 'Earth', 'arrow-right': 'ArrowRight', external: 'Launch', check: 'Checkmark', close: 'Close', copy: 'Copy' };
 for (const [name, comp] of Object.entries(map)) {

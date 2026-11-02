@@ -1,6 +1,6 @@
 // Builds the documentation site for GitHub Pages from project/ into site/.
 // Same content as the claude.ai design system: brand book, tokens, live component previews, assets.
-// Run after `npm run build`: node scripts/build_site.mjs
+// Run after `npm run build`: node scripts/build_site.mjs [output-dir]   (default: site/; the tests build into a temp dir)
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -10,7 +10,10 @@ import { marked } from 'marked';
 const require = createRequire(import.meta.url);
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const P = (...p) => path.join(ROOT, ...p);
-const OUT = P('site');
+const OUT = process.argv[2] ? path.resolve(process.argv[2]) : P('site');
+// The output directory is emptied first; never the checkout itself or a directory above it.
+const rootInOut = path.relative(OUT, ROOT);
+if (!rootInOut.startsWith('..') && !path.isAbsolute(rootInOut)) { console.error(`build_site: refusing to empty ${OUT}, which contains the checkout`); process.exit(1); }
 const write = (p, s) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, s); };
 const copy = (from, to) => { fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); };
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
