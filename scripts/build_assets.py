@@ -57,8 +57,15 @@ def pattern(ground, line, star):
 
 
 def dots(w, h, pitch, color, r=1):
-    return "".join(f'<rect x="{x - r}" y="{y - r}" width="{2 * r}" height="{2 * r}" fill="{color}"/>'
-                   for x in range(pitch, w, pitch) for y in range(pitch, h, pitch))
+    # One 2r x 2r dot per pitch cell as a <pattern> fill, centred on every multiple of
+    # `pitch` that lies inside the image (the same dots as one <rect> each, at 60 % of the size).
+    nx, ny = len(range(pitch, w, pitch)), len(range(pitch, h, pitch))
+    if nx == 0 or ny == 0:
+        return ""
+    o = pitch - r
+    return (f'<defs><pattern id="dots" x="{o}" y="{o}" width="{pitch}" height="{pitch}" patternUnits="userSpaceOnUse">'
+            f'<rect width="{2 * r}" height="{2 * r}" fill="{color}"/></pattern></defs>'
+            f'<rect x="{o}" y="{o}" width="{nx * pitch}" height="{ny * pitch}" fill="url(#dots)"/>')
 
 
 def social(w, h, mark_h, x, y, tag_size, gap):

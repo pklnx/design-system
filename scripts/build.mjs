@@ -43,7 +43,9 @@ for (const [k, v] of Object.entries(colors)) {
   const m = /^blue(\d+)(Hover)?$/.exec(k);
   if (m && typeof v === 'string') swap[v.toLowerCase()] = colors[`${hue}${m[1]}${m[2] || ''}`].toLowerCase();
 }
-// Status, syntax, AI, tags and data colors keep their Carbon meaning.
+// Status, syntax, AI, tags and data colors keep their Carbon meaning. `notification-background-info` is
+// the info status color, so it stays Blue; `notification-action-tertiary-inverse*` (G100) is a tertiary
+// button inside an inverse notification, so it follows the buttons to Purple (design-system #30).
 const keep = /^(support-|syntax-|ai-|tag-|status-|notification-background-info)/;
 const changed = { light: {}, dark: {} };
 for (const id of ['light', 'dark']) {

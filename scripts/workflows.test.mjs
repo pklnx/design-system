@@ -141,6 +141,32 @@ test('react and react-dom stay on 18.x while the scripts load the UMD builds (RE
   assert.match(readme, /React 19 dropped the `umd\/` directory/);
 });
 
+// .github/dependabot.yml (design-system #30). Text-based like the rest of this file: no YAML parser.
+test('dependabot.yml: npm, github-actions and pip, weekly, with a 14-day cooldown, covering the composite actions', () => {
+  const text = readFileSync(path.join(ROOT, '.github/dependabot.yml'), 'utf8');
+  assert.match(text, /^version: 2$/m);
+  const updates = text.split(/^ {2}- package-ecosystem: /m).slice(1).map((u) => ({ ecosystem: /^[\w-]+/.exec(u)[0], text: u }));
+  assert.deepEqual(updates.map((u) => u.ecosystem), ['npm', 'github-actions', 'pip']);
+  for (const u of updates) {
+    assert.match(u.text, /^ {4}schedule:\n {6}interval: weekly$/m, `${u.ecosystem}: weekly`);
+    assert.match(u.text, /^ {4}cooldown:\n {6}default-days: 14$/m, `${u.ecosystem}: 14-day cooldown`);
+  }
+  const [npm, ghActions, pip] = updates;
+  assert.match(npm.text, /^ {4}directory: \/$/m);
+  assert.ok(existsSync(path.join(ROOT, 'package.json')) && existsSync(path.join(ROOT, 'package-lock.json')), 'npm: manifest and lockfile at /');
+  // Every directory with a local action must match one of the globs; "/" holds the workflows.
+  const dirs = [...ghActions.text.matchAll(/^ {6}- (\S+)$/gm)].map((m) => m[1]);
+  assert.deepEqual(dirs, ['/', '/.github/actions/*']);
+  assert.ok(existsSync(path.join(ROOT, DIR)), 'github-actions: / has .github/workflows');
+  assert.ok(actions.length > 0, 'github-actions: the glob matches at least one composite action');
+  assert.match(pip.text, /^ {4}directory: \/scripts$/m);
+  assert.ok(existsSync(path.join(ROOT, 'scripts/requirements-logo.txt')), 'pip: /scripts holds requirements-logo.txt');
+  // npm must not propose React 19 (README, "Building").
+  for (const name of ['react', 'react-dom']) {
+    assert.match(npm.text, new RegExp(`- dependency-name: ${name}\\n {8}update-types: \\["version-update:semver-major"\\]`), `npm: ignore major ${name}`);
+  }
+});
+
 test('every checkout leaves no credentials behind', () => {
   for (const w of sources) {
     for (const m of w.text.matchAll(/uses: actions\/checkout@\S+.*\n((?:\s+.*\n){0,3})/g)) {

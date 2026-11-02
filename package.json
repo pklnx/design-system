@@ -25,8 +25,7 @@
     "./theme/pklnx-carbon.css": "./theme/pklnx-carbon.css",
     "./theme/vitepress.css": "./theme/vitepress.css",
     "./theme": {
-      "sass": "./theme/_index.scss",
-      "default": "./theme/_index.scss"
+      "sass": "./theme/_index.scss"
     },
     "./theme/tokens.json": "./theme/tokens.json",
     "./fonts/*": "./project/fonts/*",

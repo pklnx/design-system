@@ -19,6 +19,7 @@ import { createRequire } from 'node:module';
 import { EXPECTED_FILES } from './check-pack.mjs';
 import { rootClasses } from './capture-vitepress-fixture.mjs';
 import { transformSync } from 'esbuild';
+// lightningcss is an exact pin in package.json (README, "Building" says why).
 import { transform as lightningTransform } from 'lightningcss';
 import {
   compareSpecificity, compoundsOf, elementOf, formatSpecificity, parseCss, selectorMatches, selectorMatchesPath, specificity, splitTopLevel, subjectCompound,

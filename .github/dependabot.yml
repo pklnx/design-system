@@ -1,0 +1,38 @@
+# As in mail-archive: weekly version updates with a 14-day cooldown (Dependabot
+# waits 14 days after a release before it proposes it; security updates are
+# exempt). No `labels`: Dependabot's default labels apply.
+# npm: minor and patch updates arrive as one grouped pull request, a major update
+# as its own. react and react-dom stay on 18.x (README, "Building").
+# github-actions: "/" covers .github/workflows, the glob the composite actions in
+# .github/actions; scripts/workflows.test.mjs keeps one SHA per action everywhere.
+# pip: scripts/requirements-logo.txt (exact versions with hashes).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+    groups:
+      npm-dependencies:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-dom
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+  - package-ecosystem: pip
+    directory: /scripts
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14

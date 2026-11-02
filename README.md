@@ -34,7 +34,7 @@ import '@carbon/styles/css/styles.css';
 import '@pklnx/design-system/theme/pklnx-carbon.css';
 ```
 
-Sass (secondary; no product uses it today):
+Sass (secondary; no product uses it today). The module is reached through the `sass` export condition, which Sass tooling (Vite, sass-loader, Dart Sass's `pkg:` importer) sets; a plain JS `import` of `@pklnx/design-system/theme` is not supported and fails with a resolution error:
 
 ```scss
 @use '@pklnx/design-system/theme' as pklnx;
@@ -50,7 +50,7 @@ The logo star is available as `--pklnx-star`.
 | --- | --- |
 | `@pklnx/design-system/theme/pklnx-carbon.css` | The theme: the tokens that differ from Carbon in either theme, set for `.cds--white` and `.cds--g100` alike, each with its theme's value |
 | `@pklnx/design-system/theme/vitepress.css` | The VitePress theme for the products' docs, see [VitePress](#vitepress) |
-| `@pklnx/design-system/theme` | The Sass module (`theme/_index.scss`) |
+| `@pklnx/design-system/theme` | The Sass module (`theme/_index.scss`), only under the `sass` condition |
 | `@pklnx/design-system/theme/tokens.json` | Every Carbon color token for White and G100 after the customization, plus the `changed` set |
 | `@pklnx/design-system/fonts/*` | The IBM Plex woff2 files (`project/fonts/`) and `OFL.txt` |
 | `@pklnx/design-system/package.json` | The manifest |
@@ -124,6 +124,8 @@ The release workflow runs only on `main` and creates the tag itself, on the comm
 
 While the version is 0.x, a breaking change bumps the minor version.
 
+Removing an export condition counts as removing an export. In 0.3.0 `exports["./theme"]` lost its `default` condition, which pointed at the Sass file, so a plain JS `import` of `@pklnx/design-system/theme` resolved to Sass instead of failing. Only the `sass` condition remains: Sass tooling is unaffected, and a consumer that imported the module from JS (none of ours does) gets a resolution error.
+
 ### Updating a consumer
 
 Dependabot does not update URL dependencies. Each release gets a small pull request in each consumer:
@@ -166,6 +168,7 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `project/assets/Logos/products/` | Generated: marks, lockups and app icons (SVG and PNG) of mail-archive and paperless-go, with `manifest.json` and a README |
 | `.node-version` | The Node major for development and CI (workflows, `devEngines`, tests); see Building |
 | `.github/workflows/`, `.github/actions/setup/` | `ci.yml` (checks on every push and pull request; on `main` it also builds and deploys the documentation site once the checks pass) and `release.yml`; the composite action `setup` holds the Node and `npm ci` steps they share and the only pin of `actions/setup-node` |
+| `.github/dependabot.yml` | Weekly version updates with a 14-day cooldown (as in mail-archive) for npm, GitHub Actions (workflows and the composite action) and pip (`scripts/requirements-logo.txt`); minor and patch npm updates arrive as one pull request; `react` and `react-dom` majors are ignored (see Building) |
 | `scripts/build_all.mjs` | `npm run build:all`: the one entry point that runs all generation steps below, in their dependency order (see Building) |
 | `scripts/build_logo.py`, `scripts/build_product_logos.py`, `scripts/build_assets.py` | The pklnx logos; the product marks, lockups and icon SVGs; pattern and social images (pklnx and products) |
 | `scripts/render_pngs.mjs` | Renders the product PNGs with `@resvg/resvg-js` (pinned) and writes `products/manifest.json`; tested by `scripts/product-logos.test.mjs` |
@@ -178,14 +181,32 @@ Releases are planned with GitHub milestones, as in mail-archive: one milestone p
 | `scripts/vitepress-map.mjs` | The VitePress theme: variable → token map, the contrast pairs, the overridden and the kept VitePress rules |
 | `scripts/css-selectors.mjs` | The CSS parser, specificity and selector matching the VitePress tests and the capture use |
 | `scripts/capture-vitepress-fixture.mjs` | Captures `scripts/fixtures/vitepress-<version>.json` from the VitePress npm tarball, run by hand; the tests read the fixture |
+| `scripts/build.mjs` | `npm run build`, the third step of `build:all`: tokens, the Carbon and VitePress themes, `project/components/bundle.css` and `bundle.js` from `src/`, `project/tokens.json` and `tokens.css`, the third-party notices and `project/fonts/OFL.txt`; reads `theme/brand.json` and `theme/logo-geometry.json` |
+| `scripts/build_site.mjs` | `npm run site`: the documentation site into `site/` (see Documentation site) |
+| `scripts/build_icons.mjs` | Writes the Carbon icons the system uses as SVG into `project/assets/Icons/` |
+| `scripts/render-previews.mjs` | Run by hand, not in CI: screenshots every component preview in both themes with headless Chromium (`CHROME`, see Requirements) into `.render/` |
+| `scripts/token-notes.mjs` | The usage note of each token for the design system page, read by `build.mjs` and the tests |
+| `scripts/png.mjs` | PNG helpers (chunks, text chunks, decoding RGBA) for `render_pngs.mjs` and the tests |
+| `scripts/fixtures/` | Captured data the tests read: the VitePress fixture, `npm pack` samples and token files for the release notes |
+| `scripts/*.test.mjs` | The tests, run by `npm test` (no network, no browser). Besides the ones named above: `build_all.test.mjs` (the order and exit codes of `build:all`, README and CI against it), `check-pack.test.mjs` (the package contents and `exports`), `release-notes.test.mjs`, `css-selectors.test.mjs`, `theme.test.mjs` (the generated Carbon theme against `theme/tokens.json`), `vitepress-theme.test.mjs`, `script-robustness.test.mjs` (a path with a space, a failed render, the Python script rules) and `readme.test.mjs` (this table and the list of changed tokens) |
+| `project/components/` | One directory per component with `README.md` (guidelines) and `preview.html` (the live preview of the site and the design system page); `bundle.css` and `bundle.js` are generated by `scripts/build.mjs` from `src/`; `index.d.ts` is described above |
 | `project/` | Content of the claude.ai design system (README, tokens, components, previews, assets, fonts) |
 | `project/components/<Name>/preview.html` | One preview per component, a complete HTML page that claude.ai serves as it is. The first line is the `@dsCard` comment (`group="..."`, `subtitle="..."`, `height=N`, `width=N`, the flag `page`, and the flag `cover` on exactly one preview, the overview's banner: `build_site.mjs` gives it no page of its own and no sidebar entry, and fails unless exactly one preview has it). claude.ai finds the cover by the path `components/Cover/`, so the flag stays on `components/Cover/preview.html` and that folder stays bare: no README, no `.d.ts`, and `Cover` not in the header of `bundle.js` (otherwise claude.ai treats it as an ordinary component and the system has no cover; a test checks all of it). Every other component has a README. What the previews share is not repeated in them: `project/components/preview-shared.css` (the body style) is linked in the `<head>` as `../preview-shared.css`, `preview-shared.js` (`var P = window.Pklnx, h = React.createElement;` and the mounting of every `data-logo` element) is loaded at the end of the `<body>` as `../preview-shared.js`, and Invoice and Letterhead add `preview-din5008.css` and `preview-din5008.js` (the DIN 5008 page: marks, logo, sender, address window and footer, put into the element with `data-din5008`). The site build copies these four files to the site root, where `../` from `preview/<Name>.html` leads; `scripts/render-previews.mjs` resolves them next to the component directories. They are uploaded to claude.ai with the other files under `project/` (see "Publishing to claude.ai") |
+
+## Requirements
+
+- **Node**: the major in `.node-version` (26), for every npm script and the tests; see Building.
+- **Python 3.13**, as in CI, with the hashed packages of `scripts/requirements-logo.txt` (fontTools, brotli), for the three logo scripts only (`build_logo.py`, `build_product_logos.py`, `build_assets.py`). `npm test` also runs a lint of those scripts with any `python3` (standard library only).
+- **Chromium or Chrome**, only for `scripts/render-previews.mjs`, which takes its path from the `CHROME` environment variable. Nothing else, and not CI, needs a browser.
+- Consumers of the package need none of this: the tarball has no dependencies and no install scripts.
 
 ## Building
 
 Node 26, as declared in `.node-version`: the one place for the version. The workflows read it through the local action `.github/actions/setup` (`actions/setup-node` with `node-version-file`, then `npm ci --ignore-scripts`), `scripts/workflows.test.mjs` checks that nothing else names a Node version, and `devEngines` in `package.json` makes npm warn on an older Node when you work in this repository. `devEngines` (unlike `engines`) is ignored when the package is installed as a dependency, so the tarball puts no requirement on consumers ([npm docs, `devEngines`](https://docs.npmjs.com/cli/configuring-npm/package-json#devengines)).
 
 `react` and `react-dom` stay on 18.x in `package.json` (JSON has no comments, so the reason is here): `scripts/build_site.mjs` and `scripts/render-previews.mjs` load `node_modules/react/umd/react.production.min.js` and `node_modules/react-dom/umd/react-dom.production.min.js`, and React 19 dropped the `umd/` directory. `npm outdated` still lists 19 under "Latest"; "Wanted" stays 18. Moving to 19 means bundling React with esbuild in the site build and the previews first.
+
+`lightningcss` (`1.33.0`) is one of two exact pins among the caret ranges, with `@resvg/resvg-js` (`2.6.2`, see `render_pngs.mjs` in Layout): only `scripts/vitepress-theme.test.mjs` uses it, to check how Vite 8's CSS minifier treats `theme/vitepress.css` (the legal comment, the escaping in `url()`), and that result can change between releases of Lightning CSS. Move the pin together with `VITEPRESS_VERSION` (see VitePress).
 
 ```sh
 npm ci --ignore-scripts                 # no install scripts (IBM's telemetry), as in CI; before pip: the logo scripts read the fonts from node_modules
@@ -224,7 +245,7 @@ The same content as on claude.ai, as a static site on GitHub Pages: **https://pk
 The design system lives on claude.ai as the artifact "pklnx design system". Claude publishes it from this repo:
 
 - Files under `project/` are uploaded as files, SVGs under `project/assets/` as asset uploads. Their IDs are in `project/design-system.json` (`assetGroups`).
-- When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
+- When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. A preview that shows the SVG hard-codes its blob ID as `/_blob/<id>` (for example `project/components/SocialKit/preview.html`): replace the ID there, too, wherever it appears (`grep -rn <old id> project/`). Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
 - The previews link `../preview-shared.css`, `../preview-shared.js`, `../preview-din5008.css` and `../preview-din5008.js` (`project/components/`, see "Layout"): upload these four files with the previews, next to `bundle.js` and `bundle.css`, or the previews lose their body style, `P`/`h` and logos.
 - Edits made directly in the claude.ai editor do not land here automatically. Pull them back and commit them before the next build.
 

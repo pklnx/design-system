@@ -170,8 +170,11 @@ test('SVG hygiene: viewBox and title; no text, style, script, links, strokes or 
     const svg = readText(f);
     assert.match(svg, /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="[^"]+"/, `${f}: viewBox`);
     assert.match(svg, /<title>[^<]+<\/title>/, `${f}: title`);
+    // The social images' dot grid is a <pattern> in the file itself (#30): the one `url(` allowed is the
+    // fragment reference to it, never an address.
+    const checked = svg.replace(/ fill="url\(#dots\)"/g, '');
     for (const bad of ['<text', '<style', '<script', 'href', '<image', 'url(', 'stroke', '<foreignObject', 'font']) {
-      assert.ok(!svg.toLowerCase().includes(bad.toLowerCase()), `${f} contains ${bad}`);
+      assert.ok(!checked.toLowerCase().includes(bad.toLowerCase()), `${f} contains ${bad}`);
     }
   }
 });
