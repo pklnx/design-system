@@ -14,6 +14,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
@@ -42,12 +43,17 @@ function runScript(script, args) {
 // ------------------------------------------------------------------ the documentation site
 
 const index = json('project/design-system.json');
-// Every directory of project/components with a preview.html is a component; Cover is the
-// overview's banner and has a preview but no page of its own.
+// Every directory of project/components with a preview.html is a component; the one whose @dsCard
+// comment carries the `cover` flag is the overview's banner and has a preview but no page of its own.
 const previewDirs = readdirSync(path.join(ROOT, 'project/components'), { withFileTypes: true })
   .filter((e) => e.isDirectory() && existsSync(path.join(ROOT, 'project/components', e.name, 'preview.html')))
   .map((e) => e.name).sort();
-const componentPages = previewDirs.filter((n) => n !== 'Cover');
+const dsCard = (name) => /@dsCard([^>]*)-->/.exec(readFileSync(path.join(ROOT, 'project/components', name, 'preview.html'), 'utf8'))?.[1] || '';
+const coverDirs = previewDirs.filter((n) => /(?:^|\s)cover(?=\s|$)/.test(dsCard(n)));
+const componentPages = previewDirs.filter((n) => !coverDirs.includes(n));
+
+// The files every preview links instead of repeating them (design-system #29).
+const sharedFiles = ['preview-shared.css', 'preview-shared.js', 'preview-din5008.css', 'preview-din5008.js'];
 
 test('build_site.mjs: the pages, the previews and the static files are written', (t) => {
   const out = tempDir(t);
@@ -78,6 +84,9 @@ test('build_site.mjs: the pages, the previews and the static files are written',
     'lib/react.production.min.js', 'lib/react-dom.production.min.js', 'theme/pklnx-carbon.css']) {
     assert.ok(existsSync(path.join(out, f)), f);
   }
+  // The files the previews link as ../preview-*: at the site root, where ../ from preview/<Name>.html leads.
+  assert.deepEqual(files(path.join(ROOT, 'project/components')).filter((n) => n.startsWith('preview-')), sharedFiles.toSorted(), 'every preview-* file of project/components is listed here');
+  for (const f of sharedFiles) assert.deepEqual(readFileSync(path.join(out, f)), readFileSync(path.join(ROOT, 'project/components', f)), `${f}: copy`);
   assert.deepEqual(files(path.join(out, 'fonts')), files(path.join(ROOT, 'project/fonts')));
 });
 
@@ -139,6 +148,143 @@ const refused = (r, message, pattern = /refusing to (?:empty|replace)/) => {
   assert.notEqual(r.status, 0, `${message}: exit status`);
   assert.match(r.stderr, pattern, message);
 };
+
+// ------------------------------------------------------------------ preview boilerplate and the cover marker (#29)
+
+const previewSource = (name) => read(`project/components/${name}/preview.html`);
+
+test('previews: the shared style, prelude and logo mounting live in the preview-* files only', () => {
+  for (const name of previewDirs) {
+    const src = previewSource(name);
+    assert.doesNotMatch(src, /var P = window\.Pklnx/, `${name}: the P/h prelude is in preview-shared.js`);
+    assert.doesNotMatch(src, /body\{margin:0/, `${name}: the body style is in preview-shared.css`);
+    assert.doesNotMatch(src, /querySelectorAll\('\[data-logo\]'\)/, `${name}: the logo mounting is in preview-shared.js`);
+    assert.match(src, /<link rel="stylesheet" href="\.\.\/preview-shared\.css">/, `${name}: links the shared style`);
+    // A preview that uses P, h or a data-logo element needs the script.
+    if (/\bP\.[A-Z]|\bh\(|data-logo=/.test(src)) assert.match(src, /<script src="\.\.\/preview-shared\.js"><\/script>/, `${name}: loads preview-shared.js`);
+    // Every ../preview-* reference names a file that exists next to the component directories (claude.ai serves it from there, the site from its root).
+    for (const [, f] of src.matchAll(/(?:href|src)="\.\.\/(preview-[^"]+)"/g)) assert.ok(sharedFiles.includes(f), `${name}: ${f} is not a shared preview file`);
+  }
+  // The DIN 5008 page of Invoice and Letterhead is built once.
+  for (const name of ['Invoice', 'Letterhead']) {
+    const src = previewSource(name);
+    assert.match(src, /href="\.\.\/preview-din5008\.css"/, name);
+    assert.match(src, /<script src="\.\.\/preview-din5008\.js"><\/script>/, name);
+    assert.match(src, /data-din5008/, name);
+    assert.doesNotMatch(src, /class="mk"|class="foot"|\.page\{/, `${name}: the DIN 5008 frame is in preview-din5008.*`);
+  }
+});
+
+// The shared scripts run against a stand-in for the page: they must define P and h, mount every logo, and fill every DIN page.
+function runInPage(file, { readyState = 'loading', logos = [], pages = [] } = {}) {
+  const calls = { roots: [], created: [], listeners: [], inserted: [] };
+  const React = { createElement: (type, props) => ({ type, props }) };
+  const element = (attrs) => ({ getAttribute: (k) => attrs[k], hasAttribute: (k) => k in attrs });
+  const document = {
+    readyState,
+    addEventListener: (ev, fn) => calls.listeners.push([ev, fn]),
+    querySelectorAll: (sel) => (sel === '[data-logo]' ? logos.map(element).map((e, i) => Object.assign(e, { i })) : sel === '[data-din5008]'
+      ? pages.map(() => ({ insertAdjacentHTML: (pos, html) => calls.inserted.push([pos, html]) })) : []),
+  };
+  const ReactDOM = { createRoot: (el) => ({ render: (node) => calls.roots.push([el.i, node]) }) };
+  const Pklnx = { Logo: function Logo() {} };
+  const sandbox = { React, ReactDOM, document, window: { Pklnx }, Pklnx };
+  vm.runInNewContext(read(`project/components/${file}`), sandbox);
+  return { calls, sandbox, Pklnx, React };
+}
+
+test('preview-shared.js: defines P and h and mounts every [data-logo] element as a Logo', () => {
+  const logos = [{ 'data-logo': 'wordmark', 'data-h': '26' }, { 'data-logo': 'mark', 'data-h': '48', 'data-mono': '' }];
+  const { calls, sandbox, Pklnx, React } = runInPage('preview-shared.js', { logos });
+  assert.equal(sandbox.P, Pklnx);
+  assert.equal(sandbox.h, React.createElement);
+  assert.deepEqual(calls.roots, [], 'nothing is mounted before the page has been parsed');
+  assert.equal(calls.listeners.length, 1);
+  assert.equal(calls.listeners[0][0], 'DOMContentLoaded');
+  calls.listeners[0][1]();
+  assert.deepEqual(calls.roots.map(([i, n]) => [i, n.type === Pklnx.Logo, { ...n.props }]), [
+    [0, true, { variant: 'wordmark', height: 26, mono: false }],
+    [1, true, { variant: 'mark', height: 48, mono: true }],
+  ]);
+  // A script that is loaded after the parse mounts at once.
+  assert.equal(runInPage('preview-shared.js', { readyState: 'complete', logos }).calls.roots.length, 2);
+});
+
+test('preview-din5008.js: puts the frame before and the footer after the content of every DIN page', () => {
+  const { calls } = runInPage('preview-din5008.js', { pages: [1, 2] });
+  assert.equal(calls.inserted.length, 4);
+  for (const [pos, html] of [calls.inserted[0], calls.inserted[2]]) {
+    assert.equal(pos, 'afterbegin');
+    assert.equal((html.match(/class="mk"/g) || []).length, 3, 'three fold and punch marks');
+    assert.match(html, /data-logo="wordmark" data-h="26"/);
+  }
+  for (const [pos, html] of [calls.inserted[1], calls.inserted[3]]) {
+    assert.equal(pos, 'beforeend');
+    assert.match(html, /^<div class="foot">[\s\S]*<\/div>$/);
+    assert.equal((html.match(/class="lbl"/g) || []).length, 3, 'contact, bank, tax');
+  }
+});
+
+// claude.ai finds the cover of a design system by the path components/Cover/preview.html. A README.md or a
+// .d.ts beside it, or `Cover` in the bundle header, makes it an ordinary component and the system has no
+// cover (artifact-type reference cover.md). So the folder stays bare, and the flag sits on that preview.
+test('Cover: the flagged preview is components/Cover/preview.html and the folder stays bare for claude.ai', () => {
+  assert.deepEqual(coverDirs, ['Cover'], 'the cover flag sits on components/Cover/preview.html and nowhere else');
+  const dir = path.join(ROOT, 'project/components/Cover');
+  assert.deepEqual(files(dir), ['preview.html'], 'components/Cover/ holds the preview only: no README.md, no .d.ts, nothing else');
+  assert.ok(!existsSync(path.join(ROOT, 'project/components/Cover.d.ts')), 'no components/Cover.d.ts either');
+  const header = /^\/\* @ds-bundle: (.*) \*\//.exec(read('project/components/bundle.js').split('\n')[0]);
+  assert.ok(header, 'bundle.js starts with the @ds-bundle header');
+  const listed = JSON.parse(header[1]).components.map((c) => c.name);
+  assert.ok(listed.length > 0 && !listed.includes('Cover'), `the bundle header names Cover as a component: ${listed}`);
+});
+
+test('previews: every component but the cover has a README', () => {
+  assert.ok(componentPages.length > 0 && !componentPages.includes('Cover'));
+  for (const name of componentPages) assert.ok(existsSync(path.join(ROOT, 'project/components', name, 'README.md')), `${name}: README.md`);
+});
+
+// The site build finds the banner by its flag, never by its name: the flag moved to another preview moves
+// the banner there. This is the build's behaviour only; the committed state is held to claude.ai's rule by
+// the Cover test above.
+function withCard(t, edits) {
+  const env = throwaway(t);
+  for (const [name, from, to] of edits) {
+    const file = path.join(env.checkout, 'project/components', name, 'preview.html');
+    const src = readFileSync(file, 'utf8');
+    assert.ok(src.includes(from), `${name}: ${from}`);
+    writeFileSync(file, src.replace(from, to));
+  }
+  return env;
+}
+
+test('build_site.mjs: the site banner is the preview with the cover flag, whatever its name', (t) => {
+  const { base, site } = withCard(t, [['Cover', 'height=288 cover -->', 'height=288 -->'], ['Button', 'height=140 ', 'height=140 cover ']]);
+  const out = path.join(base, 'out');
+  const r = site(out);
+  assert.equal(r.status, 0, r.stderr);
+  assert.ok(existsSync(path.join(out, 'preview/Button.html')) && !existsSync(path.join(out, 'components/Button.html')), 'Button is the banner: a preview, no page');
+  assert.ok(existsSync(path.join(out, 'components/Cover.html')), 'Cover is an ordinary component now: it has a page');
+  assert.match(readFileSync(path.join(out, 'index.html'), 'utf8'), /<iframe class="frame cover" src="preview\/Button\.html" title="Button"/);
+});
+
+test('build_site.mjs: no banner or two banners stop the build and leave the previous site alone', (t) => {
+  for (const [label, edits, found] of [
+    ['none', [['Cover', ' cover -->', ' -->']], 'found 0'],
+    ['two', [['Button', 'height=140 ', 'height=140 cover ']], 'found 2: Button, Cover'],
+  ]) {
+    const { base, site } = withCard(t, edits);
+    const out = path.join(base, `out-${label}`);
+    // Something that looks like a previous site build, which the failing run must not empty.
+    mkdirSync(out);
+    writeFileSync(path.join(out, 'index.html'), 'previous');
+    writeFileSync(path.join(out, '.nojekyll'), '');
+    const r = site(out);
+    refused(r, label, /exactly one preview must carry the "cover" flag/);
+    assert.ok(r.stderr.includes(found), `${label}: ${r.stderr}`);
+    assert.equal(readFileSync(path.join(out, 'index.html'), 'utf8'), 'previous', `${label}: the previous site is still there`);
+  }
+});
 
 test('build_site.mjs: the default output is site/ in the checkout, and a second run replaces it', (t) => {
   const { checkout, site, intact } = throwaway(t);

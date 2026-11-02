@@ -2,11 +2,12 @@
 <!doctype html>
 <html lang="de">
 <head><meta charset="utf-8"><title>StatusBadge</title>
-<style>body{margin:0;background:var(--background);color:var(--text-primary)}.row{display:flex;flex-wrap:wrap;gap:32px;align-items:center;padding:32px}</style></head>
+<link rel="stylesheet" href="../preview-shared.css">
+<style>.row{display:flex;flex-wrap:wrap;gap:32px;align-items:center;padding:32px}</style></head>
 <body>
 <div id="root" class="row"></div>
+<script src="../preview-shared.js"></script>
 <script>
-var P = window.Pklnx, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
   h(P.StatusBadge, { status: 'ok' }),
   h(P.StatusBadge, { status: 'warn' }, 'Wartung bis 18 Uhr'),

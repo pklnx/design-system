@@ -1,0 +1,3 @@
+/* Shared by every components/<Name>/preview.html: the page the preview is drawn on.
+   Linked with <link rel="stylesheet" href="../preview-shared.css"> in the <head>. */
+body{margin:0;background:var(--background);color:var(--text-primary);font-family:var(--font-sans)}

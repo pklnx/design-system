@@ -2,8 +2,8 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><title>Logo usage</title>
+<link rel="stylesheet" href="../preview-shared.css">
 <style>
-body{margin:0;background:var(--background);font-family:var(--font-sans)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:var(--border-subtle-00)}
 .cell{display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:200px;padding:24px;background:var(--background);color:var(--text-primary)}
 .cell .art{display:flex;align-items:center;gap:32px;flex-wrap:wrap;flex:1}
@@ -22,10 +22,6 @@ body{margin:0;background:var(--background);font-family:var(--font-sans)}
   <div class="cell blk"><div class="art"><span data-logo="wordmark" data-h="40" data-mono></span><span data-logo="mark" data-h="48" data-mono></span></div><span class="cap" style="color:#c6c6c6">Single color white: vinyl, engraving, embossing</span></div>
   <div class="cell wht"><div class="art"><span data-logo="wordmark" data-h="40" data-mono></span><span data-logo="mark" data-h="48" data-mono></span></div><span class="cap" style="color:#525252">Single color black: stamp, fax, newspaper ad</span></div>
 </div>
-<script>
-document.querySelectorAll('[data-logo]').forEach(function (el) {
-  ReactDOM.createRoot(el).render(React.createElement(window.Pklnx.Logo, { variant: el.getAttribute('data-logo'), height: +el.getAttribute('data-h'), mono: el.hasAttribute('data-mono') }));
-});
-</script>
+<script src="../preview-shared.js"></script>
 </body>
 </html>

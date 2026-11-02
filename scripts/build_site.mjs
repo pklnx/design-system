@@ -45,6 +45,30 @@ const copy = (from, to) => { fs.mkdirSync(path.dirname(to), { recursive: true })
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const md = (s) => marked.parse(s, { gfm: true });
 
+// The components are read before the previous site is removed, so a broken source leaves it alone.
+// A component is a directory of project/components with a preview.html. The @dsCard comment on its first line
+// holds the card settings: group="...", subtitle="...", height=N, width=N, and the flags `page`
+// and `cover` (the overview's banner: a preview, but no page and no sidebar entry of its own; exactly one. claude.ai finds the cover by the path components/Cover/, which a test holds).
+const compDirs = fs.readdirSync(P('project/components')).filter((d) => fs.existsSync(P('project/components', d, 'preview.html')));
+const cardOf = (name) => {
+  const src = fs.readFileSync(P('project/components', name, 'preview.html'), 'utf8');
+  const marker = /@dsCard([^>]*)-->/.exec(src)?.[1] || '';
+  return { name, src, cover: /(?:^|\s)cover(?=\s|$)/.test(marker), marker };
+};
+const cards = compDirs.map(cardOf);
+const covers = cards.filter((c) => c.cover);
+if (covers.length !== 1) die(`exactly one preview must carry the "cover" flag in its @dsCard comment (the overview embeds it), found ${covers.length}: ${covers.map((c) => c.name).join(', ') || 'none'}`);
+const cover = covers[0];
+const comps = cards.filter((c) => !c.cover).map(({ name, src, marker }) => {
+  const readme = fs.existsSync(P('project/components', name, 'README.md')) ? fs.readFileSync(P('project/components', name, 'README.md'), 'utf8') : `# ${name}\n`;
+  return {
+    name, src, readme,
+    group: /group="([^"]*)"/.exec(marker)?.[1] || 'Other',
+    subtitle: /subtitle="([^"]*)"/.exec(marker)?.[1] || '',
+    height: +(/height=(\d+)/.exec(marker)?.[1] || 200),
+    width: +(/width=(\d+)/.exec(marker)?.[1] || 0),
+  };
+});
 fs.rmSync(OUT, { recursive: true, force: true });
 const tokens = JSON.parse(fs.readFileSync(P('project/tokens.json'), 'utf8'));
 const index = JSON.parse(fs.readFileSync(P('project/design-system.json'), 'utf8'));
@@ -58,6 +82,8 @@ for (const f of fs.readdirSync(P('project/fonts'))) copy(P('project/fonts', f), 
 copy(P('node_modules/react/umd/react.production.min.js'), path.join(OUT, 'lib/react.production.min.js'));
 copy(P('node_modules/react-dom/umd/react-dom.production.min.js'), path.join(OUT, 'lib/react-dom.production.min.js'));
 copy(P('theme/pklnx-carbon.css'), path.join(OUT, 'theme/pklnx-carbon.css'));
+// The files every preview.html links as ../preview-*.css|js; the site puts a preview at preview/<Name>.html, so ../ is the site root.
+for (const f of fs.readdirSync(P('project/components')).filter((f) => /^preview-.+\.(css|js)$/.test(f))) copy(P('project/components', f), path.join(OUT, f));
 const blobToPath = {};
 for (const g of index.groups) {
   for (const [name, rec] of Object.entries(index.assetGroups[g].files)) {
@@ -68,19 +94,7 @@ for (const g of index.groups) {
 copy(P('project/assets/Logos/pklnx-favicon.svg'), path.join(OUT, 'favicon.svg'));
 
 // ---------------------------------------------------------------- components and previews
-const compDirs = fs.readdirSync(P('project/components')).filter((d) => fs.existsSync(P('project/components', d, 'preview.html')));
-const comps = compDirs.filter((d) => d !== 'Cover').map((name) => {
-  const src = fs.readFileSync(P('project/components', name, 'preview.html'), 'utf8');
-  const marker = /@dsCard([^>]*)-->/.exec(src)?.[1] || '';
-  const readme = fs.existsSync(P('project/components', name, 'README.md')) ? fs.readFileSync(P('project/components', name, 'README.md'), 'utf8') : `# ${name}\n`;
-  return {
-    name, src, readme,
-    group: /group="([^"]*)"/.exec(marker)?.[1] || 'Other',
-    subtitle: /subtitle="([^"]*)"/.exec(marker)?.[1] || '',
-    height: +(/height=(\d+)/.exec(marker)?.[1] || 200),
-    width: +(/width=(\d+)/.exec(marker)?.[1] || 0),
-  };
-});
+// comps and cover were read above.
 const groupOrder = ['Brand', 'Foundations', 'Actions', 'Content', 'Forms', 'Navigation', 'Stationery', 'Social'];
 comps.sort((a, b) => (groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group)) || a.name.localeCompare(b.name));
 
@@ -99,7 +113,7 @@ const wrapPreview = (src) => {
   return html.replace(/<head>/i, `<head>${previewHead(1)}`);
 };
 for (const c of comps) write(path.join(OUT, 'preview', `${c.name}.html`), wrapPreview(c.src));
-write(path.join(OUT, 'preview', 'Cover.html'), wrapPreview(fs.readFileSync(P('project/components/Cover/preview.html'), 'utf8')));
+write(path.join(OUT, 'preview', `${cover.name}.html`), wrapPreview(cover.src));
 
 // ---------------------------------------------------------------- page shell
 const logoSvg = (h) => {
@@ -215,7 +229,7 @@ f.addEventListener('load',function(){fit();setTimeout(fit,300);setTimeout(fit,12
 const readme = fs.readFileSync(P('project/README.md'), 'utf8');
 write(path.join(OUT, 'index.html'), page({
   file: 'index.html', heading: 'Overview',
-  body: `<iframe class="frame cover" src="preview/Cover.html" title="Cover" style="height:288px" scrolling="no"></iframe>
+  body: `<iframe class="frame cover" src="preview/${cover.name}.html" title="${esc(cover.name)}" style="height:288px" scrolling="no"></iframe>
 <div class="prose">${md(readme)}</div>`,
 }));
 
