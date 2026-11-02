@@ -9,7 +9,6 @@ Released: v0.3.0 (PR #52); milestones 0.2.3 and 0.3.0 are closed. Next milestone
 Open:
 - #51 (maintainer action): at the next claude.ai publish, re-upload `project/assets/Social/pklnx-og-image.svg` and `pklnx-banner.svg` and put their new blob ids into `project/design-system.json` and `project/components/SocialKit/preview.html`.
 - Dependabot (since #49): weekly version update PRs arrive; each gets one review (Sonnet) unless it touches the risk class (CLAUDE.md, step 6). Open: #53 (`marked` 14.1.4 to 18.1.1, a major), not yet reviewed.
-- Question for the maintainer (review of #54, item 2): add `THIRD_PARTY_NOTICES.md` and `scripts/check-pack.mjs` to risk class (b)?
 
 Decisions to keep:
 - Python stays for the three logo scripts (hashed `scripts/requirements-logo.txt`).
