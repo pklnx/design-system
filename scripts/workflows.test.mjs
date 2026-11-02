@@ -190,6 +190,117 @@ test('ci.yml: only the deploy job can write Pages, and it runs no repository cod
   assert.doesNotMatch(deploy.text, /checkout/, 'no checkout');
 });
 
+// ---- the release jobs that hold write tokens run no repository code (design-system #40)
+// `attest` and `release` of release.yml hold id-token, attestations and contents write. They only
+// download the built artifact, check its checksum, attest it and call gh. Repository or dependency code
+// there would run with those tokens, and the pin rule (#21) relies on it (download-artifact is used
+// directly, not through the setup action).
+const RELEASE_JOBS = {
+  attest: { 'attestations': 'write', 'id-token': 'write' },
+  release: { 'contents': 'write' },
+};
+// Commands that run repository or dependency code: runtimes and package managers, a path under
+// scripts/ or node_modules/, or a repository-relative executable (./x, ../x) as a command.
+const CODE_COMMAND = /(?<![\w./-])(?:node|nodejs|npm|npx|pnpm|yarn|corepack|python[\d.]*|pip[\d.]*|pipx|ruby|perl|deno|bun)(?![\w-])/;
+const CODE_PATH = /(?<![\w-])(?:scripts|node_modules)\//;
+const RELATIVE_COMMAND = /(?:^|[;&|(`{]|\$\()\s*\.{1,2}\//;
+
+// The job with this name; fails loudly if the workflow has none (a renamed job must not skip the checks).
+const findJob = (text, name) => {
+  const job = jobsOf(text).find((j) => j.name === name);
+  assert.ok(job, `release.yml has a job named ${name}; if it was renamed, update RELEASE_JOBS and the docs that name it`);
+  return job;
+};
+// The bodies of all `run:` values of a job, single-line and block scalars, without YAML comment lines.
+const runBodiesOf = (jobText) => {
+  const lines = jobText.split('\n');
+  const bodies = [];
+  lines.forEach((line, i) => {
+    const m = /^(\s*(?:-\s+)?)run:[ \t]*(.*)$/.exec(line);
+    if (!m) return;
+    const keyCol = m[1].length;
+    const body = [m[2]];
+    for (let j = i + 1; j < lines.length; j++) {
+      const l = lines[j];
+      if (l.trim() === '') { body.push(''); continue; }
+      if (l.length - l.trimStart().length <= keyCol) break;
+      body.push(l);
+    }
+    bodies.push(body.filter((l) => !/^\s*#/.test(l)).join('\n'));
+  });
+  return bodies;
+};
+const permissionsOf = (jobText) => {
+  const m = /^ {4}permissions:[ \t]*(.*)\n((?: {6}\S.*\n)*)/m.exec(jobText);
+  if (!m) return null;
+  const perms = { inline: m[1] };
+  for (const l of m[2].split('\n').filter(Boolean)) {
+    const kv = /^ {6}([\w-]+): (\S+)\s*$/.exec(l);
+    perms[kv ? kv[1] : l.trim()] = kv ? kv[2] : '?';
+  }
+  return perms;
+};
+// What is wrong with the job `name` of the release workflow text, as a list of messages.
+const releaseJobProblems = (text, name) => {
+  const job = findJob(text, name);
+  const problems = [];
+  const code = job.text.split('\n').filter((l) => !/^\s*#/.test(l)).join('\n'); // without comment lines
+  const uses = [...code.matchAll(/^\s*(?:-\s+)?uses:\s*(\S+)/gm)].map((m) => m[1]);
+  if (uses.length === 0) problems.push('no uses: step found');
+  for (const u of uses) {
+    if (/^actions\/checkout@/.test(u)) problems.push(`${name}: checks out the repository (${u})`);
+    if (/^\.{1,2}\//.test(u)) problems.push(`${name}: uses the local action ${u}`);
+  }
+  if (/\bcheckout\b/.test(code)) problems.push(`${name}: mentions a checkout`);
+  for (const [i, body] of runBodiesOf(job.text).entries()) {
+    const hit = CODE_COMMAND.exec(body) ?? CODE_PATH.exec(body);
+    if (hit) problems.push(`${name}: run step ${i + 1} runs repository or dependency code (${hit[0]})`);
+    if (body.split('\n').some((l) => RELATIVE_COMMAND.test(l))) problems.push(`${name}: run step ${i + 1} runs a repository-relative command`);
+  }
+  if (/^\s*(?:-\s+)?shell:/m.test(code)) problems.push(`${name}: sets a shell, so a run step could run another interpreter (only the workflow default bash is allowed)`);
+  const perms = permissionsOf(job.text);
+  const want = { inline: '', ...RELEASE_JOBS[name] };
+  if (JSON.stringify(Object.entries(perms ?? {}).sort()) !== JSON.stringify(Object.entries(want).sort())) {
+    problems.push(`${name}: permissions are ${JSON.stringify(perms)}, expected exactly ${JSON.stringify(RELEASE_JOBS[name])}`);
+  }
+  return problems;
+};
+const releaseText = () => workflows.find((w) => w.name === 'release.yml').text;
+
+for (const name of Object.keys(RELEASE_JOBS)) {
+  test(`release.yml: the ${name} job runs no repository code and holds exactly its permissions`, () => {
+    assert.deepEqual(releaseJobProblems(releaseText(), name), []);
+  });
+}
+
+test('release.yml: the checks for attest and release catch repository code, other permissions and a missing job', () => {
+  const text = releaseText();
+  // Insert `extra` as the first lines of the steps of a job.
+  const withStep = (name, extra) => text.replace(new RegExp(`(^ {2}${name}:\\n[\\s\\S]*?^ {4}steps:\\n)`, 'm'), `$1${extra}`);
+  const cases = [
+    ['a checkout in attest', withStep('attest', '      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n'), 'attest', /checks out the repository/],
+    ['a local action in release', withStep('release', `      - uses: ${SETUP}\n`), 'release', /local action/],
+    ['node scripts/ in attest', withStep('attest', '      - run: node scripts/release-notes.mjs\n'), 'attest', /runs repository or dependency code \(node\)/],
+    ['a scripts/ path in release', withStep('release', '      - run: bash scripts/x.sh\n'), 'release', /runs repository or dependency code \(scripts\/\)/],
+    ['npm ci in a multi-line block in release', withStep('release', '      - name: Install\n        run: |\n          echo start\n          npm ci\n'), 'release', /runs repository or dependency code \(npm\)/],
+    ['python3 in a multi-line block in attest', withStep('attest', '      - name: Py\n        run: |\n          echo start\n          python3 -c "print(1)"\n'), 'attest', /\(python3\)/],
+    ['a repository-relative command in release', withStep('release', '      - run: ./tools/x\n'), 'release', /repository-relative command/],
+    ['another shell in attest', withStep('attest', '      - shell: python {0}\n        run: print(1)\n'), 'attest', /sets a shell/],
+    ['contents: write added to attest', text.replace('      id-token: write\n      attestations: write\n', '      id-token: write\n      attestations: write\n      contents: write\n'), 'attest', /permissions are/],
+    ['a permission dropped from attest', text.replace('      attestations: write\n    steps:', '    steps:'), 'attest', /permissions are/],
+    ['id-token added to release', text.replace('    permissions:\n      contents: write\n', '    permissions:\n      contents: write\n      id-token: write\n'), 'release', /permissions are/],
+    ['write-all in release', text.replace('    permissions:\n      contents: write\n', '    permissions: write-all\n'), 'release', /permissions are/],
+  ];
+  for (const [what, mutated, job, expected] of cases) {
+    assert.notEqual(mutated, text, `${what}: the mutation changed the text`);
+    assert.match(releaseJobProblems(mutated, job).join('\n'), expected, what);
+  }
+  assert.throws(() => releaseJobProblems(text.replace(/^ {2}attest:$/m, '  sign:'), 'attest'), /has a job named attest/, 'a renamed attest job');
+  assert.throws(() => releaseJobProblems(text.replace(/^ {2}release:$/m, '  publish:'), 'release'), /has a job named release/, 'a renamed release job');
+  // Comments that mention the forbidden words are no code.
+  assert.deepEqual(releaseJobProblems(withStep('attest', '      # runs node scripts/x.mjs, not in this job\n'), 'attest'), []);
+});
+
 test('the Pages build uploads the site artifact and the deploy needs nothing else from the repository', () => {
   const build = jobsOf(workflows.find((x) => x.name === 'ci.yml').text).find((j) => j.name === 'pages-build');
   assert.match(build.text, /run: npm run site\n/);
