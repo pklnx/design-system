@@ -86,16 +86,16 @@
       "width": 1280,
       "height": 640,
       "source": "project/assets/Social/mail-archive-social.svg",
-      "sourceSha256": "39f26aae8e8d01c4f9faeb7d7bc2e5390bdda0760956e8c39f11df076fde49de",
-      "sha256": "0817031cdcf27ac5418c6997ea777b45aebdd459fe6c872744820ee46ff9eddf"
+      "sourceSha256": "a77f902bb56e627c63b4112196a74f7f727147fc29c8168ff170f8d099d8ff42",
+      "sha256": "f4dd96bc4784bd8e1bc67e569eea4c8460ee082aa0f609fe7a52d238a519c1cb"
     },
     {
       "path": "project/assets/Social/paperless-go-social.png",
       "width": 1280,
       "height": 640,
       "source": "project/assets/Social/paperless-go-social.svg",
-      "sourceSha256": "78db07bcd396caafb05a4f0390b9aebf61bc65ecc6e7c977fc31fe7a6990230a",
-      "sha256": "3bfaccc2d996c3a7b24f2824848b2b085dc3347ce3065b1079929dfa35b8e982"
+      "sourceSha256": "c7773c9dbf4f528e68c7e44e653293907dc9b49a72ad8e232fab732af5861335",
+      "sha256": "c7328457be05a5bd9683fd4b487e15fa8b495073a2b0f7397c5330989152cf36"
     }
   ]
 }

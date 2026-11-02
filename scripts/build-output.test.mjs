@@ -492,6 +492,36 @@ test('the committed pattern SVGs use the ground, line and star colors of theme/t
   }
 });
 
+// The dot grid of the social images (design-system #30) is one <pattern> fill, not one <rect> per dot.
+// The layer is rendered on its own: a dot (2 x 2 px) lies on every multiple of 40 inside the image,
+// none on the edge, and no other pixel changes.
+test('the social SVGs draw the dot grid as one pattern fill with a dot on every multiple of 40 inside the image', () => {
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const ground = hex(tokens.dark.background);
+  const dot = hex(tokens.dark['border-subtle-00']);
+  for (const name of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social']) {
+    const svg = readFileSync(assetFile('Social', `${name}.svg`), 'utf8');
+    const [, w, h] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
+    assert.equal(svg.match(/<rect /g).length, 3, `${name}: ground, pattern dot and the fill rect, no rect per dot`);
+    const layer = /<defs><pattern id="dots"[^>]*>.*?<\/pattern><\/defs><rect [^>]*fill="url\(#dots\)"\/>/.exec(svg)?.[0];
+    assert.ok(layer, `${name}: dot grid as pattern`);
+    const img = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="${tokens.dark.background}"/>${layer}</svg>`).render();
+    const px = img.pixels; // a getter that copies the buffer
+    const at = (x, y) => Array.from(px.subarray((y * img.width + x) * 4, (y * img.width + x) * 4 + 3));
+    let n = 0, painted = 0;
+    for (let i = 0; i < img.width * img.height; i++) if (!ground.every((v, k) => v === px[i * 4 + k])) painted++;
+    for (let x = 40; x < w; x += 40) {
+      for (let y = 40; y < h; y += 40) {
+        n++;
+        for (const [dx, dy] of [[-1, -1], [0, -1], [-1, 0], [0, 0]]) assert.deepEqual(at(x + dx, y + dy), dot, `${name}: dot at ${x},${y}`);
+      }
+    }
+    assert.equal(painted, 4 * n, `${name}: only the ${n} dots are painted`);
+    assert.deepEqual(at(0, 0), ground, `${name}: no dot on the edge`);
+    assert.deepEqual(at(w - 1, h - 1), ground, `${name}: no dot on the far edge`);
+  }
+});
+
 test('the wordmark and pattern SVGs are indexed, and the Pattern and Logo components document them', () => {
   for (const [group, name] of [['Logos', 'pklnx-wordmark-dark.svg'], ['Logos', 'pklnx-wordmark-light.svg'], ['Patterns', 'pattern-dark.svg'], ['Patterns', 'pattern-light.svg']]) {
     assert.ok(index.assetGroups[group].files[name], `${group}/${name} is not in project/design-system.json`);
