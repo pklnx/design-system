@@ -201,9 +201,9 @@ test('vitepress.css: every colour equals tokens.json for its mapped token', () =
 
 test('vitepress.css: pinned values', () => {
   const { light, dark } = blocks();
-  assert.equal(light.get('--vp-c-brand-1'), '#8a3ffc');
+  assert.equal(light.get('--vp-c-brand-1'), tokens.light.interactive);
   assert.equal(dark.get('--vp-c-brand-1'), '#be95ff');
-  assert.equal(dark.get('--vp-button-brand-bg'), '#8a3ffc');
+  assert.equal(dark.get('--vp-button-brand-bg'), tokens.dark['button-primary']);
   assert.equal(light.get('--vp-c-bg'), '#ffffff');
   assert.equal(dark.get('--vp-c-bg'), '#161616');
   assert.equal(light.get('--vp-local-search-highlight-text'), '#161616');

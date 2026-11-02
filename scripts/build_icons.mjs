@@ -10,12 +10,17 @@ const { renderToStaticMarkup } = require('react-dom/server');
 const I = require('@carbon/icons-react');
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const out = process.argv[2] ? path.resolve(process.argv[2]) : path.join(ROOT, 'project/assets/Icons');
+// The colours and the star come from the brand sources, not from this script: the Icons sit on White, so
+// they take the light ink (text-primary White) and the light star colour.
+const readJson = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
+const { ink, star: starFill } = readJson('theme/brand.json').logo.light;
+const { star: starPath, viewBox: starViewBox } = readJson('theme/logo-geometry.json').icon;
 fs.mkdirSync(out, { recursive: true });
 const map = { terminal: 'Terminal', server: 'BareMetalServer', mail: 'Email', cloud: 'Cloud', shield: 'Security', key: 'Password', lock: 'Locked', database: 'DataBase', globe: 'Earth', 'arrow-right': 'ArrowRight', external: 'Launch', check: 'Checkmark', close: 'Close', copy: 'Copy' };
 for (const [name, comp] of Object.entries(map)) {
   let svg = renderToStaticMarkup(React.createElement(I[comp], { size: 32 }));
-  svg = (svg.includes('xmlns=') ? svg : svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')).replace(/fill="currentColor"/, 'fill="#161616"').replace(/ aria-hidden="true"/, '');
+  svg = (svg.includes('xmlns=') ? svg : svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')).replace(/fill="currentColor"/, `fill="${ink}"`).replace(/ aria-hidden="true"/, '');
   fs.writeFileSync(path.join(out, `${name}.svg`), svg + '\n');
 }
-fs.writeFileSync(path.join(out, 'star.svg'), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="#8a3ffc" d="M10.8 2 L13.2 2 L15.4 8.6 L22 10.8 L22 13.2 L15.4 15.4 L13.2 22 L10.8 22 L8.6 15.4 L2 13.2 L2 10.8 L8.6 8.6 Z"/></svg>\n');
+fs.writeFileSync(path.join(out, 'star.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${starViewBox}" width="32" height="32"><path fill="${starFill}" d="${starPath}"/></svg>\n`);
 console.log('icons', Object.keys(map).length + 1);

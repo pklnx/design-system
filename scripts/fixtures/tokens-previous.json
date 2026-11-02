@@ -1,7 +1,7 @@
 {
  "light": {
   "background": "#ffffff",
-  "interactive": "#8a3ffc",
+  "interactive": "#7c3aed",
   "link-visited": "#0043ce",
   "old-token": "#123456"
  },
@@ -11,7 +11,7 @@
   "link-visited": "#a6c8ff"
  },
  "changed": {
-  "light": { "interactive": "#8a3ffc" },
+  "light": { "interactive": "#7c3aed" },
   "dark": { "interactive": "#a56eff" }
  }
 }
