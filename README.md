@@ -242,11 +242,12 @@ The same content as on claude.ai, as a static site on GitHub Pages: **https://pk
 
 ## Publishing to claude.ai
 
-The design system lives on claude.ai as the artifact "pklnx design system". Claude publishes it from this repo:
+The design system lives on claude.ai as the artifact ["pklnx design system"](https://claude.ai/artifact/1nh6P45ENo8t4FD2u6FwZt), an Artifact of type "Design System" in Claude. The standalone Claude Design site (claude.ai/design) closes on 2026-12-14 and holds no copy of it ([#59](https://github.com/pklnx/design-system/issues/59)). Claude publishes it from this repo:
 
 - Files under `project/` are uploaded as files, SVGs under `project/assets/` as asset uploads. Their IDs are in `project/design-system.json` (`assetGroups`).
 - When an SVG changes, it has to be uploaded again and its ID replaced in the index, and its `size` updated (`npm test` fails otherwise). A new SVG under `project/assets/<Group>/` needs an upload and its upload ID in `order` and `files` of the index; never a made-up ID. A preview that shows the SVG hard-codes its blob ID as `/_blob/<id>` (for example `project/components/SocialKit/preview.html`): replace the ID there, too, wherever it appears (`grep -rn <old id> project/`). Exceptions, named in `scripts/design-system-index.test.mjs`: group READMEs, the generated `Logos/products/` and the product social images in `Social/`.
 - The previews link `../preview-shared.css`, `../preview-shared.js`, `../preview-din5008.css` and `../preview-din5008.js` (`project/components/`, see "Layout"): upload these four files with the previews, next to `bundle.js` and `bundle.css`, or the previews lose their body style, `P`/`h` and logos.
+- The artifact stores uploaded SVGs re-serialized (explicit closing tags, no final newline), so its byte sizes differ from the `size` values in the index, which are the sizes of the files in this repo. A different size alone does not mean an asset is stale; compare the content.
 - Edits made directly in the claude.ai editor do not land here automatically. Pull them back and commit them before the next build.
 
 ## License
