@@ -248,13 +248,13 @@
    "files": {
     "pklnx-og-image.svg": {
      "name": "pklnx-og-image.svg",
-     "blob": "58666f94989f482eb28a2432afe4620a",
+     "blob": "3854c46758fc19aea6dd665d03d4d8b3",
      "size": 22095,
      "type": "image/svg+xml"
     },
     "pklnx-banner.svg": {
      "name": "pklnx-banner.svg",
-     "blob": "6c88429a660fcefcb46ea76ad9397ad9",
+     "blob": "98d49b81ca894e5985cf3374dec101ff",
      "size": 21705,
      "type": "image/svg+xml"
     }
@@ -267,8 +267,8 @@
  },
  "lastChange": {
   "by": "Patrick Klein",
-  "at": "2026-10-23T11:08:27Z",
+  "at": "2026-11-03T13:38:31Z",
   "via": "Claude · github.com/pklnx/design-system",
-  "note": "All content in English"
+  "note": "Republish from main: new social images (#51), shared preview files (#23)"
  }
 }
