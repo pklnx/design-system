@@ -14,6 +14,8 @@ Language: German with the maintainer; English on GitHub and in code. Every GitHu
 7. Merge: approving review, green required checks, Done-when list met; squash merge pinned to the reviewed head SHA. Never auto-merge; never change rulesets or repository settings.
 8. Releases are planned in milestones (`README.md`, "Milestones"); releasing needs the maintainer's OK (`README.md`, "Releasing").
 
+Blocking in reviews only: a wrong result in a main function, a broken build, CI, release or deploy, a security problem, a missing or failing test for new behaviour, a Done-when item not met, a plan or maintainer decision violated. Anything else is non-blocking: a `followup` issue if the reviewer names a realistic near-term case, else it stays in the review.
+
 ## GitHub operations
 Commands per operation: `.claude/github-operations.md`, read before the first GitHub write. An MCP `issue_write` labels update replaces the whole set.
 
