@@ -175,10 +175,11 @@ test('build_site.mjs: lib/react.js sets the React and ReactDOM of node_modules, 
   }
 });
 
-test('react-bundle.mjs: one copy each of react and react-dom, react-dom/client included', async () => {
+test('react-bundle.mjs: one copy each of react and react-dom, react-dom/client included, production build', async () => {
   const { contents, inputs } = await bundleReact(ROOT);
   assert.ok(contents.length > 10000, 'a bundle');
   for (const file of ['react/index.js', 'react-dom/index.js', 'react-dom/client.js']) assert.equal(inputsOf(inputs, file).length, 1, `${file} in ${inputs.join(', ')}`);
+  assert.deepEqual(inputs.filter((p) => /\.development\.js$/.test(p)), [], 'the production build of React, no development files');
 });
 
 // node_modules with a second react nested under react-dom, as a broken install or a mismatched peer gives.
