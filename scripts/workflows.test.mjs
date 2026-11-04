@@ -132,13 +132,21 @@ test('package.json devEngines and the README name the Node major of .node-versio
   assert.match(building[1], new RegExp(`^Node ${NODE_VERSION}, as declared in \`\\.node-version\``, 'm'), 'README "Building" names Node and .node-version');
 });
 
-test('react and react-dom stay on 18.x while the scripts load the UMD builds (README says why)', () => {
+// The site and render-previews.mjs bundle the React of node_modules (scripts/react-bundle.mjs, #65), claude.ai loads
+// the React of `libraries`: both stay on one major until the move to 19 is decided. That the scripts no longer read
+// React's umd/ builds is checked in build-output.test.mjs, with the site's React.
+test('react and react-dom stay on 18.x, the major the claude.ai previews load (README says why)', () => {
   const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-  const usesUmd = ['build_site.mjs', 'render-previews.mjs'].filter((f) => /node_modules\/react(-dom)?\/umd\//.test(readFileSync(path.join(ROOT, 'scripts', f), 'utf8')));
-  assert.deepEqual(usesUmd, ['build_site.mjs', 'render-previews.mjs']);
   for (const name of ['react', 'react-dom']) assert.match(pkg.devDependencies[name], /^(18\.x|~18\.\d+\.\d+)$/, `${name} range`);
-  const readme = readFileSync(path.join(ROOT, 'README.md'), 'utf8');
-  assert.match(readme, /React 19 dropped the `umd\/` directory/);
+  const libraries = JSON.parse(readFileSync(path.join(ROOT, 'project/design-system.json'), 'utf8')).libraries;
+  for (const name of ['react', 'react-dom']) {
+    const major = JSON.parse(readFileSync(path.join(ROOT, 'node_modules', name, 'package.json'), 'utf8')).version.split('.')[0];
+    assert.deepEqual(libraries.filter((l) => l.name === name).map((l) => l.version), [major], `libraries in project/design-system.json: ${name} ${major}, the installed major`);
+  }
+  const building = /^## Building\n([\s\S]*?)^## /m.exec(readFileSync(path.join(ROOT, 'README.md'), 'utf8'));
+  assert.ok(building, 'README "Building" section');
+  assert.match(building[1], /`scripts\/react-bundle\.mjs` bundles `react` and `react-dom` from `node_modules` with esbuild/);
+  assert.match(building[1], /Moving to 19 is a separate decision that changes `package\.json` and `libraries` together/);
 });
 
 // .github/dependabot.yml (design-system #30). Text-based like the rest of this file: no YAML parser.

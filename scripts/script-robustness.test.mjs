@@ -1,5 +1,5 @@
 // Tests of the build scripts' robustness (design-system #27): a checkout path with a space,
-// render-previews.mjs exiting non-zero on a failed render, and the rules the Python logo
+// render-previews.mjs exiting non-zero on a failed render and loading one React (#65), and the rules the Python logo
 // scripts follow (files opened by `with`, text files as UTF-8, no `assert`, checked with `ast`; JSON files end with a newline).
 
 import { test } from 'node:test';
@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const scripts = readdirSync(path.join(ROOT, 'scripts'));
@@ -43,14 +43,17 @@ test('the build, icon and site scripts work in a checkout whose path has a space
   assert.equal(read('theme/tokens.json'), readFileSync(path.join(dir, 'theme/tokens.json'), 'utf8'));
   assert.ok(existsSync(path.join(dir, 'project/assets/Icons/star.svg')));
   assert.ok(existsSync(path.join(dir, 'site/index.html')));
+  assert.ok(existsSync(path.join(dir, 'site/lib/react.js')), 'the React bundle is written in a path with a space');
   assert.deepEqual(readdirSync(path.dirname(dir)).filter((n) => n.includes('%')), []);
 });
 
 // render-previews.mjs in a throw-away checkout with one preview and a stand-in for Chromium.
+// It bundles React from node_modules (react-bundle.mjs), so the checkout links the real one.
 function previewCheckout(t) {
   const { dir } = spaced(t, 'preview checkout');
   mkdirSync(path.join(dir, 'scripts'));
-  cpSync(path.join(ROOT, 'scripts/render-previews.mjs'), path.join(dir, 'scripts/render-previews.mjs'));
+  for (const f of ['render-previews.mjs', 'react-bundle.mjs']) cpSync(path.join(ROOT, 'scripts', f), path.join(dir, 'scripts', f));
+  symlinkSync(path.join(ROOT, 'node_modules'), path.join(dir, 'node_modules'));
   mkdirSync(path.join(dir, 'project/components/Demo'), { recursive: true });
   writeFileSync(path.join(dir, 'project/components/Demo/preview.html'), '<!-- @dsCard width=200 height=100 -->\n<html><head></head><body>x</body></html>\n');
   const fake = (name, body) => {
@@ -76,6 +79,15 @@ test('render-previews: exits 0 and writes both themes when Chromium renders', (t
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /rendered Demo/);
   assert.ok(existsSync(path.join(dir, '.render/Demo-dark.png')) && existsSync(path.join(dir, '.render/Demo-light.png')));
+  // The page loads one React, the bundle written to .render/lib/react.js, before bundle.js.
+  const bundle = path.join(dir, '.render/lib/react.js');
+  assert.ok(existsSync(bundle), '.render/lib/react.js');
+  assert.match(readFileSync(bundle, 'utf8'), /window\.ReactDOM=/, 'the React bundle');
+  for (const theme of ['dark', 'light']) {
+    const srcs = [...readFileSync(path.join(dir, `.render/Demo-${theme}.html`), 'utf8').matchAll(/<script\b[^>]*\bsrc="([^"]*)"/g)].map((m) => m[1]);
+    assert.deepEqual(srcs.filter((u) => /react/i.test(u)), [pathToFileURL(bundle).href], `Demo-${theme}.html: exactly one React script`);
+    assert.ok(srcs.indexOf(pathToFileURL(bundle).href) < srcs.indexOf(pathToFileURL(path.join(dir, 'project/components/bundle.js')).href), `Demo-${theme}.html: React before bundle.js`);
+  }
 });
 
 test('render-previews: exits non-zero when Chromium fails', (t) => {

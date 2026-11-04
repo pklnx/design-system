@@ -2,7 +2,8 @@
 # waits 14 days after a release before it proposes it; security updates are
 # exempt). No `labels`: Dependabot's default labels apply.
 # npm: minor and patch updates arrive as one grouped pull request, a major update
-# as its own. react and react-dom stay on 18.x (README, "Building").
+# as its own. react and react-dom stay on 18.x, the React the claude.ai previews
+# load (README, "Building"); moving to 19 is its own decision.
 # github-actions: "/" covers .github/workflows, the glob the composite actions in
 # .github/actions; scripts/workflows.test.mjs keeps one SHA per action everywhere.
 # pip: scripts/requirements-logo.txt (exact versions with hashes).
