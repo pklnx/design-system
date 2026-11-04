@@ -43,10 +43,19 @@ const { contents: reactBundle } = await bundleReact(ROOT).catch((e) => die(e.mes
 fs.mkdirSync(path.dirname(react), { recursive: true });
 fs.writeFileSync(react, reactBundle);
 
+// claude.ai serves the indexed assets of project/design-system.json under /_blob/<blob>, and a preview may link them so
+// (SocialKit). The render points those links at the files under project/assets/, as build_site.mjs does for the site;
+// a /_blob/ link that no indexed asset maps stays as it is and fails to load.
+const index = JSON.parse(fs.readFileSync(path.join(proj, 'design-system.json'), 'utf8'));
+const blobs = {};
+for (const g of index.groups) {
+  for (const [name, rec] of Object.entries(index.assetGroups[g].files)) blobs[rec.blob] = fileUrl(path.join(proj, 'assets', g, name));
+}
+
 // What a page reports, through console.log lines that start with REPORT. Chromium writes console output to stderr with
 // --enable-logging=stderr, but every level as INFO, so the page itself tells console.error apart. pageReporter is the
-// first script of every page, before the stylesheets; its first report, "ready", shows that the reporting ran and reached stderr, and a render
-// without it fails, so a Chromium that stops logging the console cannot pass a broken page.
+// first script of every page, before the stylesheets. Its first report, "ready", shows that the reporting ran and
+// reached stderr; a render without it fails, so a Chromium that stops logging the console cannot pass a broken page.
 const REPORT = 'pklnx-render-report:';
 function pageReporter(mark) {
   const log = console.log.bind(console);
@@ -93,7 +102,7 @@ for (const c of comps) {
     const head = `${reporter}<link rel="stylesheet" href="${fileUrl(path.join(proj, 'tokens.css'))}"><link rel="stylesheet" href="${fileUrl(path.join(proj, 'components/bundle.css'))}">` +
       `<script src="${fileUrl(react)}"></script><script src="${fileUrl(path.join(proj, 'components/bundle.js'))}"></script>`;
     const base = `${fileUrl(path.join(proj, 'components', c))}/`;
-    const html = src.replace(/<html([^>]*)>/i, `<html$1 data-theme="${theme}">`).replace(/<head>/i, `<head><base href="${base}">${head}`);
+    const html = src.replace(/\/_blob\/([0-9a-f]{32})/g, (m, id) => blobs[id] ?? m).replace(/<html([^>]*)>/i, `<html$1 data-theme="${theme}">`).replace(/<head>/i, `<head><base href="${base}">${head}`);
     const file = path.join(out, `${c}-${theme}.html`);
     fs.writeFileSync(file, html);
     const png = path.join(out, `${c}-${theme}.png`);

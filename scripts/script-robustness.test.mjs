@@ -50,7 +50,7 @@ test('the build, icon and site scripts work in a checkout whose path has a space
 // A stand-in for headless Chromium that runs a page without a browser: the page's inline scripts in a `vm` context in
 // document order, with `console`, `addEventListener`, `ErrorEvent`, `window` and the `data-theme` of <html>. An uncaught
 // exception goes to the `error` listeners as an ErrorEvent, an unhandled rejection to the `unhandledrejection` ones, and
-// a <script src> whose file is missing to the `error` listeners as a failed load. With --enable-logging=stderr, as
+// a <script src> or <img src> whose file is missing to the `error` listeners as a failed load. With --enable-logging=stderr, as
 // Chromium, it writes every console call to stderr as `[...:INFO:CONSOLE:1] "<text>", source: <url> (1)`, at INFO
 // whatever the level. Then it writes the file named by --screenshot=.
 const CHROMIUM_STAND_IN = String.raw`
@@ -83,11 +83,11 @@ process.on('unhandledRejection', (reason) => {
   consoleLine('Uncaught (in promise) ' + reason);
   dispatch('unhandledrejection', { reason });
 });
-for (const [, attributes, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+for (const [, tag, attributes, body] of html.matchAll(/<(script|img)\b([^>]*)>(?:([\s\S]*?)<\/script>)?/g)) {
   const src = /\bsrc="([^"]*)"/.exec(attributes)?.[1];
   if (src !== undefined) {
     const file = new URL(src, base);
-    if (file.protocol === 'file:' && !fs.existsSync(fileURLToPath(file))) dispatch('error', { target: { localName: 'script', src: file.href } });
+    if (file.protocol === 'file:' && !fs.existsSync(fileURLToPath(file))) dispatch('error', { target: { localName: tag, src: file.href } });
     continue;
   }
   try {
@@ -104,10 +104,11 @@ setImmediate(() => {
 });
 `;
 
-// render-previews.mjs in a throw-away checkout with the given previews ({name: body of the page}) and stand-ins for
-// Chromium. It bundles React from node_modules (react-bundle.mjs), so the checkout links the real one; tokens.css and
-// the bundle files are empty stand-ins, so a page loads every script it names.
-function previewCheckout(t, previews = { Demo: 'x' }) {
+// render-previews.mjs in a throw-away checkout with the given previews ({name: body of the page}), an asset index
+// (`index`, as project/design-system.json) and stand-ins for Chromium. It bundles React from node_modules
+// (react-bundle.mjs), so the checkout links the real one; tokens.css and the bundle files are empty stand-ins, so a page
+// loads every script it names.
+function previewCheckout(t, previews = { Demo: 'x' }, index = { groups: [], assetGroups: {} }) {
   const { dir } = spaced(t, 'preview checkout');
   mkdirSync(path.join(dir, 'scripts'));
   for (const f of ['render-previews.mjs', 'react-bundle.mjs']) cpSync(path.join(ROOT, 'scripts', f), path.join(dir, 'scripts', f));
@@ -117,6 +118,7 @@ function previewCheckout(t, previews = { Demo: 'x' }) {
     writeFileSync(path.join(dir, 'project/components', name, 'preview.html'), `<!-- @dsCard width=200 height=100 -->\n<html><head></head><body>${body}</body></html>\n`);
   }
   for (const f of ['tokens.css', 'components/bundle.css', 'components/bundle.js']) writeFileSync(path.join(dir, 'project', f), '');
+  writeFileSync(path.join(dir, 'project/design-system.json'), JSON.stringify(index));
   const fake = (name, body) => {
     const file = path.join(dir, name);
     writeFileSync(file, `#!/bin/sh\n${body}\n`);
@@ -185,6 +187,23 @@ test('render-previews: exits non-zero on a page error or a console error, names 
   for (const name of ['Broken', 'Demo', 'Missing']) {
     for (const theme of ['dark', 'light']) assert.ok(existsSync(path.join(dir, `.render/${name}-${theme}.png`)), `${name}-${theme}.png`);
   }
+});
+
+test('render-previews: points /_blob/ links at the indexed assets, and a link no asset maps fails to load', (t) => {
+  const known = 'a'.repeat(32);
+  const unknown = 'b'.repeat(32);
+  const index = { groups: ['Social'], assetGroups: { Social: { files: { 'card.svg': { name: 'card.svg', blob: known } } } } };
+  const { dir, standIn, render } = previewCheckout(t, { Demo: `<img src="/_blob/${known}" alt="">` }, index);
+  mkdirSync(path.join(dir, 'project/assets/Social'), { recursive: true });
+  writeFileSync(path.join(dir, 'project/assets/Social/card.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+  const ok = render(standIn());
+  assert.equal(ok.status, 0, ok.stderr);
+  const card = pathToFileURL(path.join(dir, 'project/assets/Social/card.svg')).href;
+  for (const theme of ['dark', 'light']) assert.ok(readFileSync(path.join(dir, `.render/Demo-${theme}.html`), 'utf8').includes(`<img src="${card}" alt="">`), `Demo-${theme}.html`);
+  writeFileSync(path.join(dir, 'project/components/Demo/preview.html'), `<!-- @dsCard width=200 height=100 -->\n<html><head></head><body><img src="/_blob/${unknown}"></body></html>\n`);
+  const broken = render(standIn());
+  assert.notEqual(broken.status, 0);
+  assert.match(broken.stderr, new RegExp(`fail Demo dark: failed to load: <img> file:///_blob/${unknown}`));
 });
 
 test('render-previews: exits non-zero when the page reports nothing (no console output from Chromium)', (t) => {
