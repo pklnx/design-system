@@ -38,7 +38,39 @@
     "pklnx-wordmark-black.svg",
     "pklnx-wordmark-white.svg",
     "pklnx-mark-black.svg",
-    "pklnx-mark-white.svg"
+    "pklnx-mark-white.svg",
+    "products/mail-archive-tile.svg",
+    "products/mail-archive-mark-dark.svg",
+    "products/mail-archive-mark-light.svg",
+    "products/mail-archive-mark-black.svg",
+    "products/mail-archive-mark-white.svg",
+    "products/mail-archive-lockup-dark.svg",
+    "products/mail-archive-lockup-light.svg",
+    "products/mail-archive-lockup-black.svg",
+    "products/mail-archive-lockup-white.svg",
+    "products/mail-archive-apple-touch-icon.svg",
+    "products/mail-archive-icon-maskable.svg",
+    "products/mail-archive-favicon-32.png",
+    "products/mail-archive-icon-192.png",
+    "products/mail-archive-icon-512.png",
+    "products/mail-archive-apple-touch-icon.png",
+    "products/mail-archive-icon-maskable-512.png",
+    "products/paperless-go-tile.svg",
+    "products/paperless-go-mark-dark.svg",
+    "products/paperless-go-mark-light.svg",
+    "products/paperless-go-mark-black.svg",
+    "products/paperless-go-mark-white.svg",
+    "products/paperless-go-lockup-dark.svg",
+    "products/paperless-go-lockup-light.svg",
+    "products/paperless-go-lockup-black.svg",
+    "products/paperless-go-lockup-white.svg",
+    "products/paperless-go-apple-touch-icon.svg",
+    "products/paperless-go-icon-maskable.svg",
+    "products/paperless-go-favicon-32.png",
+    "products/paperless-go-icon-192.png",
+    "products/paperless-go-icon-512.png",
+    "products/paperless-go-apple-touch-icon.png",
+    "products/paperless-go-icon-maskable-512.png"
    ],
    "files": {
     "pklnx-wordmark-dark.svg": {
@@ -100,6 +132,198 @@
      "blob": "8a9ced0dc09a39f579d5a8851b0fa21d",
      "size": 387,
      "type": "image/svg+xml"
+    },
+    "products/mail-archive-tile.svg": {
+     "name": "products/mail-archive-tile.svg",
+     "blob": "e774abc1e360ca2f70743bdec8b65da8",
+     "size": 562,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-mark-dark.svg": {
+     "name": "products/mail-archive-mark-dark.svg",
+     "blob": "90910d13662e57d738deee7fd165d063",
+     "size": 459,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-mark-light.svg": {
+     "name": "products/mail-archive-mark-light.svg",
+     "blob": "1edb17704424aed8f223d0aa3d9f727a",
+     "size": 459,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-mark-black.svg": {
+     "name": "products/mail-archive-mark-black.svg",
+     "blob": "8573ab115791f62ca81ac70aecb3e92f",
+     "size": 459,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-mark-white.svg": {
+     "name": "products/mail-archive-mark-white.svg",
+     "blob": "3254e3da2ff5de28a99b4023b29a1bca",
+     "size": 459,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-lockup-dark.svg": {
+     "name": "products/mail-archive-lockup-dark.svg",
+     "blob": "e66a3354851c6b10347fbd6b16738863",
+     "size": 4750,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-lockup-light.svg": {
+     "name": "products/mail-archive-lockup-light.svg",
+     "blob": "75f43587e839491c6e4dfc453a6aad95",
+     "size": 4750,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-lockup-black.svg": {
+     "name": "products/mail-archive-lockup-black.svg",
+     "blob": "4941bff81b62ed9d069029906918dd1d",
+     "size": 4750,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-lockup-white.svg": {
+     "name": "products/mail-archive-lockup-white.svg",
+     "blob": "6fef98aed530460a8a653c6c87b3f51b",
+     "size": 4750,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-apple-touch-icon.svg": {
+     "name": "products/mail-archive-apple-touch-icon.svg",
+     "blob": "9c6b3a4b4ba0b181d74fe9a4ae207e9a",
+     "size": 554,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-icon-maskable.svg": {
+     "name": "products/mail-archive-icon-maskable.svg",
+     "blob": "6ea63c2f6747b45e9f750466d0d7e0cd",
+     "size": 559,
+     "type": "image/svg+xml"
+    },
+    "products/mail-archive-favicon-32.png": {
+     "name": "products/mail-archive-favicon-32.png",
+     "blob": "3e5618fe0dea76be74d349da3c319489",
+     "size": 678,
+     "type": "image/png"
+    },
+    "products/mail-archive-icon-192.png": {
+     "name": "products/mail-archive-icon-192.png",
+     "blob": "7533c9aeb1f4a9075d41eb857a02ae15",
+     "size": 2923,
+     "type": "image/png"
+    },
+    "products/mail-archive-icon-512.png": {
+     "name": "products/mail-archive-icon-512.png",
+     "blob": "343b5007f200629179c9ef3d33e7d95e",
+     "size": 10371,
+     "type": "image/png"
+    },
+    "products/mail-archive-apple-touch-icon.png": {
+     "name": "products/mail-archive-apple-touch-icon.png",
+     "blob": "3c582cd9dac9f86fa180cb0b9acaa589",
+     "size": 1490,
+     "type": "image/png"
+    },
+    "products/mail-archive-icon-maskable-512.png": {
+     "name": "products/mail-archive-icon-maskable-512.png",
+     "blob": "ed7100e07929d0b7a126287560c269e8",
+     "size": 4690,
+     "type": "image/png"
+    },
+    "products/paperless-go-tile.svg": {
+     "name": "products/paperless-go-tile.svg",
+     "blob": "de9d2177e3e16dc3b4a5b44586dff17e",
+     "size": 532,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-mark-dark.svg": {
+     "name": "products/paperless-go-mark-dark.svg",
+     "blob": "59b2c4f9bd25536a8c0fab4d69443d24",
+     "size": 432,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-mark-light.svg": {
+     "name": "products/paperless-go-mark-light.svg",
+     "blob": "28971eb86760da4288a5e4d793af8df1",
+     "size": 432,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-mark-black.svg": {
+     "name": "products/paperless-go-mark-black.svg",
+     "blob": "aac9312d195048ccc1638e942265e859",
+     "size": 432,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-mark-white.svg": {
+     "name": "products/paperless-go-mark-white.svg",
+     "blob": "6cb2e64a373634680b38127c6a7f3d4e",
+     "size": 432,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-lockup-dark.svg": {
+     "name": "products/paperless-go-lockup-dark.svg",
+     "blob": "3e10e9a94747cfda83a83dc7dbff5944",
+     "size": 7400,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-lockup-light.svg": {
+     "name": "products/paperless-go-lockup-light.svg",
+     "blob": "cb04ed4eab979898bfc172331b4c1195",
+     "size": 7400,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-lockup-black.svg": {
+     "name": "products/paperless-go-lockup-black.svg",
+     "blob": "75a6553d354964eb13de1f93aaa90216",
+     "size": 7400,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-lockup-white.svg": {
+     "name": "products/paperless-go-lockup-white.svg",
+     "blob": "2b7c4753d5ee2bffeb7a45f322577469",
+     "size": 7400,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-apple-touch-icon.svg": {
+     "name": "products/paperless-go-apple-touch-icon.svg",
+     "blob": "320196a5f8268e928d7a9578e34abed6",
+     "size": 524,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-icon-maskable.svg": {
+     "name": "products/paperless-go-icon-maskable.svg",
+     "blob": "9eef1e48bf1938f354ef6146ec7485e9",
+     "size": 532,
+     "type": "image/svg+xml"
+    },
+    "products/paperless-go-favicon-32.png": {
+     "name": "products/paperless-go-favicon-32.png",
+     "blob": "4e2e803d291e0beb9e3d640c08990943",
+     "size": 729,
+     "type": "image/png"
+    },
+    "products/paperless-go-icon-192.png": {
+     "name": "products/paperless-go-icon-192.png",
+     "blob": "5ff465f82caaf0828221ddb263e4423c",
+     "size": 3159,
+     "type": "image/png"
+    },
+    "products/paperless-go-icon-512.png": {
+     "name": "products/paperless-go-icon-512.png",
+     "blob": "70cb04f6b2aeb1c61a374e13c1c932b0",
+     "size": 9680,
+     "type": "image/png"
+    },
+    "products/paperless-go-apple-touch-icon.png": {
+     "name": "products/paperless-go-apple-touch-icon.png",
+     "blob": "451f6780bb6c59ea7796d877b32962f0",
+     "size": 1980,
+     "type": "image/png"
+    },
+    "products/paperless-go-icon-maskable-512.png": {
+     "name": "products/paperless-go-icon-maskable-512.png",
+     "blob": "e576457e47b65b1bf1c8f98bc097056d",
+     "size": 7343,
+     "type": "image/png"
     }
    }
   },
@@ -243,7 +467,11 @@
    "tile": "l",
    "order": [
     "pklnx-og-image.svg",
-    "pklnx-banner.svg"
+    "pklnx-banner.svg",
+    "mail-archive-social.svg",
+    "mail-archive-social.png",
+    "paperless-go-social.svg",
+    "paperless-go-social.png"
    ],
    "files": {
     "pklnx-og-image.svg": {
@@ -257,6 +485,30 @@
      "blob": "98d49b81ca894e5985cf3374dec101ff",
      "size": 21705,
      "type": "image/svg+xml"
+    },
+    "mail-archive-social.svg": {
+     "name": "mail-archive-social.svg",
+     "blob": "298038861223d1b4184e0cdebc1035d4",
+     "size": 42736,
+     "type": "image/svg+xml"
+    },
+    "mail-archive-social.png": {
+     "name": "mail-archive-social.png",
+     "blob": "217e5c784fa9b09b3083050dfc0ea9f4",
+     "size": 32263,
+     "type": "image/png"
+    },
+    "paperless-go-social.svg": {
+     "name": "paperless-go-social.svg",
+     "blob": "6b567081db55a21851b4b1ecf3a0406c",
+     "size": 39465,
+     "type": "image/svg+xml"
+    },
+    "paperless-go-social.png": {
+     "name": "paperless-go-social.png",
+     "blob": "e5e3939880b397358615cb221e824ec6",
+     "size": 30104,
+     "type": "image/png"
     }
    }
   }
@@ -267,8 +519,8 @@
  },
  "lastChange": {
   "by": "Patrick Klein",
-  "at": "2026-11-03T13:38:31Z",
+  "at": "2026-11-04T08:58:45Z",
   "via": "Claude · github.com/pklnx/design-system",
-  "note": "Republish from main: new social images (#51), shared preview files (#23)"
+  "note": "Product logos and social images (#64)"
  }
 }

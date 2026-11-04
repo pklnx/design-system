@@ -1,0 +1,262 @@
+{
+ "e6a0b886a23953f0273e9a9241ddab11": {
+  "path": "Logos/pklnx-wordmark-dark.svg",
+  "sha256": "cbaa116b579ef1cd7b495f5fd269b78cf08f1e89bff528837dc3487de7efdb47"
+ },
+ "40d1f0884380db80af8aa6e5658f9215": {
+  "path": "Logos/pklnx-wordmark-light.svg",
+  "sha256": "72a44653699e661803a9dd5453b708eedce37448d436f36eb862458166dd0186"
+ },
+ "3243117edbcdaeef14dd035830dd3bbb": {
+  "path": "Logos/pklnx-mark-dark.svg",
+  "sha256": "8e055b83c309feb6b87299dd5358ee70a6b6b7eb6024b6de5009334ec3f572ac"
+ },
+ "1accca25069acb2e1491cf2be2ac84fb": {
+  "path": "Logos/pklnx-mark-light.svg",
+  "sha256": "f3e6bab374893f0263e2cb64eeb48a2b5f8959620cafeab7b4e4b2f1eb8be552"
+ },
+ "1e8d99221e54c3151fc8ad17db0ca8f4": {
+  "path": "Logos/pklnx-favicon.svg",
+  "sha256": "1e8952e9b0ba71eb8065925204301f34cff34324b602ce38e14f7a63eb373d3a"
+ },
+ "d19f6b33307e2c6185abbe47e80300fa": {
+  "path": "Logos/pklnx-avatar.svg",
+  "sha256": "6a18d9e563de3f19700faeae7400a26149c225f903a13b5bcf186b3fdd1574d2"
+ },
+ "ec82993e210de765c0b1edbf03dcf6d0": {
+  "path": "Logos/pklnx-wordmark-black.svg",
+  "sha256": "8f2eed488a956502b326d832f200dbc17292efae986cf926d6a7ec598fa88c96"
+ },
+ "7f5280fe152a1121e98f26369aaed1c8": {
+  "path": "Logos/pklnx-wordmark-white.svg",
+  "sha256": "654ff048643ef1c05a465a258c051fafa0a50d995d2a7dd9dccc65fabee9a2ab"
+ },
+ "be573293cca155d23cf92145a383e13f": {
+  "path": "Logos/pklnx-mark-black.svg",
+  "sha256": "5fb5f4f673edbe80b8cfd054dee9cfb8331cc702bb8b4f9096c7dc14337aeb18"
+ },
+ "8a9ced0dc09a39f579d5a8851b0fa21d": {
+  "path": "Logos/pklnx-mark-white.svg",
+  "sha256": "e360998d46e75b1f4b2fe09da3cb434c3edaf32c091e0fcb849079c8e63683a4"
+ },
+ "e774abc1e360ca2f70743bdec8b65da8": {
+  "path": "Logos/products/mail-archive-tile.svg",
+  "sha256": "63850680ca5f25fdb69206553efefcbda6d613a329d08ea4feb4fbe948c6af07"
+ },
+ "90910d13662e57d738deee7fd165d063": {
+  "path": "Logos/products/mail-archive-mark-dark.svg",
+  "sha256": "abbae744125ac65cf5e5f03c95e19d271f1f8f6fbaa17bc4eecebbbebe302d71"
+ },
+ "1edb17704424aed8f223d0aa3d9f727a": {
+  "path": "Logos/products/mail-archive-mark-light.svg",
+  "sha256": "04c4922f1e3e5e1b18b583f1e676c106ebc5b5ccfdc6af531217039bdd45d7af"
+ },
+ "8573ab115791f62ca81ac70aecb3e92f": {
+  "path": "Logos/products/mail-archive-mark-black.svg",
+  "sha256": "12678a6656851249c2685add6a83305cdf45b2c41ae4705adc774f8bb7e03bf2"
+ },
+ "3254e3da2ff5de28a99b4023b29a1bca": {
+  "path": "Logos/products/mail-archive-mark-white.svg",
+  "sha256": "be6c0d5135cf188b2322e89a313f369aae19313a9f34e47c1bab07bdfe0d925d"
+ },
+ "e66a3354851c6b10347fbd6b16738863": {
+  "path": "Logos/products/mail-archive-lockup-dark.svg",
+  "sha256": "1340324bbd2b56be143402558ca771bf5332258d7cd46e7393c535dc694c3972"
+ },
+ "75f43587e839491c6e4dfc453a6aad95": {
+  "path": "Logos/products/mail-archive-lockup-light.svg",
+  "sha256": "434eed27203f7066f1eee3c26b505b457bfe9c1693298feb6f83dc05341193b0"
+ },
+ "4941bff81b62ed9d069029906918dd1d": {
+  "path": "Logos/products/mail-archive-lockup-black.svg",
+  "sha256": "5fb78e2b7deab7bc77c8008c1548a6d7057edd0a8a6fbba8f84385c7e82c7963"
+ },
+ "6fef98aed530460a8a653c6c87b3f51b": {
+  "path": "Logos/products/mail-archive-lockup-white.svg",
+  "sha256": "e614b7fffb6bed2c5ac7472a38a5fd8d36326fd5eb9f4a80001299917dd138d4"
+ },
+ "9c6b3a4b4ba0b181d74fe9a4ae207e9a": {
+  "path": "Logos/products/mail-archive-apple-touch-icon.svg",
+  "sha256": "a9f9e2a3d8ac77a096f7b1b103f1943acbfe63c43c998684688d68b174e6ca76"
+ },
+ "6ea63c2f6747b45e9f750466d0d7e0cd": {
+  "path": "Logos/products/mail-archive-icon-maskable.svg",
+  "sha256": "763e7638cd6775841b98129779088042d95243f29ebfff00fb2a6024d90e2a61"
+ },
+ "3e5618fe0dea76be74d349da3c319489": {
+  "path": "Logos/products/mail-archive-favicon-32.png",
+  "sha256": "4d28120f6fba87cf84d2e47648197f65f34a8d3922d7537a8ad5e085733ab2fe"
+ },
+ "7533c9aeb1f4a9075d41eb857a02ae15": {
+  "path": "Logos/products/mail-archive-icon-192.png",
+  "sha256": "aaee5cf5f3db54c4ff9404e76c2a455f30280a7fd327d16df8ee93ddca24bcde"
+ },
+ "343b5007f200629179c9ef3d33e7d95e": {
+  "path": "Logos/products/mail-archive-icon-512.png",
+  "sha256": "ade51e8f6ab8ec8e8cfd03d7447766abec92140c5331b0fb46814f0a7661b0e7"
+ },
+ "3c582cd9dac9f86fa180cb0b9acaa589": {
+  "path": "Logos/products/mail-archive-apple-touch-icon.png",
+  "sha256": "1621447b7630756ec0991b3ffbcb5eafb830fec8aca974dcb4e7fb9ae0f67b2c"
+ },
+ "ed7100e07929d0b7a126287560c269e8": {
+  "path": "Logos/products/mail-archive-icon-maskable-512.png",
+  "sha256": "1c6e22e743f0a3bf4ffda4d9982c728734557300a685b090c9434ed6d4dd7435"
+ },
+ "de9d2177e3e16dc3b4a5b44586dff17e": {
+  "path": "Logos/products/paperless-go-tile.svg",
+  "sha256": "fd222cc31939cfed8387efe28309c8f26beadc04b8ffd2d825a7aa3e62e47dca"
+ },
+ "59b2c4f9bd25536a8c0fab4d69443d24": {
+  "path": "Logos/products/paperless-go-mark-dark.svg",
+  "sha256": "b3ac5536561b32082ea3a41af7fe6384c418c9546d77f2a0deb338c01f0929e7"
+ },
+ "28971eb86760da4288a5e4d793af8df1": {
+  "path": "Logos/products/paperless-go-mark-light.svg",
+  "sha256": "31a3ade8d71b238efbcd6c88ccd1106634458194d53ef86f6bc0388876394fa1"
+ },
+ "aac9312d195048ccc1638e942265e859": {
+  "path": "Logos/products/paperless-go-mark-black.svg",
+  "sha256": "2a58bcacceeb5ef98fd6884117cffc7e22295549b4cf73585a70152b8b9b7522"
+ },
+ "6cb2e64a373634680b38127c6a7f3d4e": {
+  "path": "Logos/products/paperless-go-mark-white.svg",
+  "sha256": "658a48c69ec26898947dd4f7bb82638aee6e46490ab0050bf8890e04f558f95f"
+ },
+ "3e10e9a94747cfda83a83dc7dbff5944": {
+  "path": "Logos/products/paperless-go-lockup-dark.svg",
+  "sha256": "71fa1f3e1ffa802b516cf451c2e13a5ca0371f50d16add803cd6d82018597648"
+ },
+ "cb04ed4eab979898bfc172331b4c1195": {
+  "path": "Logos/products/paperless-go-lockup-light.svg",
+  "sha256": "06d4d488f5c2e517bf2ef33ed3980defb04e8bb77aa38d989d57216e942313ee"
+ },
+ "75a6553d354964eb13de1f93aaa90216": {
+  "path": "Logos/products/paperless-go-lockup-black.svg",
+  "sha256": "71b570cecb739882c25a4a5c6f0da540cd3c324a1c0f6f8732a4e35774e87ca1"
+ },
+ "2b7c4753d5ee2bffeb7a45f322577469": {
+  "path": "Logos/products/paperless-go-lockup-white.svg",
+  "sha256": "3867a7f21ffedc6ec6a8cda86158d0691d014502b8302ab69b29a4e870b306ab"
+ },
+ "320196a5f8268e928d7a9578e34abed6": {
+  "path": "Logos/products/paperless-go-apple-touch-icon.svg",
+  "sha256": "0cfc68f3452558ff3d0dd7de9881c2076a4cc7c8e81de13736cb30efc170bcac"
+ },
+ "9eef1e48bf1938f354ef6146ec7485e9": {
+  "path": "Logos/products/paperless-go-icon-maskable.svg",
+  "sha256": "05728a41393c7c3b2a148e72e42181673f649dd935555868fb74bbd01159a551"
+ },
+ "4e2e803d291e0beb9e3d640c08990943": {
+  "path": "Logos/products/paperless-go-favicon-32.png",
+  "sha256": "fe20a1ed287442fb5db23e3b92899b267153979e88a69484e51773ee45b24554"
+ },
+ "5ff465f82caaf0828221ddb263e4423c": {
+  "path": "Logos/products/paperless-go-icon-192.png",
+  "sha256": "f9970331b8bb5d2beaa7875a64382989b420588a4750042aefd8726614e15e47"
+ },
+ "70cb04f6b2aeb1c61a374e13c1c932b0": {
+  "path": "Logos/products/paperless-go-icon-512.png",
+  "sha256": "ad265d874c3d353ebad472de845a74350b783efaa70971d61e086b954afd569b"
+ },
+ "451f6780bb6c59ea7796d877b32962f0": {
+  "path": "Logos/products/paperless-go-apple-touch-icon.png",
+  "sha256": "eeab0cf99e328379e8c700d71dc87ee4040eadb85280b6a3b2dfdda7f6b94bad"
+ },
+ "e576457e47b65b1bf1c8f98bc097056d": {
+  "path": "Logos/products/paperless-go-icon-maskable-512.png",
+  "sha256": "796fcfc8cf4a958e42259b3b9e5c4b77c317723ce048ef6b19331c91b63cbb0a"
+ },
+ "d765e9e451f476c954696b1689e4f3db": {
+  "path": "Icons/terminal.svg",
+  "sha256": "c1871c285ba5edc4ba11c1492c39ab091986e3ec9dbd7ffb7a78f2a4e06f106c"
+ },
+ "ca7fad61455d5bcca6b1cc6806d051a4": {
+  "path": "Icons/server.svg",
+  "sha256": "9824a23a0bfab86d35e08d74abe4735101fdfbe61bac78101a9a1f2f94bcc22f"
+ },
+ "536824e8383a6a4e730560a38a96d82c": {
+  "path": "Icons/mail.svg",
+  "sha256": "e52da79e6a13c4073696dc8db7383e120b1845d1072c2ee34c989aa2285d2320"
+ },
+ "7a47b6a85a705df25de01ec385fff552": {
+  "path": "Icons/cloud.svg",
+  "sha256": "04d66685607017115992c43317396c5f3325303b09aa1cd0c9a20ad9639beb60"
+ },
+ "dc845ccca6932620f1ba8457af7f0935": {
+  "path": "Icons/shield.svg",
+  "sha256": "21b831d8ca73d46e69be683c17c338acf5dafb6eb0a1099704468c3407f9b8a2"
+ },
+ "a2626886ee40cbc3bd7e042d6f22f30d": {
+  "path": "Icons/key.svg",
+  "sha256": "5f9890cb2a1d1a74b9434d6d9639dfcaa7842134d9a5f6b9af2965b0ea5df3dc"
+ },
+ "340278d90763a5363a6b34be46128558": {
+  "path": "Icons/lock.svg",
+  "sha256": "9d96bfb32302125f42dea22b797c4ffd102f70609337e34a6c3fd1bd8b9c6a21"
+ },
+ "5ecc849ef0a96324ff1a28ffaffece05": {
+  "path": "Icons/database.svg",
+  "sha256": "6149bc5ac1d2980d56e8c56968479a552ea9321e7272d0a525b7075964af72ad"
+ },
+ "4d30bd06db7ada3fd04f14a6ecc6a479": {
+  "path": "Icons/globe.svg",
+  "sha256": "d39718c0af442d8a5b9c122cea7944b77fb01faf814cc71d80ac2cc2e7da448e"
+ },
+ "062234d854e381860ad49c153fdc6d30": {
+  "path": "Icons/arrow-right.svg",
+  "sha256": "239b5c4a19116c81eebc6685b35008afd6319b2a6f9d71bacc2df93f9b8a3104"
+ },
+ "83c9a6ee68209154a1c09b72b6418176": {
+  "path": "Icons/external.svg",
+  "sha256": "78886935bc5c8872621dcc200eb51a33a7d150473a379c7935249f03836e81a3"
+ },
+ "e2da2a49305cc088e0d58bdc66cb0b0a": {
+  "path": "Icons/check.svg",
+  "sha256": "50bc35c58e5ba43f27fd861f9981001cc1dac94f1b8b1dbfcc33f8fba4f1c257"
+ },
+ "8faa04d1d75f182e3e97773e22c6fa46": {
+  "path": "Icons/close.svg",
+  "sha256": "a7bdba273fa70758e3b018291c251c520d7dcad88b9d57edb4301deead895b7d"
+ },
+ "f8b753809776c23b6e50c9c398daf70e": {
+  "path": "Icons/copy.svg",
+  "sha256": "a9152920289928fe66d3ea937754fd1a7c4d629d74b8960503d8a0f604d9fe79"
+ },
+ "2677bf7e8901959857d08e90a5e48efb": {
+  "path": "Icons/star.svg",
+  "sha256": "8a143b349994cd1fd5cfd9309c73086c49dc686c844935db927652552f164a16"
+ },
+ "22b988c6bbdb9083833f47a6163caecd": {
+  "path": "Patterns/pattern-dark.svg",
+  "sha256": "059a39a649287a4acd42f9f39e6deb5e67481f43777a839fbcad661e0543e922"
+ },
+ "aef86cea89c7369b7d0ff2f51a201fa0": {
+  "path": "Patterns/pattern-light.svg",
+  "sha256": "38606595cd024dbd0f0c8afc58ad432d3fc7d4293e366238868ce645eb3f25fe"
+ },
+ "3854c46758fc19aea6dd665d03d4d8b3": {
+  "path": "Social/pklnx-og-image.svg",
+  "sha256": "b6f67b081ddaa2eabf22ace83a2b06d4992a63d501a15ff277d2b31a4769fd76"
+ },
+ "98d49b81ca894e5985cf3374dec101ff": {
+  "path": "Social/pklnx-banner.svg",
+  "sha256": "41a663ab5c18147a9595fa8fe7898c1cc191ddcb322c0bf8d2e966a7f8505ac4"
+ },
+ "298038861223d1b4184e0cdebc1035d4": {
+  "path": "Social/mail-archive-social.svg",
+  "sha256": "a77f902bb56e627c63b4112196a74f7f727147fc29c8168ff170f8d099d8ff42"
+ },
+ "217e5c784fa9b09b3083050dfc0ea9f4": {
+  "path": "Social/mail-archive-social.png",
+  "sha256": "f4dd96bc4784bd8e1bc67e569eea4c8460ee082aa0f609fe7a52d238a519c1cb"
+ },
+ "6b567081db55a21851b4b1ecf3a0406c": {
+  "path": "Social/paperless-go-social.svg",
+  "sha256": "c7773c9dbf4f528e68c7e44e653293907dc9b49a72ad8e232fab732af5861335"
+ },
+ "e5e3939880b397358615cb221e824ec6": {
+  "path": "Social/paperless-go-social.png",
+  "sha256": "c7328457be05a5bd9683fd4b487e15fa8b495073a2b0f7397c5330989152cf36"
+ }
+}
