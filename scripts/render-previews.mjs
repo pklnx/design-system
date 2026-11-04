@@ -1,5 +1,5 @@
 // Renders every components/<Comp>/preview.html the way the design system page does
-// (tokens.css, bundle.css, React 18, bundle.js preloaded, data-theme on <html>) and
+// (tokens.css, bundle.css, the React of node_modules, bundled, bundle.js preloaded, data-theme on <html>) and
 // screenshots it in both themes with headless Chromium.
 // Usage: CHROME=/path/to/chrome node scripts/render-previews.mjs [Comp ...]   -> .render/<Comp>-<theme>.png
 // CHROME is required (no machine-specific default). Exits non-zero when a render fails.
@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { REACT_FILE, bundleReact } from './react-bundle.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const proj = path.join(ROOT, 'project');
@@ -33,9 +34,11 @@ if (unknown.length) die(`no preview.html for: ${unknown.join(', ')}`);
 
 fs.mkdirSync(out, { recursive: true });
 const fileUrl = (p) => pathToFileURL(p).href;
-// React 18 only: the browser gets the UMD builds, which React 19 dropped (no umd/ directory). package.json pins react and react-dom to 18.x (README, "Building"); bundling React instead is what would allow 19.
-const react = path.join(ROOT, 'node_modules/react/umd/react.production.min.js');
-const reactDom = path.join(ROOT, 'node_modules/react-dom/umd/react-dom.production.min.js');
+// React and ReactDOM as one classic script that sets the globals bundle.js reads (scripts/react-bundle.mjs), written to .render/lib/react.js.
+const react = path.join(out, REACT_FILE);
+const { contents: reactBundle } = await bundleReact(ROOT).catch((e) => die(e.message));
+fs.mkdirSync(path.dirname(react), { recursive: true });
+fs.writeFileSync(react, reactBundle);
 
 let failed = 0;
 for (const c of comps) {
@@ -46,7 +49,7 @@ for (const c of comps) {
   const width = +(/width=(\d+)/.exec(marker)?.[1] || 960);
   for (const theme of ['dark', 'light']) {
     const head = `<link rel="stylesheet" href="${fileUrl(path.join(proj, 'tokens.css'))}"><link rel="stylesheet" href="${fileUrl(path.join(proj, 'components/bundle.css'))}">` +
-      `<script src="${fileUrl(react)}"></script><script src="${fileUrl(reactDom)}"></script><script src="${fileUrl(path.join(proj, 'components/bundle.js'))}"></script>`;
+      `<script src="${fileUrl(react)}"></script><script src="${fileUrl(path.join(proj, 'components/bundle.js'))}"></script>`;
     const base = `${fileUrl(path.join(proj, 'components', c))}/`;
     const html = src.replace(/<html([^>]*)>/i, `<html$1 data-theme="${theme}">`).replace(/<head>/i, `<head><base href="${base}">${head}`);
     const file = path.join(out, `${c}-${theme}.html`);

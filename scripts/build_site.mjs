@@ -6,6 +6,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
+import { REACT_FILE, bundleReact } from './react-bundle.mjs';
 
 const require = createRequire(import.meta.url);
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -69,6 +70,7 @@ const comps = cards.filter((c) => !c.cover).map(({ name, src, marker }) => {
     width: +(/width=(\d+)/.exec(marker)?.[1] || 0),
   };
 });
+const { contents: reactBundle } = await bundleReact(ROOT).catch((e) => die(e.message)); // like the components: a failed bundle leaves the previous site alone
 fs.rmSync(OUT, { recursive: true, force: true });
 const tokens = JSON.parse(fs.readFileSync(P('project/tokens.json'), 'utf8'));
 const index = JSON.parse(fs.readFileSync(P('project/design-system.json'), 'utf8'));
@@ -78,9 +80,8 @@ const title = index.title;
 // ---------------------------------------------------------------- static files
 for (const f of ['tokens.css', 'components/bundle.css', 'components/bundle.js', 'THIRD_PARTY_NOTICES.txt']) copy(P('project', f), path.join(OUT, f));
 for (const f of fs.readdirSync(P('project/fonts'))) copy(P('project/fonts', f), path.join(OUT, 'fonts', f));
-// React 18 only: the browser gets the UMD builds, which React 19 dropped (no umd/ directory). package.json pins react and react-dom to 18.x (README, "Building"); bundling React instead is what would allow 19.
-copy(P('node_modules/react/umd/react.production.min.js'), path.join(OUT, 'lib/react.production.min.js'));
-copy(P('node_modules/react-dom/umd/react-dom.production.min.js'), path.join(OUT, 'lib/react-dom.production.min.js'));
+// React and ReactDOM as one classic script that sets the globals bundle.js reads (scripts/react-bundle.mjs).
+write(path.join(OUT, REACT_FILE), reactBundle);
 copy(P('theme/pklnx-carbon.css'), path.join(OUT, 'theme/pklnx-carbon.css'));
 // The files every preview.html links as ../preview-*.css|js; the site puts a preview at preview/<Name>.html, so ../ is the site root.
 for (const f of fs.readdirSync(P('project/components')).filter((f) => /^preview-.+\.(css|js)$/.test(f))) copy(P('project/components', f), path.join(OUT, f));
@@ -103,7 +104,7 @@ comps.sort((a, b) => (groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group))
 const previewHead = (depth) => {
   const up = '../'.repeat(depth);
   return `<link rel="stylesheet" href="${up}tokens.css"><link rel="stylesheet" href="${up}components/bundle.css">` +
-    `<script src="${up}lib/react.production.min.js"></script><script src="${up}lib/react-dom.production.min.js"></script><script src="${up}components/bundle.js"></script>` +
+    `<script src="${up}${REACT_FILE}"></script><script src="${up}components/bundle.js"></script>` +
     `<script>(function(){var d=document.documentElement;function t(){try{var p=window.parent&&window.parent.document.documentElement.getAttribute('data-theme');if(p)d.setAttribute('data-theme',p);}catch(e){}}` +
     `d.setAttribute('data-theme',(new URLSearchParams(location.search)).get('theme')||'dark');t();try{new MutationObserver(t).observe(window.parent.document.documentElement,{attributes:true,attributeFilter:['data-theme']});}catch(e){}})();</script>`;
 };

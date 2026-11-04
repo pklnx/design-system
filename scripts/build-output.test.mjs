@@ -1,6 +1,6 @@
 // Tests of what the build scripts write (design-system #28): the documentation site
-// (build_site.mjs), the Carbon icon SVGs (build_icons.mjs), the usage notes (token-notes.mjs)
-// and the committed pklnx wordmark and pattern SVGs (build_logo.py, build_assets.py).
+// (build_site.mjs) with the React it bundles (react-bundle.mjs, #65), the Carbon icon SVGs (build_icons.mjs),
+// the usage notes (token-notes.mjs) and the committed pklnx wordmark and pattern SVGs (build_logo.py, build_assets.py).
 //
 // The scripts run into a temp directory (their optional output-dir argument), so the checkout
 // stays untouched. No network, no Chromium. The expected lists come from the sources the scripts
@@ -12,13 +12,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 import { exact, prefix, noteFor } from './token-notes.mjs';
+import { bundleReact } from './react-bundle.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const read = (p) => readFileSync(path.join(ROOT, p), 'utf8');
@@ -81,9 +82,33 @@ test('build_site.mjs: the pages, the previews and the static files are written',
     for (const n of componentPages) assert.ok(text.includes(`href="${up}components/${n}.html"`), `${file}: no link to components/${n}.html`);
   }
   for (const f of ['tokens.css', 'site.css', 'favicon.svg', '.nojekyll', 'THIRD_PARTY_NOTICES.txt', 'components/bundle.css', 'components/bundle.js',
-    'lib/react.production.min.js', 'lib/react-dom.production.min.js', 'theme/pklnx-carbon.css']) {
+    'lib/react.js', 'theme/pklnx-carbon.css']) {
     assert.ok(existsSync(path.join(out, f)), f);
   }
+  // React is one file, bundled by react-bundle.mjs: no umd/ copies next to it.
+  assert.deepEqual(readdirSync(path.join(out, 'lib')), ['react.js'], 'lib/ holds the React bundle only');
+  // One React per page: every preview loads lib/react.js once and before bundle.js, and no other React script.
+  const scriptSrcs = (text) => [...text.matchAll(/<script\b[^>]*\bsrc="([^"]*)"/g)].map((m) => m[1]);
+  for (const name of previewDirs) {
+    const srcs = scriptSrcs(readFileSync(path.join(out, 'preview', `${name}.html`), 'utf8'));
+    assert.deepEqual(srcs.filter((u) => /react/i.test(u)), ['../lib/react.js'], `preview/${name}.html: exactly one React script`);
+    assert.ok(srcs.indexOf('../lib/react.js') < srcs.indexOf('../components/bundle.js'), `preview/${name}.html: React before bundle.js`);
+  }
+  // No page links a umd/ build or a React file other than lib/react.js, and the pages around the previews load no React.
+  // (lib/react.js itself names react.production.min.js in its licence comments, so file contents are not scanned.)
+  for (const file of walk(out).filter((f) => f.endsWith('.html'))) {
+    const text = readFileSync(file, 'utf8');
+    const rel = path.relative(out, file);
+    for (const [, url] of text.matchAll(/\b(?:href|src)="([^"]*)"/g)) {
+      assert.doesNotMatch(url, /umd\//, `${rel} links ${url}`);
+      if (/(^|\/)react(-dom)?\b[^/]*$/i.test(url.split(/[?#]/)[0])) assert.equal(path.resolve(path.dirname(file), url), path.join(out, 'lib/react.js'), `${rel} links ${url}`);
+    }
+    if (!rel.startsWith(`preview${path.sep}`)) assert.deepEqual(scriptSrcs(text).filter((u) => /react/i.test(u)), [], `${rel}: no React outside the previews`);
+  }
+  // No build script reads React's umd/ builds (React 19 has none). The tests name the old paths on purpose.
+  const sources = files(path.join(ROOT, 'scripts')).filter((f) => /\.(mjs|js|py)$/.test(f) && !f.endsWith('.test.mjs'));
+  assert.ok(sources.includes('build_site.mjs') && sources.includes('render-previews.mjs'), 'the scripts are read');
+  for (const f of sources) assert.doesNotMatch(read(`scripts/${f}`), /react(-dom)?\/umd\/|react(-dom)?\.production\.min\.js/, `scripts/${f} reads a umd/ build of React`);
   // The files the previews link as ../preview-*: at the site root, where ../ from preview/<Name>.html leads.
   assert.deepEqual(files(path.join(ROOT, 'project/components')).filter((n) => n.startsWith('preview-')), sharedFiles.toSorted(), 'every preview-* file of project/components is listed here');
   for (const f of sharedFiles) assert.deepEqual(readFileSync(path.join(out, f)), readFileSync(path.join(ROOT, 'project/components', f)), `${f}: copy`);
@@ -122,6 +147,69 @@ test('build_site.mjs: no page or preview links to a file that is not in the site
   }
 });
 
+// ------------------------------------------------------------------ the React of the site and the previews (#65)
+
+const installed = (name) => JSON.parse(read(`node_modules/${name}/package.json`)).version;
+const inputsOf = (inputs, file) => inputs.filter((p) => new RegExp(`(^|/)node_modules/${file.replace(/[.]/g, '\\.')}$`).test(p));
+
+test('build_site.mjs: lib/react.js sets the React and ReactDOM of node_modules, and bundle.js runs on them', (t) => {
+  const out = tempDir(t);
+  runScript('build_site.mjs', [out]);
+  const code = readFileSync(path.join(out, 'lib/react.js'), 'utf8');
+  // A classic script, as on claude.ai: it sets the globals that bundle.js reads. No DOM is needed to load either.
+  const ctx = vm.createContext({ console });
+  vm.runInContext('var window = globalThis;', ctx);
+  vm.runInContext(code, ctx, { filename: 'lib/react.js' });
+  const { React, ReactDOM } = ctx;
+  assert.equal(React.version, installed('react'), 'React.version');
+  // react-dom 18 reports its build as `<version>-next-<sha>-<date>`, 19 the plain version.
+  assert.ok(ReactDOM.version === installed('react-dom') || ReactDOM.version.startsWith(`${installed('react-dom')}-`), `ReactDOM.version ${ReactDOM.version}`);
+  for (const fn of ['createRoot', 'createPortal', 'flushSync']) assert.equal(typeof ReactDOM[fn], 'function', `ReactDOM.${fn}`);
+  vm.runInContext(read('project/components/bundle.js'), ctx, { filename: 'components/bundle.js' });
+  const header = JSON.parse(/^\/\* @ds-bundle: (.*) \*\//.exec(read('project/components/bundle.js').split('\n')[0])[1]);
+  assert.deepEqual(Object.keys(ctx.Pklnx).sort(), header.components.map((c) => c.name).sort(), 'window.Pklnx holds the components of the @ds-bundle header');
+  assert.ok(React.isValidElement(React.createElement(ctx.Pklnx.Button)), 'a component element of the bundle is a React element');
+  // The licence headers of the bundled React packages are kept, as the umd/ copies carried them.
+  for (const name of ['react', 'react-dom', 'scheduler']) {
+    assert.match(code, new RegExp(`^${name}/cjs/[\\w.-]+\\.js:\\n\\s*\\(\\*\\*\\n\\s*\\* @license React$`, 'm'), `${name}: @license React header`);
+  }
+});
+
+test('react-bundle.mjs: one copy each of react and react-dom, react-dom/client included', async () => {
+  const { contents, inputs } = await bundleReact(ROOT);
+  assert.ok(contents.length > 10000, 'a bundle');
+  for (const file of ['react/index.js', 'react-dom/index.js', 'react-dom/client.js']) assert.equal(inputsOf(inputs, file).length, 1, `${file} in ${inputs.join(', ')}`);
+});
+
+// node_modules with a second react nested under react-dom, as a broken install or a mismatched peer gives.
+function twoReacts(dir) {
+  const pkg = (rel, files) => {
+    mkdirSync(path.join(dir, 'node_modules', rel), { recursive: true });
+    writeFileSync(path.join(dir, 'node_modules', rel, 'package.json'), JSON.stringify({ name: path.basename(rel), version: '18.3.1', main: 'index.js' }));
+    for (const [f, src] of Object.entries(files)) writeFileSync(path.join(dir, 'node_modules', rel, f), src);
+  };
+  pkg('react', { 'index.js': 'module.exports = { version: "outer" };' });
+  pkg('react-dom', { 'index.js': 'module.exports = { react: require("react") };', 'client.js': 'module.exports = { createRoot: function () {} };' });
+  pkg('react-dom/node_modules/react', { 'index.js': 'module.exports = { version: "inner" };' });
+}
+
+test('react-bundle.mjs: rejects a bundle with a second copy of react and names it', async (t) => {
+  const dir = tempDir(t);
+  twoReacts(dir);
+  await assert.rejects(bundleReact(dir), (e) => {
+    assert.match(e.message, /^react-bundle: expected one copy of react in the bundle, found 2: /);
+    assert.match(e.message, /(^|[ /])node_modules\/react\/index\.js(,|$)/, 'names the first copy');
+    assert.match(e.message, /node_modules\/react-dom\/node_modules\/react\/index\.js/, 'names the second copy');
+    return true;
+  });
+});
+
+test('react-bundle.mjs: writes and deletes nothing itself (no fs import, esbuild with write: false)', () => {
+  const src = read('scripts/react-bundle.mjs');
+  assert.doesNotMatch(src, /['"](?:node:)?fs(?:\/promises)?['"]/, 'react-bundle.mjs imports fs');
+  assert.match(src, /^\s*write: false,$/m, 'the esbuild call passes write: false');
+});
+
 // build_site.mjs empties its output directory, so these tests never point it at a real directory:
 // each runs a copy of the script in a throw-away "checkout" in a temp dir (the script, project/,
 // theme/ and package.json; node_modules is a symlink that is never an output directory), and every
@@ -130,7 +218,7 @@ function throwaway(t, name = 'checkout') {
   const base = tempDir(t);
   const checkout = path.join(base, name);
   mkdirSync(path.join(checkout, 'scripts'), { recursive: true });
-  cpSync(path.join(ROOT, 'scripts/build_site.mjs'), path.join(checkout, 'scripts/build_site.mjs'));
+  for (const f of ['build_site.mjs', 'react-bundle.mjs']) cpSync(path.join(ROOT, 'scripts', f), path.join(checkout, 'scripts', f));
   for (const d of ['project', 'theme']) cpSync(path.join(ROOT, d), path.join(checkout, d), { recursive: true });
   cpSync(path.join(ROOT, 'package.json'), path.join(checkout, 'package.json'));
   symlinkSync(path.join(ROOT, 'node_modules'), path.join(checkout, 'node_modules'));
@@ -172,6 +260,16 @@ test('previews: the shared style, prelude and logo mounting live in the preview-
     assert.match(src, /<script src="\.\.\/preview-din5008\.js"><\/script>/, name);
     assert.match(src, /data-din5008/, name);
     assert.doesNotMatch(src, /class="mk"|class="foot"|\.page\{/, `${name}: the DIN 5008 frame is in preview-din5008.*`);
+  }
+});
+
+test('previews: no preview loads React itself (one React per page)', () => {
+  for (const name of previewDirs) {
+    const srcs = [...previewSource(name).matchAll(/<script\b[^>]*\bsrc="([^"]*)"/g)].map((m) => m[1]);
+    assert.deepEqual(srcs.filter((u) => /react/i.test(u)), [], `${name}/preview.html loads React`);
+  }
+  for (const f of sharedFiles.filter((f) => f.endsWith('.js'))) {
+    assert.doesNotMatch(read(`project/components/${f}`), /(jsdelivr|unpkg|node_modules)[^'"\s]*react/i, `${f} loads React`);
   }
 });
 
@@ -284,6 +382,25 @@ test('build_site.mjs: no banner or two banners stop the build and leave the prev
     assert.ok(r.stderr.includes(found), `${label}: ${r.stderr}`);
     assert.equal(readFileSync(path.join(out, 'index.html'), 'utf8'), 'previous', `${label}: the previous site is still there`);
   }
+});
+
+test('build_site.mjs: a failed React bundle stops the build and leaves the previous site alone', (t) => {
+  const { base, checkout, site, intact } = throwaway(t);
+  // The checkout's node_modules becomes a directory with the real marked and esbuild and two copies of react.
+  const nm = path.join(checkout, 'node_modules');
+  unlinkSync(nm); // the symbolic link only, never its target
+  mkdirSync(nm);
+  for (const dep of ['marked', 'esbuild']) symlinkSync(path.join(ROOT, 'node_modules', dep), path.join(nm, dep));
+  twoReacts(checkout);
+  const out = path.join(base, 'out');
+  mkdirSync(out);
+  writeFileSync(path.join(out, 'index.html'), 'previous');
+  writeFileSync(path.join(out, '.nojekyll'), '');
+  const r = site(out);
+  refused(r, 'two copies of react', /build_site: react-bundle: expected one copy of react in the bundle, found 2/);
+  assert.equal(readFileSync(path.join(out, 'index.html'), 'utf8'), 'previous', 'the previous site is still there');
+  assert.deepEqual(readdirSync(out).sort(), ['.nojekyll', 'index.html'], 'nothing was written');
+  intact('two copies of react');
 });
 
 test('build_site.mjs: the default output is site/ in the checkout, and a second run replaces it', (t) => {
