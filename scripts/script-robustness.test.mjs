@@ -1,5 +1,5 @@
 // Tests of the build scripts' robustness (design-system #27): a checkout path with a space,
-// render-previews.mjs exiting non-zero on a failed render and loading one React (#65), and the rules the Python logo
+// render-previews.mjs exiting non-zero on a failed render or a page error (#67) and loading one React (#65), and the rules the Python logo
 // scripts follow (files opened by `with`, text files as UTF-8, no `assert`, checked with `ast`; JSON files end with a newline).
 
 import { test } from 'node:test';
@@ -47,20 +47,89 @@ test('the build, icon and site scripts work in a checkout whose path has a space
   assert.deepEqual(readdirSync(path.dirname(dir)).filter((n) => n.includes('%')), []);
 });
 
-// render-previews.mjs in a throw-away checkout with one preview and a stand-in for Chromium.
-// It bundles React from node_modules (react-bundle.mjs), so the checkout links the real one.
-function previewCheckout(t) {
+// A stand-in for headless Chromium that runs a page without a browser: the page's inline scripts in a `vm` context in
+// document order, with `console`, `addEventListener`, `ErrorEvent`, `window` and the `data-theme` of <html>. An uncaught
+// exception goes to the `error` listeners as an ErrorEvent, an unhandled rejection to the `unhandledrejection` ones, and
+// a <script src> or <img src> whose file is missing to the `error` listeners as a failed load. With --enable-logging=stderr, as
+// Chromium, it writes every console call to stderr as `[...:INFO:CONSOLE:1] "<text>", source: <url> (1)`, at INFO
+// whatever the level. Then it writes the file named by --screenshot=.
+const CHROMIUM_STAND_IN = String.raw`
+import fs from 'node:fs';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+
+const args = process.argv.slice(2);
+const url = args.at(-1);
+const screenshot = args.find((a) => a.startsWith('--screenshot=')).slice('--screenshot='.length);
+const logging = args.includes('--enable-logging=stderr');
+const html = fs.readFileSync(fileURLToPath(url), 'utf8');
+const base = /<base href="([^"]*)"/.exec(html)?.[1] ?? url;
+const consoleLine = (...values) => {
+  if (logging) process.stderr.write('[1:1:1104/000000.000000:INFO:CONSOLE:1] "' + values.map(String).join(' ') + '", source: ' + url + ' (1)\n');
+};
+const listeners = {};
+const dispatch = (type, event) => (listeners[type] || []).forEach((listener) => listener(event));
+class ErrorEvent {
+  constructor(init) { Object.assign(this, init); }
+}
+const page = vm.createContext({
+  console: { log: consoleLine, info: consoleLine, warn: consoleLine, error: consoleLine, debug: consoleLine },
+  addEventListener: (type, listener) => (listeners[type] ||= []).push(listener),
+  ErrorEvent,
+  document: { documentElement: { dataset: { theme: /<html[^>]*\bdata-theme="([^"]*)"/.exec(html)?.[1] } } },
+});
+page.window = page;
+process.on('unhandledRejection', (reason) => {
+  consoleLine('Uncaught (in promise) ' + reason);
+  dispatch('unhandledrejection', { reason });
+});
+for (const [, tag, attributes, body] of html.matchAll(/<(script|img)\b([^>]*)>(?:([\s\S]*?)<\/script>)?/g)) {
+  const src = /\bsrc="([^"]*)"/.exec(attributes)?.[1];
+  if (src !== undefined) {
+    const file = new URL(src, base);
+    if (file.protocol === 'file:' && !fs.existsSync(fileURLToPath(file))) dispatch('error', { target: { localName: tag, src: file.href } });
+    continue;
+  }
+  try {
+    vm.runInContext(body, page, { filename: url });
+  } catch (e) {
+    consoleLine('Uncaught ' + e);
+    dispatch('error', new ErrorEvent({ message: 'Uncaught ' + e, error: e, filename: url, lineno: 1 }));
+  }
+}
+// After the rejections of the scripts' promises are reported.
+setImmediate(() => {
+  fs.writeFileSync(screenshot, 'png');
+  process.stderr.write('3 bytes written to file ' + screenshot + '\n');
+});
+`;
+
+// render-previews.mjs in a throw-away checkout with the given previews ({name: body of the page}), an asset index
+// (`index`, as project/design-system.json) and stand-ins for Chromium. It bundles React from node_modules
+// (react-bundle.mjs), so the checkout links the real one; tokens.css and the bundle files are empty stand-ins, so a page
+// loads every script it names.
+function previewCheckout(t, previews = { Demo: 'x' }, index = { groups: [], assetGroups: {} }) {
   const { dir } = spaced(t, 'preview checkout');
   mkdirSync(path.join(dir, 'scripts'));
   for (const f of ['render-previews.mjs', 'react-bundle.mjs']) cpSync(path.join(ROOT, 'scripts', f), path.join(dir, 'scripts', f));
   symlinkSync(path.join(ROOT, 'node_modules'), path.join(dir, 'node_modules'));
-  mkdirSync(path.join(dir, 'project/components/Demo'), { recursive: true });
-  writeFileSync(path.join(dir, 'project/components/Demo/preview.html'), '<!-- @dsCard width=200 height=100 -->\n<html><head></head><body>x</body></html>\n');
+  for (const [name, body] of Object.entries(previews)) {
+    mkdirSync(path.join(dir, 'project/components', name), { recursive: true });
+    writeFileSync(path.join(dir, 'project/components', name, 'preview.html'), `<!-- @dsCard width=200 height=100 -->\n<html><head></head><body>${body}</body></html>\n`);
+  }
+  for (const f of ['tokens.css', 'components/bundle.css', 'components/bundle.js']) writeFileSync(path.join(dir, 'project', f), '');
+  writeFileSync(path.join(dir, 'project/design-system.json'), JSON.stringify(index));
   const fake = (name, body) => {
     const file = path.join(dir, name);
     writeFileSync(file, `#!/bin/sh\n${body}\n`);
     chmodSync(file, 0o755);
     return file;
+  };
+  // Chromium that runs the page (CHROMIUM_STAND_IN), started through a shell script as CHROME is.
+  const standIn = () => {
+    const script = path.join(dir, 'chromium-stand-in.mjs');
+    writeFileSync(script, CHROMIUM_STAND_IN);
+    return fake('chrome-runs-page', `exec "${process.execPath}" "${script}" "$@"`);
   };
   const render = (chrome) => {
     const env = { ...process.env };
@@ -68,16 +137,16 @@ function previewCheckout(t) {
     if (chrome !== undefined) env.CHROME = chrome;
     return run(path.join(dir, 'scripts/render-previews.mjs'), [], { cwd: dir, env });
   };
-  return { dir, fake, render };
+  return { dir, fake, standIn, render };
 }
 
 test('render-previews: exits 0 and writes both themes when Chromium renders', (t) => {
-  const { dir, fake, render } = previewCheckout(t);
-  // Writes the file named by --screenshot=..., as Chromium does.
-  const chrome = fake('chrome-ok', 'for a in "$@"; do case "$a" in --screenshot=*) printf png > "${a#--screenshot=}";; esac; done');
-  const r = render(chrome);
+  // Console output other than console.error, warnings included, does not fail a render.
+  const { dir, standIn, render } = previewCheckout(t, { Demo: "x<script>console.log('log'); console.info('info'); console.warn('a warning');</script>" });
+  const r = render(standIn());
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /rendered Demo/);
+  assert.doesNotMatch(r.stderr, /fail/);
   assert.ok(existsSync(path.join(dir, '.render/Demo-dark.png')) && existsSync(path.join(dir, '.render/Demo-light.png')));
   // The page loads one React, the bundle written to .render/lib/react.js, before bundle.js.
   const bundle = path.join(dir, '.render/lib/react.js');
@@ -88,6 +157,63 @@ test('render-previews: exits 0 and writes both themes when Chromium renders', (t
     assert.deepEqual(srcs.filter((u) => /react/i.test(u)), [pathToFileURL(bundle).href], `Demo-${theme}.html: exactly one React script`);
     assert.ok(srcs.indexOf(pathToFileURL(bundle).href) < srcs.indexOf(pathToFileURL(path.join(dir, 'project/components/bundle.js')).href), `Demo-${theme}.html: React before bundle.js`);
   }
+});
+
+test('render-previews: exits non-zero on a page error or a console error, names preview and theme, and renders the rest', (t) => {
+  const { dir, standIn, render } = previewCheckout(t, {
+    // A console.error in the dark theme; an uncaught exception and an unhandled rejection in the light one.
+    Broken: `<script>
+      if (document.documentElement.dataset.theme === 'dark') console.error('Broken: dark only', new Error('detail'));
+      else { Promise.reject(new Error('light rejection')); throw new TypeError('light throws'); }
+    </script>`,
+    Demo: 'x',
+    Missing: '<script src="missing.js"></script>',
+  });
+  const r = render(standIn());
+  assert.notEqual(r.status, 0);
+  const fails = r.stderr.split('\n').filter((l) => l.startsWith('fail '));
+  const missing = pathToFileURL(path.join(dir, 'project/components/Missing/missing.js')).href;
+  const brokenLight = pathToFileURL(path.join(dir, '.render/Broken-light.html')).href;
+  assert.deepEqual(fails, [
+    'fail Broken dark: console error: Broken: dark only Error: detail',
+    `fail Broken light: page error: Uncaught TypeError: light throws (${brokenLight}:1)`,
+    'fail Broken light: page error: Uncaught (in promise) Error: light rejection',
+    `fail Missing dark: failed to load: <script> ${missing}`,
+    `fail Missing light: failed to load: <script> ${missing}`,
+  ]);
+  assert.match(r.stderr, /4 renders failed/);
+  // Every preview was rendered, the ones after a failing one too; the failing ones keep their screenshots.
+  assert.deepEqual(r.stdout.split('\n').filter(Boolean), ['rendered Demo']);
+  for (const name of ['Broken', 'Demo', 'Missing']) {
+    for (const theme of ['dark', 'light']) assert.ok(existsSync(path.join(dir, `.render/${name}-${theme}.png`)), `${name}-${theme}.png`);
+  }
+});
+
+test('render-previews: points /_blob/ links at the indexed assets, and a link no asset maps fails to load', (t) => {
+  const known = 'a'.repeat(32);
+  const unknown = 'b'.repeat(32);
+  const index = { groups: ['Social'], assetGroups: { Social: { files: { 'card.svg': { name: 'card.svg', blob: known } } } } };
+  const { dir, standIn, render } = previewCheckout(t, { Demo: `<img src="/_blob/${known}" alt="">` }, index);
+  mkdirSync(path.join(dir, 'project/assets/Social'), { recursive: true });
+  writeFileSync(path.join(dir, 'project/assets/Social/card.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+  const ok = render(standIn());
+  assert.equal(ok.status, 0, ok.stderr);
+  const card = pathToFileURL(path.join(dir, 'project/assets/Social/card.svg')).href;
+  for (const theme of ['dark', 'light']) assert.ok(readFileSync(path.join(dir, `.render/Demo-${theme}.html`), 'utf8').includes(`<img src="${card}" alt="">`), `Demo-${theme}.html`);
+  writeFileSync(path.join(dir, 'project/components/Demo/preview.html'), `<!-- @dsCard width=200 height=100 -->\n<html><head></head><body><img src="/_blob/${unknown}"></body></html>\n`);
+  const broken = render(standIn());
+  assert.notEqual(broken.status, 0);
+  assert.match(broken.stderr, new RegExp(`fail Demo dark: failed to load: <img> file:///_blob/${unknown}`));
+});
+
+test('render-previews: exits non-zero when the page reports nothing (no console output from Chromium)', (t) => {
+  const { fake, render } = previewCheckout(t);
+  // Writes the screenshot but logs no console output, as a Chromium without --enable-logging=stderr would.
+  const r = render(fake('chrome-mute', 'for a in "$@"; do case "$a" in --screenshot=*) printf png > "${a#--screenshot=}";; esac; done'));
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /fail Demo dark: the page reported nothing/);
+  assert.match(r.stderr, /2 renders failed/);
+  assert.doesNotMatch(r.stdout, /rendered Demo/);
 });
 
 test('render-previews: exits non-zero when Chromium fails', (t) => {
