@@ -275,7 +275,7 @@ for (const [key, label] of [['spacing', 'Spacing'], ['size', 'Size'], ['radius',
 write(path.join(OUT, 'spacing.html'), page({ file: 'spacing.html', heading: 'Spacing and size', body: sp }));
 
 // Assets
-let as = `<h1 class="page-title">Assets</h1><p class="lead">Logos, icons, patterns and social images as SVG. Brand assets are all rights reserved, Carbon icons are Apache-2.0.</p>`;
+let as = `<h1 class="page-title">Assets</h1><p class="lead">Logos, icons, patterns and social images as SVG and PNG. Brand assets are all rights reserved, Carbon icons are Apache-2.0.</p>`;
 for (const g of index.groups) {
   const notes = fs.existsSync(P('project/assets', g, 'README.md')) ? fs.readFileSync(P('project/assets', g, 'README.md'), 'utf8').replace(/^# .*\n/, '') : '';
   as += `<h2 class="group-title">${esc(g)}</h2><div class="prose">${md(notes)}</div><div class="asset-grid">`;
