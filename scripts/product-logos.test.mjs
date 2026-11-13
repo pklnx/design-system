@@ -1,6 +1,7 @@
 // Tests of the product logos, icons and social images (design-system #10, part 2):
 // the generated files in project/assets/Logos/products and project/assets/Social, their
-// PNGs and manifest, and the reference geometry from issue #12.
+// PNGs and manifest, the reference geometry from issue #12 (dokumentum: #72) and the Icon
+// Composer layers of dokumentum (#72).
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,7 +15,7 @@ import { decodeRGBA, ihdr, textChunks } from './png.mjs';
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const DIR = 'project/assets/Logos/products';
 const SOCIAL = 'project/assets/Social';
-const PRODUCTS = ['mail-archive', 'paperless-go'];
+const PRODUCTS = ['mail-archive', 'paperless-go', 'dokumentum'];
 const read = (p) => readFileSync(path.join(ROOT, p));
 const readText = (p) => readFileSync(path.join(ROOT, p), 'utf8');
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
@@ -33,6 +34,11 @@ const PNG_KINDS = {
   'icon-maskable-512': [512, 'icon-maskable'],
 };
 const SOCIAL_SIZE = [1280, 640];
+// The products with Icon Composer layers (#72), and the layer kinds.
+const LAYERS = ['dokumentum'];
+const LAYER_KINDS = ['icon-layer-ink', 'icon-layer-star'];
+const ICON_SIZE = 1024;
+const ICON_UNIT = 12;
 
 // Every PNG the manifest must list: path → { width, height, source }.
 const EXPECTED_PNGS = Object.fromEntries(
@@ -47,9 +53,11 @@ const EXPECTED_PNGS = Object.fromEntries(
 
 const manifest = JSON.parse(readText(`${DIR}/manifest.json`));
 const productSvgs = PRODUCTS.flatMap((p) => SVG_KINDS.map((k) => `${DIR}/${p}-${k}.svg`));
+const layerSvgs = LAYERS.flatMap((p) => LAYER_KINDS.map((k) => `${DIR}/${p}-${k}.svg`));
 const socialSvgs = PRODUCTS.map((p) => `${SOCIAL}/${p}-social.svg`);
 
-// The reference geometry from https://github.com/pklnx/design-system/issues/12#issuecomment-6374484974.
+// The reference geometry from https://github.com/pklnx/design-system/issues/12#issuecomment-6374484974,
+// for dokumentum from https://github.com/pklnx/design-system/issues/72#issuecomment-6848468352.
 const REFERENCE = {
   'mail-archive': [
     ['M3.5 13.5 L60.5 13.5 L60.5 20.5 L3.5 20.5 Z', null],
@@ -60,8 +68,12 @@ const REFERENCE = {
     ['M11 5 L41 5 L53 17 L53 59 L11 59 Z M18 12 L34 12 L34 24 L46 24 L46 52 L18 52 Z', 'evenodd'],
     ['M30.86 28.5 L33.14 28.5 L35.23 34.77 L41.5 36.86 L41.5 39.14 L35.23 41.23 L33.14 47.5 L30.86 47.5 L28.77 41.23 L22.5 39.14 L22.5 36.86 L28.77 34.77 Z', 'star'],
   ],
+  dokumentum: [
+    ['M10 5 L40 5 L54 19 L54 45 L40 59 L10 59 Z M17 12 L35.9 12 L47 23.1 L47 40.9 L35.9 52 L17 52 Z', 'evenodd'],
+    ['M30.8 22 L33.2 22 L35.4 28.6 L42 30.8 L42 33.2 L35.4 35.4 L33.2 42 L30.8 42 L28.6 35.4 L22 33.2 L22 30.8 L28.6 28.6 Z', 'star'],
+  ],
 };
-const MARK_BBOX = { 'mail-archive': [3.5, 13.5, 60.5, 54.5], 'paperless-go': [11, 5, 53, 59] };
+const MARK_BBOX = { 'mail-archive': [3.5, 13.5, 60.5, 54.5], 'paperless-go': [11, 5, 53, 59], dokumentum: [10, 5, 54, 59] };
 
 const paths = (svg) => [...svg.matchAll(/<path ([^>]*)\/>/g)].map((m) => ({
   fill: /fill="([^"]*)"/.exec(m[1])?.[1],
@@ -103,7 +115,7 @@ const contrast = (a, b) => {
 
 test('products/ holds exactly the SVGs of the naming rule, the manifest PNGs, manifest.json and README.md', () => {
   const pngs = Object.keys(EXPECTED_PNGS).filter((p) => p.startsWith(`${DIR}/`));
-  const want = [...productSvgs, ...pngs, `${DIR}/manifest.json`, `${DIR}/README.md`].map((p) => path.basename(p)).sort();
+  const want = [...productSvgs, ...layerSvgs, ...pngs, `${DIR}/manifest.json`, `${DIR}/README.md`].map((p) => path.basename(p)).sort();
   assert.deepEqual(readdirSync(path.join(ROOT, DIR)).sort(), want);
 });
 
@@ -129,7 +141,7 @@ test('every manifest PNG exists, has its size, and was rendered from the current
   }
 });
 
-test('the marks reproduce the reference geometry of #12 exactly, in every file that holds them', () => {
+test('the marks reproduce the reference geometry of #12 (dokumentum: #72) exactly, in every file that holds them', () => {
   for (const p of PRODUCTS) {
     for (const k of SVG_KINDS) {
       const svg = readText(`${DIR}/${p}-${k}.svg`);
@@ -166,7 +178,7 @@ test('lockups: mark stroke = SemiBold stem, mark box centred on the cap height, 
 });
 
 test('SVG hygiene: viewBox and title; no text, style, script, links, strokes or embedded images', () => {
-  for (const f of [...productSvgs, ...socialSvgs]) {
+  for (const f of [...productSvgs, ...layerSvgs, ...socialSvgs]) {
     const svg = readText(f);
     assert.match(svg, /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="[^"]+"/, `${f}: viewBox`);
     assert.match(svg, /<title>[^<]+<\/title>/, `${f}: title`);
@@ -197,6 +209,14 @@ test('marks, tiles, lockups and icon sources use only the brand.json logo colour
       const star = paths(svg).slice(0, REFERENCE[p].length).at(-1);
       const starColour = k.endsWith('-light') ? l.star : k.endsWith('-black') ? '#000000' : k.endsWith('-white') ? '#ffffff' : d.star;
       assert.equal(star.fill, starColour, `${p}-${k}: star colour`);
+    }
+  }
+  // The Icon Composer layers (#72): the ink layer only in the ink colour, the star layer only in the star colour.
+  const layerColours = { 'icon-layer-ink': [d.ink], 'icon-layer-star': [d.star] };
+  for (const p of LAYERS) {
+    for (const k of LAYER_KINDS) {
+      const svg = readText(`${DIR}/${p}-${k}.svg`);
+      assert.deepEqual([...colours(svg)].sort(), layerColours[k], `${p}-${k}: colours`);
     }
   }
 });
@@ -331,6 +351,61 @@ test('tiles and touch icons: the mark keeps 7 units of clear space, centred, at 
   }
 });
 
+test('Icon Composer layers (#72): transparent 1024 canvas, the mark centred at 12 px per unit, ink and star apart', () => {
+  // Only the products in LAYERS have layers.
+  for (const p of PRODUCTS.filter((x) => !LAYERS.includes(x))) {
+    for (const k of LAYER_KINDS) assert.ok(!existsSync(path.join(ROOT, `${DIR}/${p}-${k}.svg`)), `${p}-${k}.svg must not exist`);
+  }
+  for (const p of LAYERS) {
+    const [x0, y0, x1, y1] = MARK_BBOX[p];
+    const tx = ICON_SIZE / 2 - ((x0 + x1) / 2) * ICON_UNIT;
+    const ty = ICON_SIZE / 2 - ((y0 + y1) / 2) * ICON_UNIT;
+    // The mark's bounding box on the canvas, in px.
+    const box = [tx + x0 * ICON_UNIT, ty + y0 * ICON_UNIT, tx + x1 * ICON_UNIT, ty + y1 * ICON_UNIT];
+    const want = {
+      'icon-layer-ink': REFERENCE[p].filter(([, r]) => r !== 'star').map(([d, r]) => ({ fill: brand.dark.ink, rule: r, d })),
+      'icon-layer-star': REFERENCE[p].filter(([, r]) => r === 'star').map(([d]) => ({ fill: brand.dark.star, rule: null, d })),
+    };
+    const boxes = {};
+    for (const k of LAYER_KINDS) {
+      const f = `${DIR}/${p}-${k}.svg`;
+      assert.ok(existsSync(path.join(ROOT, f)), `${f} is missing`);
+      const svg = readText(f);
+      assert.deepEqual(viewBox(svg), [0, 0, ICON_SIZE, ICON_SIZE], `${f}: viewBox`);
+      assert.match(svg, /^<svg [^>]*width="1024" height="1024"/, `${f}: width and height`);
+      assert.ok(!svg.includes('<rect'), `${f}: a layer has no ground (the ground is the fill of icon.json)`);
+      const groups = [...svg.matchAll(/<g\b[^>]*>/g)].map((m) => m[0]);
+      assert.equal(groups.length, 1, `${f}: exactly one group`);
+      const m = /^<g transform="translate\((-?[\d.]+) (-?[\d.]+)\) scale\(([\d.]+)\)">$/.exec(groups[0]);
+      assert.ok(m, `${f}: the group is translate(tx ty) scale(s): ${groups[0]}`);
+      assert.deepEqual(m.slice(1).map(Number), [tx, ty, ICON_UNIT], `${f}: the mark's box centred on ${ICON_SIZE / 2} at ${ICON_UNIT} px per unit`);
+      assert.deepEqual(paths(svg), want[k], `${f}: paths`);
+      // Rendered: every painted pixel lies inside the mark's box (± 1 px).
+      const img = new Resvg(svg, { fitTo: { mode: 'width', value: ICON_SIZE }, font: { loadSystemFonts: false } }).render();
+      assert.deepEqual([img.width, img.height], [ICON_SIZE, ICON_SIZE], `${f}: render size`);
+      const px = img.pixels;
+      let [minX, minY, maxX, maxY, n] = [Infinity, Infinity, -Infinity, -Infinity, 0];
+      for (let y = 0; y < ICON_SIZE; y++) {
+        for (let x = 0; x < ICON_SIZE; x++) {
+          if (px[(y * ICON_SIZE + x) * 4 + 3] === 0) continue;
+          n++;
+          minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+        }
+      }
+      assert.ok(n > 1000, `${f}: nothing is painted (${n} pixels)`);
+      const painted = [minX, minY, maxX + 1, maxY + 1];
+      assert.ok(painted[0] >= box[0] - 1 && painted[1] >= box[1] - 1 && painted[2] <= box[2] + 1 && painted[3] <= box[3] + 1,
+        `${f}: painted box ${painted} outside the mark's box ${box} ± 1`);
+      boxes[k] = painted;
+    }
+    // The ink spans the mark's box and is centred on the canvas.
+    const ink = boxes['icon-layer-ink'];
+    for (let i = 0; i < 4; i++) assert.ok(Math.abs(ink[i] - box[i]) <= 1, `${p}: ink box ${ink} against the mark's box ${box}`);
+    const c = [(ink[0] + ink[2]) / 2, (ink[1] + ink[3]) / 2];
+    assert.ok(Math.abs(c[0] - ICON_SIZE / 2) <= 1 && Math.abs(c[1] - ICON_SIZE / 2) <= 1, `${p}: ink box centre ${c}`);
+  }
+});
+
 function difference(a, b) {
   let n = 0;
   let sum = 0;
@@ -363,6 +438,23 @@ test('16 px: paperless-go differs from pklnx-favicon.svg and from mail-archive',
     assert.ok(d.n >= 48, `against ${other}: ${d.n} pixels differ by more than 64 levels`);
     assert.ok(d.mean >= 30, `against ${other}: mean difference ${d.mean.toFixed(1)}`);
   }
+});
+
+// dokumentum (#72) against the pklnx favicon and mail-archive with the thresholds of #12. Against
+// paperless-go its tile stays below that bar (20 pixels, mean 20.0 when it was picked): the
+// maintainer kept variant B anyway (#72, M2), because Dokumentum shows as its Liquid Glass app
+// icon, not as this tile, while paperless-go's tile is a browser favicon. The floor of 18 / 18,
+// just under the measured values, stops the two from drifting closer.
+test('16 px: dokumentum differs from pklnx-favicon.svg and mail-archive (thresholds from #12) and keeps its distance to paperless-go (#72)', () => {
+  const doc = lum16(`${DIR}/dokumentum-tile.svg`);
+  for (const other of ['project/assets/Logos/pklnx-favicon.svg', `${DIR}/mail-archive-tile.svg`]) {
+    const d = difference(doc, lum16(other));
+    assert.ok(d.n >= 48, `against ${other}: ${d.n} pixels differ by more than 64 levels`);
+    assert.ok(d.mean >= 30, `against ${other}: mean difference ${d.mean.toFixed(1)}`);
+  }
+  const d = difference(doc, lum16(`${DIR}/paperless-go-tile.svg`));
+  assert.ok(d.n >= 18, `against paperless-go: ${d.n} pixels differ by more than 64 levels (floor 18)`);
+  assert.ok(d.mean >= 18, `against paperless-go: mean difference ${d.mean.toFixed(1)} (floor 18)`);
 });
 
 test('requirements-logo.txt pins exact versions with hashes only', () => {

@@ -617,7 +617,7 @@ test('the social SVGs draw the dot grid as one pattern fill with a dot on every 
   const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
   const ground = hex(tokens.dark.background);
   const dot = hex(tokens.dark['border-subtle-00']);
-  for (const name of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social']) {
+  for (const name of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social', 'dokumentum-social']) {
     const svg = readFileSync(assetFile('Social', `${name}.svg`), 'utf8');
     const [, w, h] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
     assert.equal(svg.match(/<rect /g).length, 3, `${name}: ground, pattern dot and the fill rect, no rect per dot`);

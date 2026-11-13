@@ -258,5 +258,85 @@
  "e5e3939880b397358615cb221e824ec6": {
   "path": "Social/paperless-go-social.png",
   "sha256": "c7328457be05a5bd9683fd4b487e15fa8b495073a2b0f7397c5330989152cf36"
+ },
+ "8956b47ea0106e4498507288667eaaf6": {
+  "path": "Logos/products/dokumentum-tile.svg",
+  "sha256": "8f2011d7c29be4377af3afd34608644851e4f1e3fd5db577feab749f8cae6f8b"
+ },
+ "6c1ee188f2dac26a7e0faf0e6689c34c": {
+  "path": "Logos/products/dokumentum-mark-dark.svg",
+  "sha256": "e710940fb8b6993960f5b2c7aba9466d9bff34d0bb195934d7478532f1ac3f1c"
+ },
+ "ee88f48c4ee1e61dbd09ba8c0110dcb0": {
+  "path": "Logos/products/dokumentum-mark-light.svg",
+  "sha256": "bd8457b59df3de4038d8b5b4bcd77b402c1e976073f69c2c2a34372608ca91ff"
+ },
+ "1cc8a9a87d80e13cc810a37af754a43d": {
+  "path": "Logos/products/dokumentum-mark-black.svg",
+  "sha256": "cfa742819a8b9fe9e1922d0e904ddcf1ae54adcf858f62cbe166fe9c0edda41a"
+ },
+ "4f909137fff2abc34ee33f43e1e3ed3a": {
+  "path": "Logos/products/dokumentum-mark-white.svg",
+  "sha256": "ef46226d20ef98233e4993a12fa0f5bf5f6f1b6f0b3e5b2a2c6a484be0b95847"
+ },
+ "6305d33939fec6964148e58bec78d257": {
+  "path": "Logos/products/dokumentum-lockup-dark.svg",
+  "sha256": "856e40510c6ba903a6d05acaf217e4f7c8a22175086d1ab91a72f7f2574169bb"
+ },
+ "38a85a2fcd4cb1a94dffa0f4cb2b2891": {
+  "path": "Logos/products/dokumentum-lockup-light.svg",
+  "sha256": "fe45f3b3ada60f43b5373a0c3be921a5f89052cbe276a5178424b31afb8e326a"
+ },
+ "43265dd30fe591d900b5cb6907c32f78": {
+  "path": "Logos/products/dokumentum-lockup-black.svg",
+  "sha256": "602464a0f3ad97643f03d41794f85f8f1463b26c53b6afa2369951ac82b2eaa2"
+ },
+ "091f8c5dbaae8207387dd09e754947b1": {
+  "path": "Logos/products/dokumentum-lockup-white.svg",
+  "sha256": "e18fd0f70a7f9eb057cfa42f186796bb1e202d10aef75f8031b42c8afc24cee9"
+ },
+ "67956a1557684b78be5f714fc81a7f72": {
+  "path": "Logos/products/dokumentum-apple-touch-icon.svg",
+  "sha256": "8f8ea5df7b5d284f98b9b161488a8cee2799ace191aed60f7aa2bba3a3715152"
+ },
+ "a8c928be517f50c0714cf3d21776c852": {
+  "path": "Logos/products/dokumentum-icon-maskable.svg",
+  "sha256": "fc7dea62c6a16e8f8c57f94ec3e8b32ffddcb2c35d98fbd48c0118ea23dd9b1b"
+ },
+ "cf1b894c8f3f82c37a338d8772fa31fd": {
+  "path": "Logos/products/dokumentum-icon-layer-ink.svg",
+  "sha256": "f8009c858c69e11125c6146295984d52e99b98c7825fac9af704490acc8310fc"
+ },
+ "f01c39c6cb5df9b5e26d96587c33ba8d": {
+  "path": "Logos/products/dokumentum-icon-layer-star.svg",
+  "sha256": "c1bc8922c74fbf4469e79ba51e3a6a189d581bd413e83f6b4e7cdc3f8728fe0f"
+ },
+ "503ae871ba5ce9024e25c75d6662046e": {
+  "path": "Logos/products/dokumentum-favicon-32.png",
+  "sha256": "68aeed06d1fa7259ca09881c20c6f23011518f27b1fb67cf453bbf5f9198289a"
+ },
+ "d03ade6db3070c148fc699ea7409d2ef": {
+  "path": "Logos/products/dokumentum-icon-192.png",
+  "sha256": "fa08f4a011a9a6606ac651e5b1766636a08c6c173a61748df3b774485a1498a7"
+ },
+ "f187ebc2efc8e19efe1e604d0bfc435e": {
+  "path": "Logos/products/dokumentum-icon-512.png",
+  "sha256": "1edc361274dd66e81e3cb76e977af99302df7dcd1c9d4552243cef1dfe614fcb"
+ },
+ "d6a2e2b72fa79205f96fa7cee12d2d39": {
+  "path": "Logos/products/dokumentum-apple-touch-icon.png",
+  "sha256": "26aabe4dcd2948560c3f3a5af837e5494d2f1faf3ad85543e9e7c7af32582e86"
+ },
+ "81f1661df8cc55f8258a5547fd5b1bb8": {
+  "path": "Logos/products/dokumentum-icon-maskable-512.png",
+  "sha256": "439814ba398f4d20a32ccfb62e29f72d53e67be125efba574ede05d0c2f83b73"
+ },
+ "abc9bffe09375cb7a1cfc3f31f05de29": {
+  "path": "Social/dokumentum-social.svg",
+  "sha256": "4b2e92165c3868e53535d9b329c16a88e8165878c7e0ca16a24111d87bd5b4a0"
+ },
+ "ce6b6bfabc52030f5d91b475554894f4": {
+  "path": "Social/dokumentum-social.png",
+  "sha256": "4e8d4b73ebdc325919903317684274680651529fe11c962be062f7cf7ca28820"
  }
 }

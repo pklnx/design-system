@@ -2,6 +2,46 @@
   "renderer": "@resvg/resvg-js 2.6.2",
   "pngs": [
     {
+      "path": "project/assets/Logos/products/dokumentum-apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "source": "project/assets/Logos/products/dokumentum-apple-touch-icon.svg",
+      "sourceSha256": "8f8ea5df7b5d284f98b9b161488a8cee2799ace191aed60f7aa2bba3a3715152",
+      "sha256": "26aabe4dcd2948560c3f3a5af837e5494d2f1faf3ad85543e9e7c7af32582e86"
+    },
+    {
+      "path": "project/assets/Logos/products/dokumentum-favicon-32.png",
+      "width": 32,
+      "height": 32,
+      "source": "project/assets/Logos/products/dokumentum-tile.svg",
+      "sourceSha256": "8f2011d7c29be4377af3afd34608644851e4f1e3fd5db577feab749f8cae6f8b",
+      "sha256": "68aeed06d1fa7259ca09881c20c6f23011518f27b1fb67cf453bbf5f9198289a"
+    },
+    {
+      "path": "project/assets/Logos/products/dokumentum-icon-192.png",
+      "width": 192,
+      "height": 192,
+      "source": "project/assets/Logos/products/dokumentum-tile.svg",
+      "sourceSha256": "8f2011d7c29be4377af3afd34608644851e4f1e3fd5db577feab749f8cae6f8b",
+      "sha256": "fa08f4a011a9a6606ac651e5b1766636a08c6c173a61748df3b774485a1498a7"
+    },
+    {
+      "path": "project/assets/Logos/products/dokumentum-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/dokumentum-tile.svg",
+      "sourceSha256": "8f2011d7c29be4377af3afd34608644851e4f1e3fd5db577feab749f8cae6f8b",
+      "sha256": "1edc361274dd66e81e3cb76e977af99302df7dcd1c9d4552243cef1dfe614fcb"
+    },
+    {
+      "path": "project/assets/Logos/products/dokumentum-icon-maskable-512.png",
+      "width": 512,
+      "height": 512,
+      "source": "project/assets/Logos/products/dokumentum-icon-maskable.svg",
+      "sourceSha256": "fc7dea62c6a16e8f8c57f94ec3e8b32ffddcb2c35d98fbd48c0118ea23dd9b1b",
+      "sha256": "439814ba398f4d20a32ccfb62e29f72d53e67be125efba574ede05d0c2f83b73"
+    },
+    {
       "path": "project/assets/Logos/products/mail-archive-apple-touch-icon.png",
       "width": 180,
       "height": 180,
@@ -80,6 +120,14 @@
       "source": "project/assets/Logos/products/paperless-go-icon-maskable.svg",
       "sourceSha256": "05728a41393c7c3b2a148e72e42181673f649dd935555868fb74bbd01159a551",
       "sha256": "796fcfc8cf4a958e42259b3b9e5c4b77c317723ce048ef6b19331c91b63cbb0a"
+    },
+    {
+      "path": "project/assets/Social/dokumentum-social.png",
+      "width": 1280,
+      "height": 640,
+      "source": "project/assets/Social/dokumentum-social.svg",
+      "sourceSha256": "4b2e92165c3868e53535d9b329c16a88e8165878c7e0ca16a24111d87bd5b4a0",
+      "sha256": "4e8d4b73ebdc325919903317684274680651529fe11c962be062f7cf7ca28820"
     },
     {
       "path": "project/assets/Social/mail-archive-social.png",

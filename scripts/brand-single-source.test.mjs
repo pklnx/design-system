@@ -65,7 +65,7 @@ test('the mark, favicon and avatar SVGs carry the mark geometry and the brand.js
 });
 
 test('the social images carry the word star in the brand.json colour', () => {
-  for (const n of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social']) {
+  for (const n of ['pklnx-og-image', 'pklnx-banner', 'mail-archive-social', 'paperless-go-social', 'dokumentum-social']) {
     const file = `project/assets/Social/${n}.svg`;
     const stars = paths(read(file)).filter((p) => p.d === geo.word.star);
     assert.ok(stars.length > 0, `${file}: has the star path from theme/logo-geometry.json`);
@@ -126,7 +126,7 @@ test('the component bundle renders Logo and Icon from the geometry of theme/logo
 // writer of the geometry, scripts/build_logo.py, is the origin of its shapes (the mark's
 // bracket is drawn there by hand), but it reads the colours like everyone else. Tests are not
 // scanned: they compare against the files above, and the products' own marks are reference
-// values from issue #12.
+// values from issues #12 and #72.
 test('no build script or source file spells out a star colour or a path of theme/logo-geometry.json', () => {
   const walk = (dir) => readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? (['fixtures', '__pycache__'].includes(e.name) ? [] : walk(`${dir}/${e.name}`)) : [`${dir}/${e.name}`]));
   const files = [...walk('scripts'), ...walk('src')].filter((f) => /\.(mjs|py|jsx|css|scss)$/.test(f) && !/\.test\.mjs$/.test(f));
