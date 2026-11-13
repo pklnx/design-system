@@ -81,6 +81,7 @@ def social(w, h, mark_h, x, y, tag_size, gap):
 PRODUCT_SOCIAL = {
     "mail-archive": "A read-only, deduplicated archive of your IMAP mailboxes, with full-text search and a web UI.",
     "paperless-go": "A self-hosted document archive with OCR, full-text search and a web UI.",
+    "dokumentum": "A personal document archive for iPhone and Mac, in your private iCloud, with no server and no accounts.",
 }
 SOCIAL_W, SOCIAL_H = 1280, 640
 SOCIAL_X = 96  # left edge of the lockup, the description and the wordmark

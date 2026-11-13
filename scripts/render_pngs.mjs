@@ -20,7 +20,7 @@ export const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 export const PRODUCTS_DIR = 'project/assets/Logos/products';
 export const MANIFEST = `${PRODUCTS_DIR}/manifest.json`;
 export const SOURCE_KEY = 'pklnx:source-sha256';
-export const PRODUCTS = ['mail-archive', 'paperless-go'];
+export const PRODUCTS = ['mail-archive', 'paperless-go', 'dokumentum'];
 
 // [png, source svg, width in px]; the height follows from the SVG's aspect ratio.
 export const JOBS = PRODUCTS.flatMap((p) => [

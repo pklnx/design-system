@@ -1,16 +1,23 @@
-"""Builds the product marks of mail-archive and paperless-go and writes their SVGs.
+"""Builds the product marks of mail-archive, paperless-go and dokumentum and writes their SVGs.
 
-Both marks use the formal language of the pklnx mark (build_logo.py): the 64 x 64 grid,
+All three marks use the formal language of the pklnx mark (build_logo.py): the 64 x 64 grid,
 7-unit strokes, square corners and the four-pointed flat-tip star as the only accent.
-The geometry is the reference posted on design-system issue #12:
+The geometry is the reference posted on design-system issue #12 (dokumentum: #72):
 
 - mail-archive, archive box: a lid bar over an open box, the star as the label.
 - paperless-go, file: a page with the top-right corner cut at 45 degrees, the fold as a
   7-unit L, the star on the page.
+- dokumentum, D: a page drawn as a D, both right corners cut at 45 degrees, a 7-unit
+  frame, the star in the counter (variant B, picked on design-system issue #72).
 
-All shapes are filled paths; only paperless-go's page uses fill-rule="evenodd" for its hole.
+All shapes are filled paths; only the pages of paperless-go and dokumentum use
+fill-rule="evenodd" for their holes.
 The lockup sets the product name in IBM Plex Mono SemiBold, converted to paths, so the
 files need no fonts.
+
+dokumentum also gets its Icon Composer layers (ICON_LAYERS): the ink and the star of the
+mark as two transparent 1024 x 1024 SVGs, which pklnx/dokumentum copies into its
+AppIcon.icon; the ground is the solid fill of that icon.json.
 
 Output: project/assets/Logos/products/*.svg. The PNGs and manifest.json come from
 scripts/render_pngs.mjs; the social images from scripts/build_assets.py.
@@ -34,7 +41,12 @@ FONT_SIZE = 100  # name size in lockup units
 STEM = 12.8  # stem of the "l" in Plex Mono SemiBold at size 100 (glyf x 236-364 of 1000)
 K = STEM / S  # lockup scale of the mark: 7-unit stroke = SemiBold stem
 MASKABLE = 512  # maskable icon size
-MASKABLE_SCALE = 5.6  # px per mark unit; the safe circle (r 0.4 x 512) allows 5.84 (C) and 5.99 (A)
+# px per mark unit; the safe circle (r 0.4 x 512) allows mail-archive 5.84, paperless-go 5.99
+# and dokumentum 5.88.
+MASKABLE_SCALE = 5.6
+ICON_LAYERS = {"dokumentum"}  # products with Icon Composer layers
+ICON_SIZE = 1024  # canvas of an Icon Composer layer
+ICON_UNIT = 12  # px per mark unit on the layer canvas (the 64-unit box spans 768 px)
 
 
 def poly(pts):
@@ -49,6 +61,17 @@ def page_file(x0, y0, x1, y1, c):
     fx, fy = x1 - c - S, y0 + c + S  # inner edges of the fold legs
     hole = [(x0 + S, y0 + S), (fx, y0 + S), (fx, fy), (x1 - S, fy), (x1 - S, y1 - S), (x0 + S, y1 - S)]
     return [outer, hole], (fy + y1 - S) / 2
+
+
+def d_page(x0, y0, x1, y1, c):
+    """Page drawn as a D: both right corners cut at 45 degrees (cut length c), a frame S
+    wide. The inner cuts are shorter by S * (sqrt 2 - 1), so the diagonals stay S wide too.
+    Returns the outer outline and the hole, for fill-rule evenodd."""
+    outer = [(x0, y0), (x1 - c, y0), (x1, y0 + c), (x1, y1 - c), (x1 - c, y1), (x0, y1)]
+    xi0, yi0, xi1, yi1 = x0 + S, y0 + S, x1 - S, y1 - S
+    ci = c - S * (math.sqrt(2) - 1)
+    hole = [(xi0, yi0), (xi1 - ci, yi0), (xi1, yi0 + ci), (xi1, yi1 - ci), (xi1 - ci, yi1), (xi0, yi1)]
+    return [outer, hole]
 
 
 _page, _page_cy = page_file(11, 5, 53, 59, 12)
@@ -66,6 +89,10 @@ PRODUCTS = {
     "paperless-go": {
         "shapes": [(_page, "evenodd")],
         "star": (32, _page_cy, 9.5),
+    },
+    "dokumentum": {
+        "shapes": [(d_page(10, 5, 54, 59, 14), "evenodd")],
+        "star": (32, 32, 10),
     },
 }
 
@@ -106,15 +133,28 @@ def tile_transform(product):
     return f"translate({tx:g} {ty:g}) scale({TILE_SCALE:g})"
 
 
-def mark_paths(product, ink, star):
-    p = PRODUCTS[product]
+def ink_paths(product, ink):
     out = []
-    for outlines, rule in p["shapes"]:
+    for outlines, rule in PRODUCTS[product]["shapes"]:
         d = " ".join(poly(o) for o in outlines)
         r = f' fill-rule="{rule}"' if rule else ""
         out.append(f'<path fill="{ink}"{r} d="{d}"/>')
-    out.append(f'<path fill="{star}" d="{star_d(p["star"])}"/>')
     return "".join(out)
+
+
+def star_paths(product, star):
+    return f'<path fill="{star}" d="{star_d(PRODUCTS[product]["star"])}"/>'
+
+
+def mark_paths(product, ink, star):
+    return ink_paths(product, ink) + star_paths(product, star)
+
+
+def icon_transform(product):
+    """The transform that centres the mark's bounding box on the Icon Composer canvas at ICON_UNIT."""
+    x0, y0, x1, y1 = mark_bbox(product)
+    c = ICON_SIZE / 2
+    return f"translate({fmt(c - (x0 + x1) / 2 * ICON_UNIT)} {fmt(c - (y0 + y1) / 2 * ICON_UNIT)}) scale({fmt(ICON_UNIT)})"
 
 
 def svg(view_box, title, body, size=None):
@@ -185,6 +225,13 @@ def files(product):
         f"0 0 {MASKABLE} {MASKABLE}", product,
         f'<rect width="{MASKABLE}" height="{MASKABLE}" fill="{ground}"/>'
         f'<g transform="translate({fmt(tx)} {fmt(ty)}) scale({fmt(MASKABLE_SCALE)})">{mark}</g>')
+    if product in ICON_LAYERS:
+        # Icon Composer layers: transparent, no ground (the ground is the fill of icon.json),
+        # the ink and the star each on its own layer, the star above the ink in icon.json.
+        size, g = (ICON_SIZE, ICON_SIZE), f'<g transform="{icon_transform(product)}">'
+        vb = f"0 0 {ICON_SIZE} {ICON_SIZE}"
+        out[f"{product}-icon-layer-ink.svg"] = svg(vb, product, f'{g}{ink_paths(product, dark["ink"])}</g>', size)
+        out[f"{product}-icon-layer-star.svg"] = svg(vb, product, f'{g}{star_paths(product, dark["star"])}</g>', size)
     return out
 
 
