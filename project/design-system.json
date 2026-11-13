@@ -70,7 +70,25 @@
     "products/paperless-go-icon-192.png",
     "products/paperless-go-icon-512.png",
     "products/paperless-go-apple-touch-icon.png",
-    "products/paperless-go-icon-maskable-512.png"
+    "products/paperless-go-icon-maskable-512.png",
+    "products/dokumentum-tile.svg",
+    "products/dokumentum-mark-dark.svg",
+    "products/dokumentum-mark-light.svg",
+    "products/dokumentum-mark-black.svg",
+    "products/dokumentum-mark-white.svg",
+    "products/dokumentum-lockup-dark.svg",
+    "products/dokumentum-lockup-light.svg",
+    "products/dokumentum-lockup-black.svg",
+    "products/dokumentum-lockup-white.svg",
+    "products/dokumentum-apple-touch-icon.svg",
+    "products/dokumentum-icon-maskable.svg",
+    "products/dokumentum-icon-layer-ink.svg",
+    "products/dokumentum-icon-layer-star.svg",
+    "products/dokumentum-favicon-32.png",
+    "products/dokumentum-icon-192.png",
+    "products/dokumentum-icon-512.png",
+    "products/dokumentum-apple-touch-icon.png",
+    "products/dokumentum-icon-maskable-512.png"
    ],
    "files": {
     "pklnx-wordmark-dark.svg": {
@@ -324,6 +342,114 @@
      "blob": "e576457e47b65b1bf1c8f98bc097056d",
      "size": 7343,
      "type": "image/png"
+    },
+    "products/dokumentum-tile.svg": {
+     "name": "products/dokumentum-tile.svg",
+     "blob": "8956b47ea0106e4498507288667eaaf6",
+     "size": 511,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-mark-dark.svg": {
+     "name": "products/dokumentum-mark-dark.svg",
+     "blob": "6c1ee188f2dac26a7e0faf0e6689c34c",
+     "size": 411,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-mark-light.svg": {
+     "name": "products/dokumentum-mark-light.svg",
+     "blob": "ee88f48c4ee1e61dbd09ba8c0110dcb0",
+     "size": 411,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-mark-black.svg": {
+     "name": "products/dokumentum-mark-black.svg",
+     "blob": "1cc8a9a87d80e13cc810a37af754a43d",
+     "size": 411,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-mark-white.svg": {
+     "name": "products/dokumentum-mark-white.svg",
+     "blob": "4f909137fff2abc34ee33f43e1e3ed3a",
+     "size": 411,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-lockup-dark.svg": {
+     "name": "products/dokumentum-lockup-dark.svg",
+     "blob": "6305d33939fec6964148e58bec78d257",
+     "size": 4539,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-lockup-light.svg": {
+     "name": "products/dokumentum-lockup-light.svg",
+     "blob": "38a85a2fcd4cb1a94dffa0f4cb2b2891",
+     "size": 4539,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-lockup-black.svg": {
+     "name": "products/dokumentum-lockup-black.svg",
+     "blob": "43265dd30fe591d900b5cb6907c32f78",
+     "size": 4539,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-lockup-white.svg": {
+     "name": "products/dokumentum-lockup-white.svg",
+     "blob": "091f8c5dbaae8207387dd09e754947b1",
+     "size": 4539,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-apple-touch-icon.svg": {
+     "name": "products/dokumentum-apple-touch-icon.svg",
+     "blob": "67956a1557684b78be5f714fc81a7f72",
+     "size": 503,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-icon-maskable.svg": {
+     "name": "products/dokumentum-icon-maskable.svg",
+     "blob": "a8c928be517f50c0714cf3d21776c852",
+     "size": 511,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-icon-layer-ink.svg": {
+     "name": "products/dokumentum-icon-layer-ink.svg",
+     "blob": "cf1b894c8f3f82c37a338d8772fa31fd",
+     "size": 346,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-icon-layer-star.svg": {
+     "name": "products/dokumentum-icon-layer-star.svg",
+     "blob": "f01c39c6cb5df9b5e26d96587c33ba8d",
+     "size": 350,
+     "type": "image/svg+xml"
+    },
+    "products/dokumentum-favicon-32.png": {
+     "name": "products/dokumentum-favicon-32.png",
+     "blob": "503ae871ba5ce9024e25c75d6662046e",
+     "size": 766,
+     "type": "image/png"
+    },
+    "products/dokumentum-icon-192.png": {
+     "name": "products/dokumentum-icon-192.png",
+     "blob": "d03ade6db3070c148fc699ea7409d2ef",
+     "size": 3360,
+     "type": "image/png"
+    },
+    "products/dokumentum-icon-512.png": {
+     "name": "products/dokumentum-icon-512.png",
+     "blob": "f187ebc2efc8e19efe1e604d0bfc435e",
+     "size": 9654,
+     "type": "image/png"
+    },
+    "products/dokumentum-apple-touch-icon.png": {
+     "name": "products/dokumentum-apple-touch-icon.png",
+     "blob": "d6a2e2b72fa79205f96fa7cee12d2d39",
+     "size": 1722,
+     "type": "image/png"
+    },
+    "products/dokumentum-icon-maskable-512.png": {
+     "name": "products/dokumentum-icon-maskable-512.png",
+     "blob": "81f1661df8cc55f8258a5547fd5b1bb8",
+     "size": 5031,
+     "type": "image/png"
     }
    }
   },
@@ -471,7 +597,9 @@
     "mail-archive-social.svg",
     "mail-archive-social.png",
     "paperless-go-social.svg",
-    "paperless-go-social.png"
+    "paperless-go-social.png",
+    "dokumentum-social.svg",
+    "dokumentum-social.png"
    ],
    "files": {
     "pklnx-og-image.svg": {
@@ -509,6 +637,18 @@
      "blob": "e5e3939880b397358615cb221e824ec6",
      "size": 30104,
      "type": "image/png"
+    },
+    "dokumentum-social.svg": {
+     "name": "dokumentum-social.svg",
+     "blob": "abc9bffe09375cb7a1cfc3f31f05de29",
+     "size": 49581,
+     "type": "image/svg+xml"
+    },
+    "dokumentum-social.png": {
+     "name": "dokumentum-social.png",
+     "blob": "ce6b6bfabc52030f5d91b475554894f4",
+     "size": 33572,
+     "type": "image/png"
     }
    }
   }
@@ -519,8 +659,8 @@
  },
  "lastChange": {
   "by": "Patrick Klein",
-  "at": "2026-11-04T08:58:45Z",
+  "at": "2026-11-13T09:19:54Z",
   "via": "Claude · github.com/pklnx/design-system",
-  "note": "Product logos and social images (#64)"
+  "note": "Dokumentum logos, icon layers and social image (#72)"
  }
 }
